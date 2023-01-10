@@ -44,7 +44,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//敵アップデート
 			snake.Update();
 
-
+			//当たり判定
+			collision(player, snake);
 
 			//スクロール値をアップデートする
 			screen.SetScroll(player);
@@ -91,6 +92,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			snake.Draw(screen);
 			//プレイヤー描画
 			player.Draw(screen);
+
+			//当たり判定のデバッグ
+			for (int i = 0; i < 5; i++) {
+				if (collisiontest[i]) {
+					Novice::DrawBox(0 + i * 35, 0, 30, 30, 0, RED, kFillModeSolid);
+				}
+			}
 
 			//制作中の操作説明を一時的に描画する
 			Novice::DrawSprite(Screen::kWindowWidth - 420, Screen::kWindowHeight - 220, explanation, 1, 1, 0.0f, WHITE);

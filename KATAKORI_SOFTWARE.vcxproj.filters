@@ -157,5 +157,6 @@
     <ClInclude Include="Quad.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="Vec2.h" />
+    <ClInclude Include="collision.h" />
   </ItemGroup>
 </Project>
