@@ -7,6 +7,7 @@
 #include "Ingame.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "collision.h"
 
 //インスタンス化
 Screen screen;
