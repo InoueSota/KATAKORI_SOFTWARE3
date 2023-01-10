@@ -1,6 +1,8 @@
 #pragma once
 #include "Screen.h"
 #include "Vec2.h"
+#include <time.h>
+#include <conio.h>
 
 
 
@@ -22,8 +24,11 @@ public:
 	Vec2 mHeadPosition;
 	int mHeadRadius;
 	float mHeadAngle;
+	Vec2 mHeadPositionStart;//スタート地点
+	Vec2 mTargetPoint;//目標地点
 	void Move();
 	void Angle();
+	int mSpeed = 3;
 
 	//体部分共通
 	static constexpr int kMaxFrame = 120;

@@ -12,9 +12,9 @@ void Snake::Init() {
 	for (int i = 0; i < kMaxFrame; i++){
 		mOldHeadPosition[i] = mHeadPosition;
 	}
+	mTargetPoint.x = rand() % 1280 - (1280 / 2);
+	mTargetPoint.y = rand() % 640 - (640 / 2);
 }
-
-
 
 void Snake::Update() {
 	Move();
@@ -35,6 +35,23 @@ void Snake::Move() {
 	if (Key::IsPress(DIK_RIGHT)) {
 		mHeadPosition.x += 3;
 	}
+
+	//ƒ‰ƒ“ƒ_ƒ€‚ÉˆÚ“®’n“_‚ðŒˆ‚ß‚ÄˆÚ“®
+		float rad = atan2(mTargetPoint.y - mHeadPosition.y, mTargetPoint.x - mHeadPosition.x);
+
+		if ((mTargetPoint.x > mHeadPositionStart.x && mTargetPoint.x > mHeadPosition.x) || (mTargetPoint.x < mHeadPositionStart.x && mTargetPoint.x < mHeadPosition.x)) {
+			mHeadPosition.x += cosf(rad) * mSpeed;
+		} else {
+			mHeadPositionStart.x = mHeadPosition.x;
+			mTargetPoint.x = rand() % 1280 - (1280 / 2);
+		}
+
+		if ((mTargetPoint.y > mHeadPositionStart.y && mTargetPoint.y > mHeadPosition.y) || (mTargetPoint.y < mHeadPositionStart.y && mTargetPoint.y < mHeadPosition.y)) {
+			mHeadPosition.y += sinf(rad) * mSpeed;
+		} else {
+			mHeadPositionStart.y = mHeadPosition.y;
+			mTargetPoint.y = rand() % 640 - (640 / 2);
+		}	
 
 	//Œü‚«‚ð•Ï‚¦‚éˆ—
 	Angle();

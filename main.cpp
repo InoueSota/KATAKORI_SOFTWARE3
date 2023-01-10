@@ -11,6 +11,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// 画像読み込み
 	int explanation = Novice::LoadTexture("./Resources/Debugs/Explanation.png");
 
+	//乱数の初期化
+	srand(time(nullptr));
+
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
 		// フレームの開始
