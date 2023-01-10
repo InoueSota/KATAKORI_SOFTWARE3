@@ -195,10 +195,10 @@ void Player::Draw(Screen& screen) {
 	if (mIsMarkActive){
 
 		screen.DrawLine(mPosition, mMarkPosition, WHITE);
-		//screen.DrawSquare(mMarkPosition, mSize, WHITE);
+		screen.DrawSquare(mMarkPosition, mSize, WHITE);
 
 	}
 
-	//screen.DrawSquare(mPosition, mSize, 0x606060FF);
+	screen.DrawSquare(mPosition, mSize, 0x606060FF);
 
 }
