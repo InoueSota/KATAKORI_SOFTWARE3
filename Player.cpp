@@ -44,13 +44,13 @@ void Player::Update() {
 
 		//マーキング
 		Mark();
+
+		//速度を代入する
+		mPosition += mVelocity;
 	}
 
 	//ストライク
 	Strike();
-
-	//速度を代入する
-	mPosition += mVelocity;
 
 }
 
