@@ -44,6 +44,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//敵アップデート
 			snake.Update();
 
+
+
 			//スクロール値をアップデートする
 			screen.SetScroll(player);
 
