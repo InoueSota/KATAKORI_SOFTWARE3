@@ -97,6 +97,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			ingame.BackGroundDraw();
 			//グリッド線描画
 			ingame.DebagDraw(screen);
+			//マップ端描画
+			map.Draw(screen);
 			//敵描画
 			for (int i = 0; i < Snake::kMaxSnake; i++) {
 				snake[i].Draw(screen);

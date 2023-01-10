@@ -51,8 +51,8 @@ void Screen::SetScroll(Player& player) {
 	}
 	else 
 	{
-		mScroll.x += ( player.mPosition.x - mScroll.x) * 0.15f;
-		mScroll.y += (-player.mPosition.y - mScroll.y) * 0.15f;
+		mScroll.x += ( player.mPosition.x - mScroll.x) * 0.2f;
+		mScroll.y += (-player.mPosition.y - mScroll.y) * 0.2f;
 	}
 	
 

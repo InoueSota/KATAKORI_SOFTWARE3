@@ -3,6 +3,7 @@
 #include "ControllerInput.h"
 #include "Function.h"
 #include "Easing.h"
+#include "Ingame.h"
 
 
 void Player::Init() {
@@ -12,7 +13,7 @@ void Player::Init() {
 	mSize = 64;
 
 	//通常移動
-	mNormalMag = 3.0f;
+	mNormalMag = 6.0f;
 
 	//ダッシュ
 	mDushMag = 200.0f;
@@ -51,6 +52,10 @@ void Player::Update() {
 
 	//ストライク
 	Strike();
+
+	//マップ内に収める
+	mPosition.x = Clamp(mPosition.x, Map::kMapLeft + (mSize / 2), Map::kMapRight - (mSize / 2));
+	mPosition.y = Clamp(mPosition.y, Map::kMapBottom + (mSize / 2), Map::kMapTop - (mSize / 2));
 
 }
 
@@ -153,7 +158,7 @@ void Player::Strike() {
 				float tmpValue = tmpDistance / 100;
 
 				// n / tmpValue のとき、nは距離が100のときのEasingtの増加量になる
-				mStrikeEasingtIncrementValue = 0.15f / tmpValue;
+				mStrikeEasingtIncrementValue = 0.25f / tmpValue;
 
 				//イージング時の始点と終点の設定
 				mStrikeStartPosition = mPosition;

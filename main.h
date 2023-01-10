@@ -12,6 +12,7 @@
 //インスタンス化
 Screen screen;
 Ingame ingame;
+Map map;
 Player player;
 Snake snake[Snake::kMaxSnake];
 

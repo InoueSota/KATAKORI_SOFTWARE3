@@ -26,3 +26,17 @@ public:
 	void DebagDraw(Screen& screen);
 };
 
+class Map
+{
+public:
+
+	static constexpr int kMapRadius = 5000;
+	static constexpr int kMapTop = kMapRadius;
+	static constexpr int kMapBottom = -kMapRadius;
+	static constexpr int kMapLeft = -kMapRadius;
+	static constexpr int kMapRight = kMapRadius;
+
+	void Draw(Screen& screen);
+
+};
+
