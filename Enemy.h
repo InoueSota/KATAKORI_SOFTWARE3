@@ -28,7 +28,10 @@ public:
 	Vec2 mTargetPoint;//–Ú•W’n“_
 	void Move();
 	void Angle();
-	int mSpeed = 3;
+	int mSpeed = 5;
+	bool IsCollision[5] = {};
+
+	static constexpr int kMaxSnake = 10;//“G‚ÌÅ‘å”
 
 	//‘Ì•”•ª‹¤’Ê
 	static constexpr int kMaxFrame = 120;

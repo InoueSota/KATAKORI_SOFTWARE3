@@ -13,7 +13,7 @@
 Screen screen;
 Ingame ingame;
 Player player;
-Snake snake;
+Snake snake[Snake::kMaxSnake];
 
 //スイッチ文で main.cpp を分けるやつ
 enum Scene

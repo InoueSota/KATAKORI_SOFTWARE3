@@ -38,17 +38,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//初期化
 			if (Key::IsTrigger(DIK_R)){
 				player.Init();
-				snake.Init();
+				for (int i = 0; i < Snake::kMaxSnake; i++) {
+					snake[i].Init();
+				}
 			}
 
 			//プレイヤーアップデート
 			player.Update();
 
 			//敵アップデート
-			snake.Update();
+			for (int i = 0; i < Snake::kMaxSnake; i++) {
+				snake[i].Update();
+			}
 
 			//当たり判定
-			collision(player, snake);
+			for (int i = 0; i < Snake::kMaxSnake; i++) {
+				collision(player, snake[i]);
+			}
 
 			//スクロール値をアップデートする
 			screen.SetScroll(player);
@@ -92,16 +98,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//グリッド線描画
 			ingame.DebagDraw(screen);
 			//敵描画
-			snake.Draw(screen);
+			for (int i = 0; i < Snake::kMaxSnake; i++) {
+				snake[i].Draw(screen);
+			}
 			//プレイヤー描画
 			player.Draw(screen);
-
-			//当たり判定のデバッグ
-			for (int i = 0; i < 5; i++) {
-				if (collisiontest[i]) {
-					Novice::DrawBox(0 + i * 35, 0, 30, 30, 0, RED, kFillModeSolid);
-				}
-			}
 
 			//制作中の操作説明を一時的に描画する
 			Novice::DrawSprite(Screen::kWindowWidth - 420, Screen::kWindowHeight - 220, explanation, 1, 1, 0.0f, WHITE);

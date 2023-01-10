@@ -148,4 +148,22 @@ void Snake::Draw(Screen& screen) {
 	//“ª•`‰æ
 	screen.DrawPicture(mHeadPosition, mHeadRadius, mHeadAngle, 100, 100, head);
 
+	//“–‚½‚è”»’è•`‰æ
+
+	//“–‚½‚è”»’è‚ÌƒfƒoƒbƒO
+	if (IsCollision[0]) {
+		screen.DrawCircle(mHeadPosition, mHeadRadius / 2, 0xFF000080, kFillModeSolid);
+	}
+	if (IsCollision[1]) {
+		screen.DrawCircle(mFirstBodyPosition, mBodyRadius / 2, 0xFF000080, kFillModeSolid);
+	}
+	if (IsCollision[2]) {
+		screen.DrawCircle(mSecondBodyPosition, mBodyRadius / 2, 0xFF000080, kFillModeSolid);
+	}
+	if (IsCollision[3]) {
+		screen.DrawCircle(mThirdBodyPosition, mBodyRadius / 2, 0xFF000080, kFillModeSolid);
+	}
+	if (IsCollision[4]) {
+		screen.DrawCircle(mFourthBodyPosition, mBodyRadius / 2, 0xFF000080, kFillModeSolid);
+	}
 }
