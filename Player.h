@@ -44,6 +44,15 @@ public:
 	Vec2 mStrikeEndPosition;
 	void Strike();
 
+	//Žc‘œ
+	static constexpr int kShadowMax = 4;
+	Vec2 mOldPosition;
+	Vec2 mShadowPosition[kShadowMax];
+	bool mIsShadowActive;
+	float mShadowAlphat;
+	unsigned int mShadowColor;
+	void Shadow();
+
 };
 
 

@@ -16,7 +16,7 @@ void Player::Init() {
 	mNormalMag = 6.0f;
 
 	//ダッシュ
-	mDushMag = 200.0f;
+	mDushMag = 300.0f;
 
 	//マーキング
 	mIsMarkActive = false;
@@ -25,11 +25,17 @@ void Player::Init() {
 	//ストライク
 	mIsStrikeActive = false;
 	mStrikeEasingt = 0.0f;
+
+	//残像
+	mIsShadowActive = false;
 }
 
 
 
 void Player::Update() {
+
+	//前回ポジションを取得する
+	mOldPosition = mPosition;
 
 	//速度を初期化する
 	mVelocity.setZero();
@@ -56,6 +62,9 @@ void Player::Update() {
 	//マップ内に収める
 	mPosition.x = Clamp(mPosition.x, Map::kMapLeft + (mSize / 2), Map::kMapRight - (mSize / 2));
 	mPosition.y = Clamp(mPosition.y, Map::kMapBottom + (mSize / 2), Map::kMapTop - (mSize / 2));
+
+	//残像処理
+	Shadow();
 
 }
 
@@ -193,9 +202,52 @@ void Player::Strike() {
 
 }
 
+void Player::Shadow() {
+
+	//Aボタン押下時
+	if (Controller::IsTriggerButton(0, Controller::bA)) {
+
+		float distanceX = mPosition.x - mOldPosition.x;
+		float distanceY = mPosition.y - mOldPosition.y;
+
+		float intervalX = distanceX / kShadowMax;
+		float intervalY = distanceY / kShadowMax;
+
+		for (int i = 0; i < kShadowMax; i++) {
+
+			mShadowPosition[i].x = mOldPosition.x + (intervalX * i);
+			mShadowPosition[i].y = mOldPosition.y + (intervalY * i);
+
+		}
+
+		mShadowAlphat = 0.0f;
+		mShadowColor = 0x60606060;
+		mIsShadowActive = true;
+
+	}
+
+	if (mIsShadowActive){
+
+		mShadowAlphat = EasingClamp(0.08f, mShadowAlphat);
+		mShadowColor = ColorEasingMove(0x60606060, 0x60606000, easeLinear(mShadowAlphat));
+
+		if (mShadowAlphat == 1.0f) {
+			mIsShadowActive = false;
+		}
+
+	}
+
+}
+
 
 
 void Player::Draw(Screen& screen) {
+
+	for (int i = 0; i < kShadowMax; i++){
+
+		screen.DrawSquare(mShadowPosition[i], mSize, mShadowColor);
+
+	}
 
 	if (mIsMarkActive){
 
