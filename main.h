@@ -7,6 +7,7 @@
 #include "Ingame.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Tsuchinoko.h"
 #include "collision.h"
 
 //インスタンス化
@@ -15,6 +16,7 @@ Ingame ingame;
 Map map;
 Player player;
 Snake snake[Snake::kMaxSnake];
+Tsuchinoko tsuchinoko;
 
 //スイッチ文で main.cpp を分けるやつ
 enum Scene

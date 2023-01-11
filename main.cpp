@@ -41,6 +41,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				for (int i = 0; i < Snake::kMaxSnake; i++) {
 					snake[i].Init();
 				}
+				tsuchinoko.Init();
 			}
 
 			//プレイヤーアップデート
@@ -50,6 +51,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			for (int i = 0; i < Snake::kMaxSnake; i++) {
 				snake[i].Update();
 			}
+			tsuchinoko.Update();
 
 			//当たり判定
 			for (int i = 0; i < Snake::kMaxSnake; i++) {
@@ -103,6 +105,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			for (int i = 0; i < Snake::kMaxSnake; i++) {
 				snake[i].Draw(screen);
 			}
+			tsuchinoko.Draw(screen);
 			//プレイヤー描画
 			player.Draw(screen);
 

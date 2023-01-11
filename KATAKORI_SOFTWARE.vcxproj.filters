@@ -65,6 +65,9 @@
     <ClCompile Include="Vec2.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
+    <ClCompile Include="Tsuchinoko.cpp">
+      <Filter>KamataEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\audio\Audio.h">
@@ -158,5 +161,6 @@
     <ClInclude Include="Screen.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="collision.h" />
+    <ClInclude Include="Tsuchinoko.h" />
   </ItemGroup>
 </Project>

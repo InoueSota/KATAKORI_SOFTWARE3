@@ -110,6 +110,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Quad.cpp" />
     <ClCompile Include="Screen.cpp" />
+    <ClCompile Include="Tsuchinoko.cpp" />
     <ClCompile Include="Vec2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +151,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="Screen.h" />
+    <ClInclude Include="Tsuchinoko.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="collision.h" />
   </ItemGroup>

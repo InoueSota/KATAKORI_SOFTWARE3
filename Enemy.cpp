@@ -66,13 +66,10 @@ void Snake::Angle() {
 	Vec2 base = { 1,0 };
 	Vec2 tmpDirection = mHeadPosition - mOldHeadPosition[1];
 
-	//Œü‚«ƒxƒNƒgƒ‹‚É‚·‚é
-	tmpDirection = tmpDirection.Normalized();
-
 	//‚È‚·Šp‚ğ‹‚ß‚é
 	float dp = tmpDirection.Dot(base);
 	float cp = tmpDirection.Cross(base);
-	mHeadAngle = atan2(cp, dp);
+	mHeadAngle = atan2(cp, dp); 
 
 }
 
