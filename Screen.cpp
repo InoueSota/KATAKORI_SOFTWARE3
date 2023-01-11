@@ -46,13 +46,13 @@ void Screen::SetScroll(Player& player) {
 
 	if (!player.mIsStrikeActive)
 	{
-		mScroll.x += ( player.mPosition.x - mScroll.x) * 0.05f;
-		mScroll.y += (-player.mPosition.y - mScroll.y) * 0.05f;
+		mScroll.x += ( player.mPosition.x - mScroll.x) * 0.15f;
+		mScroll.y += (-player.mPosition.y - mScroll.y) * 0.15f;
 	}
 	else 
 	{
-		mScroll.x += ( player.mPosition.x - mScroll.x) * 0.7f;
-		mScroll.y += (-player.mPosition.y - mScroll.y) * 0.7f;
+		mScroll.x += ( player.mPosition.x - mScroll.x) * 0.15f;
+		mScroll.y += (-player.mPosition.y - mScroll.y) * 0.15f;
 	}
 	
 

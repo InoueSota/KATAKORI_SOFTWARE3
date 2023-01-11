@@ -15,7 +15,7 @@ public:
 	void BackGroundDraw();
 
 	//デバッグ用
-	static constexpr int kAxisLength = 50;
+	static constexpr int kAxisLength = 66;
 	static constexpr int kLineInterval = 150;
 	Vec2 mXaxisStartPosition[kAxisLength];
 	Vec2 mXaxisEndPosition[kAxisLength];
