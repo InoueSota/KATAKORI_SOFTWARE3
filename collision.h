@@ -52,4 +52,14 @@ void collision(Player &player, Snake &snake) {
 	} else {
 		snake.IsCollision[4] = false;
 	}
+
+	A = player.mPosition.x - snake.mHeadPosition.x;
+	B = player.mPosition.y - snake.mHeadPosition.y;
+	Dis = sqrtf(A * A + B * B);
+	if (Dis <= player.mSize / 2 + snake.mLockonRadius) {
+		snake.IsPlayerLockon = true;
+		snake.mTargetPoint = player.mPosition;
+	} else {
+		snake.IsPlayerLockon = false;
+	}
 }

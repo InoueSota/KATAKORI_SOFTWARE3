@@ -4,6 +4,7 @@
 
 
 
+
 void Snake::Init() {
 	mHeadRadius = 50;
 	mBodyRadius = 30;
@@ -12,8 +13,8 @@ void Snake::Init() {
 	for (int i = 0; i < kMaxFrame; i++){
 		mOldHeadPosition[i] = mHeadPosition;
 	}
-	mTargetPoint.x = rand() % 1280 - (1280 / 2);
-	mTargetPoint.y = rand() % 640 - (640 / 2);
+	mTargetPoint.x = rand() % 6400 - (6400 / 2);
+	mTargetPoint.y = rand() % 3200 - (3200 / 2);
 }
 
 void Snake::Update() {
@@ -38,19 +39,32 @@ void Snake::Move() {
 
 	//ƒ‰ƒ“ƒ_ƒ€‚ÉˆÚ“®’n“_‚ðŒˆ‚ß‚ÄˆÚ“®
 	float rad = atan2(mTargetPoint.y - mHeadPosition.y, mTargetPoint.x - mHeadPosition.x);
+	float rad_2 = 0;
+
+	//if (rad > mHeadAngle + 3.14159) {
+		rad_2 = mHeadAngle + mAngleSpeed;
+	/*	if (rad < mHeadAngle + 3.14159) {
+			rad_2 = rad;
+		}
+	} else {
+		rad_2 = mHeadAngle - mAngleSpeed;
+		if (rad > mHeadAngle + 3.14159) {
+			rad_2 = rad;
+		}
+	}*/
 
 	if ((mTargetPoint.x > mHeadPositionStart.x && mTargetPoint.x > mHeadPosition.x) || (mTargetPoint.x < mHeadPositionStart.x && mTargetPoint.x < mHeadPosition.x)) {
-		mHeadPosition.x += cosf(rad) * mSpeed;
+		mHeadPosition.x += cosf(rad_2) * mSpeed;
 	} else {
 		mHeadPositionStart.x = mHeadPosition.x;
-		mTargetPoint.x = rand() % 1280 - (1280 / 2);
+		mTargetPoint.x = rand() % 6400 - (6400 / 2);
 	}
 
 	if ((mTargetPoint.y > mHeadPositionStart.y && mTargetPoint.y > mHeadPosition.y) || (mTargetPoint.y < mHeadPositionStart.y && mTargetPoint.y < mHeadPosition.y)) {
-		mHeadPosition.y += sinf(rad) * mSpeed;
+		mHeadPosition.y += sinf(rad_2) * mSpeed;
 	} else {
 		mHeadPositionStart.y = mHeadPosition.y;
-		mTargetPoint.y = rand() % 640 - (640 / 2);
+		mTargetPoint.y = rand() % 3200 - (3200 / 2);
 	}
 
 	//Œü‚«‚ð•Ï‚¦‚éˆ—
@@ -163,4 +177,5 @@ void Snake::Draw(Screen& screen) {
 	if (IsCollision[4]) {
 		screen.DrawCircle(mFourthBodyPosition, mBodyRadius / 2, 0xFF000080, kFillModeSolid);
 	}
+	screen.DrawCircle(mHeadPosition, mLockonRadius, 0x0000FF80, kFillModeSolid);
 }

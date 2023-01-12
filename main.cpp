@@ -109,6 +109,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//プレイヤー描画
 			player.Draw(screen);
 
+			Novice::ScreenPrintf(0, 0, "%f", snake[0].mHeadAngle);
+
 			//制作中の操作説明を一時的に描画する
 			Novice::DrawSprite(Screen::kWindowWidth - 420, Screen::kWindowHeight - 220, explanation, 1, 1, 0.0f, WHITE);
 
