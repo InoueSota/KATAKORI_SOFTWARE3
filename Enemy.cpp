@@ -41,9 +41,9 @@ void Snake::Move() {
 	float rad = atan2(mTargetPoint.y - mHeadPosition.y, mTargetPoint.x - mHeadPosition.x);
 	float rad_2 = 0;
 
-	//if (rad > mHeadAngle + 3.14159) {
+	if (rad > mHeadAngle + 3.14159) {
 		rad_2 = mHeadAngle + mAngleSpeed;
-	/*	if (rad < mHeadAngle + 3.14159) {
+		if (rad < mHeadAngle + 3.14159) {
 			rad_2 = rad;
 		}
 	} else {
@@ -51,17 +51,17 @@ void Snake::Move() {
 		if (rad > mHeadAngle + 3.14159) {
 			rad_2 = rad;
 		}
-	}*/
+	}
 
 	if ((mTargetPoint.x > mHeadPositionStart.x && mTargetPoint.x > mHeadPosition.x) || (mTargetPoint.x < mHeadPositionStart.x && mTargetPoint.x < mHeadPosition.x)) {
-		mHeadPosition.x += cosf(rad_2) * mSpeed;
+		mHeadPosition.x += cosf(rad) * mSpeed;
 	} else {
 		mHeadPositionStart.x = mHeadPosition.x;
 		mTargetPoint.x = rand() % 6400 - (6400 / 2);
 	}
 
 	if ((mTargetPoint.y > mHeadPositionStart.y && mTargetPoint.y > mHeadPosition.y) || (mTargetPoint.y < mHeadPositionStart.y && mTargetPoint.y < mHeadPosition.y)) {
-		mHeadPosition.y += sinf(rad_2) * mSpeed;
+		mHeadPosition.y += sinf(rad) * mSpeed;
 	} else {
 		mHeadPositionStart.y = mHeadPosition.y;
 		mTargetPoint.y = rand() % 3200 - (3200 / 2);
