@@ -35,7 +35,7 @@ void Tsuchinoko::Update(Vec2 playerposition) {
 	if (mIsActive && !mIsDeath)
 	{
 		//移動処理
-		//Move(playerposition);
+		Move(playerposition);
 
 		//角度処理
 		SetAngle();
@@ -78,14 +78,14 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 	}*/
 
 	if ((mTargetPoint.x > mCenterPositionStart.x && mTargetPoint.x > mHeadPosition.x) || (mTargetPoint.x < mCenterPositionStart.x && mTargetPoint.x < mHeadPosition.x)) {
-		mCenterPosition.x += cosf(rad) * mSpeed;
+		mCenterPosition.x += cosf(rad) * mCenterSpeed;
 	} else {
 		mCenterPositionStart.x = mCenterPosition.x;
 		mTargetPoint.x = rand() % 6400 - (6400 / 2);
 	}
 
 	if ((mTargetPoint.y > mCenterPositionStart.y && mTargetPoint.y > mHeadPosition.y) || (mTargetPoint.y < mCenterPositionStart.y && mTargetPoint.y < mHeadPosition.y)) {
-		mCenterPosition.y += sinf(rad) * mSpeed;
+		mCenterPosition.y += sinf(rad) * mCenterSpeed;
 	} else {
 		mCenterPositionStart.y = mCenterPosition.y;
 		mTargetPoint.y = rand() % 3200 - (3200 / 2);
@@ -93,18 +93,18 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 
 
 
-	//プレイヤーへの向きベクトル
-	Vec2 toPlayer = { playerPosition.x - mCenterPosition.x, playerPosition.y - mCenterPosition.y };
+	////プレイヤーへの向きベクトル
+	//Vec2 toPlayer = { playerPosition.x - mCenterPosition.x, playerPosition.y - mCenterPosition.y };
 
-	//向きベクトルと速度を正規化する
-	toPlayer = toPlayer.Normalized();
-	mVelocity = mVelocity.Normalized();
+	////向きベクトルと速度を正規化する
+	//toPlayer = toPlayer.Normalized();
+	//mVelocity = mVelocity.Normalized();
 
-	//向きを設定する
-	mVelocity += (toPlayer - mVelocity) * 0.08f;
+	////向きを設定する
+	//mVelocity += (toPlayer - mVelocity) * 0.08f;
 
-	//速度を設定する
-	mVelocity *= mCenterSpeed;
+	////速度を設定する
+	//mVelocity *= mCenterSpeed;
 
 }
 
