@@ -56,6 +56,36 @@ void Tsuchinoko::Move() {
 		mVelocity.x += mSpeed;
 	}
 
+	//ランダムに移動地点を決めて移動
+	float rad = atan2(mTargetPoint.y - mCenterPosition.y, mTargetPoint.x - mCenterPosition.x);
+	float rad_2 = 0;
+
+	/*if (rad > mHeadAngle + 3.14159) {
+		rad_2 = mHeadAngle + mAngleSpeed;
+		if (rad < mHeadAngle + 3.14159) {
+			rad_2 = rad;
+		}
+	} else {
+		rad_2 = mHeadAngle - mAngleSpeed;
+		if (rad > mHeadAngle + 3.14159) {
+			rad_2 = rad;
+		}
+	}*/
+
+	if ((mTargetPoint.x > mCenterPositionStart.x && mTargetPoint.x > mHeadPosition.x) || (mTargetPoint.x < mCenterPositionStart.x && mTargetPoint.x < mHeadPosition.x)) {
+		mCenterPosition.x += cosf(rad) * mSpeed;
+	} else {
+		mCenterPositionStart.x = mCenterPosition.x;
+		mTargetPoint.x = rand() % 6400 - (6400 / 2);
+	}
+
+	if ((mTargetPoint.y > mCenterPositionStart.y && mTargetPoint.y > mHeadPosition.y) || (mTargetPoint.y < mCenterPositionStart.y && mTargetPoint.y < mHeadPosition.y)) {
+		mCenterPosition.y += sinf(rad) * mSpeed;
+	} else {
+		mCenterPositionStart.y = mCenterPosition.y;
+		mTargetPoint.y = rand() % 3200 - (3200 / 2);
+	}
+
 	//コントローラーで動かす処理
 	/*
 	//スティックの方向を取得する
@@ -125,4 +155,23 @@ void Tsuchinoko::Draw(Screen& screen) {
 		screen.DrawPicture(mBodyPosition[i], mBodyRadius, mCenterAngle, 100, 100, tsuchinoko);
 	}
 
+	//当たり判定描画
+
+	//当たり判定のデバッグ
+	if (IsCollision[0]) {
+		screen.DrawCircle(mHeadPosition, mRadius / 2, 0xFF000080, kFillModeSolid);
+	}
+	if (IsCollision[1]) {
+		screen.DrawCircle(mBodyPosition[0], mBodyRadius / 2, 0xFF000080, kFillModeSolid);
+	}
+	if (IsCollision[2]) {
+		screen.DrawCircle(mBodyPosition[1], mBodyRadius / 2, 0xFF000080, kFillModeSolid);
+	}
+	if (IsCollision[3]) {
+		screen.DrawCircle(mBodyPosition[2], mBodyRadius / 2, 0xFF000080, kFillModeSolid);
+	}
+	if (IsCollision[4]) {
+		screen.DrawCircle(mTailPosition, mRadius / 2, 0xFF000080, kFillModeSolid);
+	}
+	screen.DrawCircle(mCenterPosition, mLockonRadius, 0x0000FF80, kFillModeSolid);
 }

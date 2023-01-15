@@ -16,7 +16,7 @@ Ingame ingame;
 Map map;
 Player player;
 Snake snake[Snake::kMaxSnake];
-Tsuchinoko tsuchinoko;
+Tsuchinoko tsuchinoko[Tsuchinoko::kMaxTsuchinoko];
 
 //スイッチ文で main.cpp を分けるやつ
 enum Scene

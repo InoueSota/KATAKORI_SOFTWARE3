@@ -14,6 +14,13 @@ public:
 	void Update();
 	void Draw(Screen& screen);
 
+	static constexpr int kMaxTsuchinoko = 10;//敵の最大数
+	Vec2 mCenterPositionStart;//スタート地点
+	Vec2 mTargetPoint;//目標地点
+	bool IsPlayerLockon = false;//プレイヤーを補足しているかどうか
+	int mLockonRadius = 300;//敵の視界の範囲
+
+	bool IsCollision[5] = {};
 
 	//中心座標
 	Vec2 mCenterPosition;

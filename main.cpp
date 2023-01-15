@@ -41,7 +41,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				for (int i = 0; i < Snake::kMaxSnake; i++) {
 					snake[i].Init();
 				}
-				tsuchinoko.Init();
+				for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
+					tsuchinoko[i].Init();
+				}
 			}
 
 			//プレイヤーアップデート
@@ -51,11 +53,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			for (int i = 0; i < Snake::kMaxSnake; i++) {
 				snake[i].Update();
 			}
-			tsuchinoko.Update();
+			for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
+				tsuchinoko[i].Update();
+			}
 
 			//当たり判定
 			for (int i = 0; i < Snake::kMaxSnake; i++) {
 				collision(player, snake[i]);
+			}
+			for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
+				collisionTsuchinoko(player, tsuchinoko[i]);
 			}
 
 			//スクロール値をアップデートする
@@ -105,7 +112,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			for (int i = 0; i < Snake::kMaxSnake; i++) {
 				snake[i].Draw(screen);
 			}
-			tsuchinoko.Draw(screen);
+			for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
+				tsuchinoko[i].Draw(screen);
+			}
 			//プレイヤー描画
 			player.Draw(screen);
 
