@@ -19,7 +19,7 @@ void UI::Init() {
 	//コンボ
 	mIsCombo = false;
 	mIsComboScaleAnime = false;
-	mComboPosition.x = Screen::kWindowWidth - mTimeUISize / 2.0 - 5.0f;
+	mComboPosition.x = Screen::kWindowWidth - mTimeUISize / 2.0 - 15.0f;
 	mComboPosition.y = 100.0f;
 	mComboScale.x = 1.0f;
 	mComboScale.y = 1.0f;
@@ -57,8 +57,8 @@ void UI::Combo() {
 		mCombo++;
 		mComboCoolTime = 0;
 		//拡縮アニメーション
-		mComboScale.x = 2.0f;
-		mComboScale.y = 2.0f;
+		mComboScale.x = 1.8f;
+		mComboScale.y = 1.8f;
 		mIsComboScaleAnime = true;
 		mIsCombo = false;
 	}
@@ -73,16 +73,14 @@ void UI::Combo() {
 
 	//拡縮アニメーション
 	if (mIsComboScaleAnime) {
-		mComboScale.x -= 0.2f;
-		mComboScale.y -= 0.2f;
-		mComboScale.x = Clamp(mComboScale.x, 1.0f, 2.0f);
-		mComboScale.y = Clamp(mComboScale.y, 1.0f, 2.0f);
+		mComboScale.x -= 0.1f;
+		mComboScale.y -= 0.1f;
+		mComboScale.x = Clamp(mComboScale.x, 1.0f, 1.8f);
+		mComboScale.y = Clamp(mComboScale.y, 1.0f, 1.8f);
 		if (mComboScale.x == 1.0f) {
 			mIsComboScaleAnime = false;
 		}
-		
 	}
-
 }
 void UI::Draw(Screen& screen) {
 

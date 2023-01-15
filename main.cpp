@@ -75,6 +75,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 			for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
 
+				collisionTsuchinoko(player, tsuchinoko[i]);
 				//頭と尾
 				if (!tsuchinoko[i].mIsDeath && (Collision(player.mPosition, player.mRadius, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius) || Collision(player.mPosition, player.mRadius, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius)))
 				{
