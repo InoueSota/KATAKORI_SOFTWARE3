@@ -28,8 +28,11 @@ public:
 	Vec2 mTargetPoint;//目標地点
 	void Move();
 	void Angle();
-	int mSpeed = 5;
+	const int mSpeed = 5;
+	const float mAngleSpeed = 0.1;//回転の速さ
 	bool IsCollision[5] = {};
+	bool IsPlayerLockon = false;//プレイヤーを補足しているかどうか
+	int mLockonRadius = 300;//敵の視界の範囲
 
 	static constexpr int kMaxSnake = 10;//敵の最大数
 
