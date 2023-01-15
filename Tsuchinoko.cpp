@@ -1,77 +1,78 @@
 #include "Tsuchinoko.h"
 #include "ControllerInput.h"
-#include "Function.h"
 #include "Key.h"
+#include "Ingame.h"
+#include "Function.h"
 
 
 
 void Tsuchinoko::Init() {
 
-	mCenterPosition.x = 100;
-	mCenterPosition.y = 0;
-	mSpeed = 5.0f;
+	mCenterSpeed = 5.0f;
+	mVelocity.setZero();
+	
+	//生成
+	mIsActive = false;
+	mIsDeath = false;
 
 	//頭と尾の半径
-	mRadius = 75.0f;
+	mSize = 75.0f;
+	mRadius = mSize / 2.0f;
 
 	//体の半径
-	mBodyRadius = 50.0f;
+	mBodySize = 50.0f;
+	mBodyRadius = mBodySize / 2.0f;
 
 }
 
 
 
-void Tsuchinoko::Update() {
+void Tsuchinoko::Update(Vec2 playerposition) {
 
-	//速度を0に初期化する
-	mVelocity.setZero();
+	//生成処理
+	Make(playerposition);
 
-	//移動処理
-	Move();
+	if (mIsActive && !mIsDeath)
+	{
+		//移動処理
+		//Move(playerposition);
 
-	//角度処理
-	SetAngle();
+		//角度処理
+		SetAngle();
 
-	//ポジションに速度を代入する
-	mCenterPosition += mVelocity;
+		//ポジションに速度を代入する
+		mCenterPosition += mVelocity;
 
-	//本体
-	Follow();
+		//本体
+		Follow();
+	}
+}
+
+void Tsuchinoko::Make(Vec2 playerPosition) {
+
+	if (!mIsActive && !mIsDeath)
+	{
+		mCenterPosition.x = RAND(Map::kMapLeft, Map::kMapRight);
+		mCenterPosition.y = RAND(Map::kMapBottom, Map::kMapTop);
+		mIsActive = true;
+	}
 
 }
 
-void Tsuchinoko::Move() {
+void Tsuchinoko::Move(Vec2 playerPosition) {
 
-	//移動処理
-	if (Key::IsPress(DIK_UP)) {
-		mVelocity.y += mSpeed;
-	}
-	if (Key::IsPress(DIK_DOWN)) {
-		mVelocity.y -= mSpeed;
-	}
-	if (Key::IsPress(DIK_LEFT)) {
-		mVelocity.x -= mSpeed;
-	}
-	if (Key::IsPress(DIK_RIGHT)) {
-		mVelocity.x += mSpeed;
-	}
+	//プレイヤーへの向きベクトル
+	Vec2 toPlayer = { playerPosition.x - mCenterPosition.x, playerPosition.y - mCenterPosition.y };
 
-	//コントローラーで動かす処理
-	/*
-	//スティックの方向を取得する
-	int tmpX, tmpY;
-	Controller::GetLeftStick(0, tmpX, tmpY);
+	//向きベクトルと速度を正規化する
+	toPlayer = toPlayer.Normalized();
+	mVelocity = mVelocity.Normalized();
 
-	//int型 の値を float型 に入れる（int型のままだと計算が０か１になる）
-	mCenterVelocity.x = tmpX;
-	mCenterVelocity.y = tmpY;
+	//向きを設定する
+	mVelocity += (toPlayer - mVelocity) * 0.08f;
 
-	//最大値を１にする
-	mCenterVelocity = mCenterVelocity.Normalized();
-
-	//ｎ倍する
-	mCenterVelocity *= mCenterSpeed;
-	*/
+	//速度を設定する
+	mVelocity *= mCenterSpeed;
 
 }
 
@@ -93,10 +94,10 @@ void Tsuchinoko::SetAngle() {
 
 void Tsuchinoko::Follow() {
 
-	mHeadPosition.x = mCenterPosition.x + ( cosf(mCenterAngle + Degree(90)) * (150.0f + (mRadius - mBodyRadius)));
-	mHeadPosition.y = mCenterPosition.y + (-sinf(mCenterAngle + Degree(90)) * (150.0f + (mRadius - mBodyRadius)));
-	mTailPosition.x = mCenterPosition.x + ( cosf(mCenterAngle + Degree(90)) * (-150.0f - (mRadius - mBodyRadius)));
-	mTailPosition.y = mCenterPosition.y + (-sinf(mCenterAngle + Degree(90)) * (-150.0f - (mRadius - mBodyRadius)));
+	mHeadPosition.x = mCenterPosition.x + ( cosf(mCenterAngle + Degree(90)) * (150.0f + (mSize - mBodySize)));
+	mHeadPosition.y = mCenterPosition.y + (-sinf(mCenterAngle + Degree(90)) * (150.0f + (mSize - mBodySize)));
+	mTailPosition.x = mCenterPosition.x + ( cosf(mCenterAngle + Degree(90)) * (-150.0f - (mSize - mBodySize)));
+	mTailPosition.y = mCenterPosition.y + (-sinf(mCenterAngle + Degree(90)) * (-150.0f - (mSize - mBodySize)));
 
 	for (int i = 0; i < kBodyMax; i++)
 	{
@@ -115,14 +116,18 @@ void Tsuchinoko::Draw(Screen& screen) {
 		mIsLoadTexture = true;
 	}
 
-	//頭と尾の描画
-	screen.DrawPicture(mHeadPosition, mRadius, mCenterAngle, 100, 100, tsuchinoko);
-	screen.DrawPicture(mTailPosition, mRadius, mCenterAngle, 100, 100, tsuchinoko);
-
-	//体の描画
-	for (int i = 0; i < kBodyMax; i++)
+	//生成されていて死んでいない時
+	if (mIsActive && !mIsDeath)
 	{
-		screen.DrawPicture(mBodyPosition[i], mBodyRadius, mCenterAngle, 100, 100, tsuchinoko);
+		//頭と尾の描画
+		screen.DrawPicture(mHeadPosition, mSize, mCenterAngle, 100, 100, tsuchinoko);
+		screen.DrawPicture(mTailPosition, mSize, mCenterAngle, 100, 100, tsuchinoko);
+
+		//体の描画
+		for (int i = 0; i < kBodyMax; i++)
+		{
+			screen.DrawPicture(mBodyPosition[i], mBodySize, mCenterAngle, 100, 100, tsuchinoko);
+		}
 	}
 
 }

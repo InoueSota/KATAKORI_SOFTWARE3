@@ -11,6 +11,7 @@ void Player::Init() {
 	mPosition.setZero();
 	mVelocity.setZero();
 	mSize = 64;
+	mRadius = mSize / 2.0f;
 
 	//通常移動
 	mNormalMag = 6.0f;
@@ -26,13 +27,18 @@ void Player::Init() {
 	mIsStrikeActive = false;
 	mStrikeEasingt = 0.0f;
 
+	//ストライク演出
+	for (int i = 0; i < kStrikeLineMax; i++) {
+		mIsStrikeLineActive[i] = false;
+	}
+
 	//残像
 	mIsShadowActive = false;
 }
 
 
 
-void Player::Update() {
+void Player::Update(Screen& screen) {
 
 	//前回ポジションを取得する
 	mOldPosition = mPosition;
@@ -58,6 +64,7 @@ void Player::Update() {
 
 	//ストライク
 	Strike();
+	StrikeLine(screen);
 
 	//マップ内に収める
 	mPosition.x = Clamp(mPosition.x, Map::kMapLeft + (mSize / 2), Map::kMapRight - (mSize / 2));
@@ -202,6 +209,66 @@ void Player::Strike() {
 
 }
 
+void Player::StrikeLine(Screen& screen) {
+
+	if (mIsStrikeActive && 0.2f <= mStrikeEasingt && mStrikeEasingt <= 0.85f)
+	{
+		//基準線とストライクの方向を取得
+		Vec2 base = { 1,0 };
+		Vec2 tmpDirection = mStrikeEndPosition - mStrikeStartPosition;
+
+		//方向を正規化してｎ倍する
+		tmpDirection = tmpDirection.Normalized();
+		tmpDirection = tmpDirection * (100 / screen.GetZoom());
+
+		//なす角を求める
+		float dp = tmpDirection.Dot(base);
+		float cp = tmpDirection.Cross(base);
+		mStrikeLineAngle = atan2(cp, dp);
+
+		//生成位置の最少値と最大値
+		float randminX = mPosition.x - ((float)Screen::kWindowWidth  / screen.GetZoom());
+		float randmaxX = mPosition.x + ((float)Screen::kWindowWidth  / screen.GetZoom());
+		float randminY = mPosition.y - ((float)Screen::kWindowHeight / screen.GetZoom());
+		float randmaxY = mPosition.y + ((float)Screen::kWindowHeight / screen.GetZoom());
+
+		for (int i = 0; i < kStrikeLineMax; i++)
+		{
+			//生成
+			if (!mIsStrikeLineActive[i])
+			{
+				mStrikeLinePosition[i].x = RAND(randminX, randmaxX);
+				mStrikeLinePosition[i].y = RAND(randminY, randmaxY);
+				mStrikeLinePosition[i] += tmpDirection;
+				mStrikeLineWidth[i] = RAND(200, 400);
+				mStrikeLineHeight[i] = RAND(2.5f, 3.5f);
+				mStrikeLineAlphat[i] = 0.0f;
+				mStrikeLineColor[i] = 0x50505000;
+				mIsStrikeLineActive[i] = true;
+				break;
+			}
+		}
+	}
+	for (int i = 0; i < kStrikeLineMax; i++) 
+	{
+		if (mIsStrikeLineActive[i])
+		{
+			//透明度を変える
+			mStrikeLineAlphat[i] = EasingClamp(0.015f, mStrikeLineAlphat[i]);
+			if (mStrikeLineAlphat[i] < 0.5f) {
+				mStrikeLineColor[i] = ColorEasingMove(0x50505000, 0x505050BB, easeLinear(mStrikeLineAlphat[i] * 2));
+			}
+			else {
+				mStrikeLineColor[i] = ColorEasingMove(0x505050BB, 0x50505000, easeLinear(mStrikeLineAlphat[i] * 2 - 0.5f));
+			}
+			if (mStrikeLineAlphat[i] == 1.0f) {
+				mIsStrikeLineActive[i] = false;
+			}
+		}
+	}
+
+}
+
 void Player::Shadow() {
 
 	//Aボタン押下時
@@ -243,12 +310,14 @@ void Player::Shadow() {
 
 void Player::Draw(Screen& screen) {
 
+	//残像描画
 	for (int i = 0; i < kShadowMax; i++){
 
 		screen.DrawSquare(mShadowPosition[i], mSize, mShadowColor);
 
 	}
 
+	//マーク描画
 	if (mIsMarkActive){
 
 		screen.DrawLine(mPosition, mMarkPosition, WHITE);
@@ -256,6 +325,13 @@ void Player::Draw(Screen& screen) {
 
 	}
 
+	//プレイヤー本体描画
 	screen.DrawSquare(mPosition, mSize, 0x606060FF);
+
+	//ストライク中の線描画
+	for (int i = 0; i < kStrikeLineMax; i++)
+	{
+		screen.DrawRectAngle(mStrikeLinePosition[i], mStrikeLineWidth[i], mStrikeLineHeight[i], mStrikeLineAngle, mStrikeLineColor[i]);
+	}
 
 }

@@ -52,10 +52,14 @@ public:
 	/// </summary>
 	void SetScroll(Player& player);
 
+	inline Vec2 GetScroll() { return mScroll; }
+
 	/// <summary>
 	/// ズーム
 	/// </summary>
 	void SetZoom();
+
+	inline float GetZoom() { return mZoom; }
 
 
 	//--------------------------------------------------------------------------------------------//
@@ -109,7 +113,18 @@ public:
 	void DrawSquare(Vec2 position, float size, unsigned int color = WHITE, FillMode fillMode = kFillModeSolid);
 
 	/// <summary>
-	/// 長方形を描画する
+	/// 長方形を描画する（傾きあり）
+	/// </summary>
+	/// <param name="position">中心座標</param>
+	/// <param name="width">横幅</param>
+	/// <param name="height">縦幅</param>
+	/// <param name="angle">傾き</param>
+	/// <param name="color">描画するスプライトの色</param>
+	/// <param name="fillMode">塗りつぶしモード</param>
+	void DrawRectAngle(Vec2 position, float width, float height, float angle, unsigned int color = WHITE, FillMode fillMode = kFillModeSolid);
+	
+	/// <summary>
+	/// 長方形を描画する（傾きなし）
 	/// </summary>
 	/// <param name="position">中心座標</param>
 	/// <param name="width">横幅</param>
@@ -129,6 +144,49 @@ public:
 	/// <param name="textureHandle">テクスチャのハンドル</param>
 	/// <param name="color">描画するスプライトの色</param>
 	void DrawPicture(Vec2 position, float size, float angle, float srcW, float srcH, int textureHandle, unsigned int color = WHITE);
+
+	/// <summary>
+	/// 連番画像（正方形）を描画する
+	/// </summary>
+	/// <param name="position">中心座標</param>
+	/// <param name="size">大きさ(= 直径)</param>
+	/// <param name="srcX">画像上の描画したい範囲左上座標 X（変数）</param>
+	/// <param name="srcW">画像上の描画したい範囲横幅</param>
+	/// <param name="srcH">画像上の描画したい範囲縦幅</param>
+	/// <param name="sheets">画像枚数</param>
+	/// <param name="frame">何フレームで切り替えるか</param>
+	/// <param name="frameVariable">加算しているフレームの変数</param>
+	/// <param name="textureHandle">テクスチャのハンドル</param>
+	/// <param name="color">描画するスプライトの色</param>
+	void DrawAnime(Vec2 position, float size, int srcX, int srcW, int srcH, int sheets, int frame, int& frameVariable, int textureHandle, unsigned int color = WHITE);
+
+	/// <summary>
+	/// ＵＩ（スクロールしない）（長方形）
+	/// </summary>
+	/// <param name="position">中心座標</param>
+	/// <param name="width">横幅</param>
+	/// <param name="height">縦幅</param>
+	/// <param name="angle">傾き</param>
+	/// <param name="srcX">画像上の描画したい範囲左上座標 X（変数）</param>
+	/// <param name="srcW">画像上の描画したい範囲横幅</param>
+	/// <param name="srcH">画像上の描画したい範囲縦幅</param>
+	/// <param name="textureHandle">テクスチャのハンドル</param>
+	/// <param name="color">描画するスプライトの色</param>
+	/// <param name="scale">大きさを変化させる</param>
+	void DrawUI(Vec2 position, float width, float height, int srcX, int srcW, int srcH, int textureHandle, unsigned int color = WHITE, Vec2 scale = { 1.0f, 1.0f });
+
+	/// <summary>
+	/// ＵＩ（スクロールしない）（正方形）
+	/// </summary>
+	/// <param name="position">中心座標</param>
+	/// <param name="size">大きさ(= 直径)</param>
+	/// <param name="srcX">画像上の描画したい範囲左上座標 X（変数）</param>
+	/// <param name="srcW">画像上の描画したい範囲横幅</param>
+	/// <param name="srcH">画像上の描画したい範囲縦幅</param>
+	/// <param name="textureHandle">テクスチャのハンドル</param>
+	/// <param name="color">描画するスプライトの色</param>
+	/// <param name="scale">大きさを変化させる</param>
+	void DrawUI(Vec2 position, float size, int srcX, int srcW, int srcH, int textureHandle, unsigned int color = WHITE, Vec2 scale = { 1.0f, 1.0f });
 
 
 	//--------------------------------------------------------------------------------------------//

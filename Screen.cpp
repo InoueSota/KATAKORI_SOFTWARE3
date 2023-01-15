@@ -10,7 +10,7 @@
 void Screen::Init() {
 	mWorldCenter = { kWindowWidth / 2, kWindowHeight / 2 };
 	mScroll.setZero();
-	mZoom = 1.0f;
+	mZoom = 0.4f;
 	mScreenShake.setZero();
 };
 
@@ -46,15 +46,14 @@ void Screen::SetScroll(Player& player) {
 
 	if (!player.mIsStrikeActive)
 	{
-		mScroll.x += ( player.mPosition.x - mScroll.x) * 0.15f;
-		mScroll.y += (-player.mPosition.y - mScroll.y) * 0.15f;
+		mScroll.x += (( player.mPosition.x * mZoom) - mScroll.x) * 0.15f;
+		mScroll.y += ((-player.mPosition.y * mZoom) - mScroll.y) * 0.15f;
 	}
 	else 
 	{
-		mScroll.x += ( player.mPosition.x - mScroll.x) * 0.15f;
-		mScroll.y += (-player.mPosition.y - mScroll.y) * 0.15f;
+		mScroll.x += (( player.mPosition.x * mZoom) - mScroll.x) * 0.15f;
+		mScroll.y += ((-player.mPosition.y * mZoom) - mScroll.y) * 0.15f;
 	}
-	
 
 }
 
@@ -68,6 +67,8 @@ void Screen::SetZoom() {
 	{
 		mZoom -= 0.01f;
 	}
+
+	mZoom = Clamp(mZoom, 0.1f, 5.0f);
 
 }
 
@@ -99,9 +100,9 @@ void Screen::DrawCircle(Vec2 Position, float radius, unsigned int color, FillMod
 }
 
 
-void Screen::DrawRectAngle(Vec2 Position, float Width, float Height, unsigned int color, FillMode fillMode) {
-	Quad OriginalPosition = RectAssign(Width, Height);
-	Quad Rect = Transform(OriginalPosition, MakeAffineMatrix({ mZoom, mZoom }, 0.0f, ScreenTransform(Position)));
+void Screen::DrawRectAngle(Vec2 position, float width, float height, float angle, unsigned int color, FillMode fillMode) {
+	Quad OriginalPosition = RectAssign(width, height);
+	Quad Rect = Transform(OriginalPosition, MakeAffineMatrix({ mZoom, mZoom }, angle, ScreenTransform(position)));
 	if (fillMode == kFillModeSolid) {
 		Novice::DrawQuad((int)Rect.LeftTop.x, (int)Rect.LeftTop.y, (int)Rect.RightTop.x, (int)Rect.RightTop.y, (int)Rect.LeftBottom.x, (int)Rect.LeftBottom.y, (int)Rect.RightBottom.x, (int)Rect.RightBottom.y, 0, 0, 0, 0, 192, color);
 	}
@@ -114,6 +115,11 @@ void Screen::DrawRectAngle(Vec2 Position, float Width, float Height, unsigned in
 }
 
 
+void Screen::DrawRectAngle(Vec2 Position, float Width, float Height, unsigned int color, FillMode fillMode) {
+	DrawRectAngle(Position, Width, Height, 0.0f, color, fillMode);
+}
+
+
 void Screen::DrawSquare(Vec2 Position, float size, unsigned int color, FillMode fillMode) {
 	DrawRectAngle(Position, size, size, color, fillMode);
 }
@@ -123,6 +129,30 @@ void Screen::DrawPicture(Vec2 Position, float size, float angle, float srcW, flo
 	Quad OriginalPosition = RectAssign(size, size);
 	Quad Rect = Transform(OriginalPosition, MakeAffineMatrix({ mZoom, mZoom }, angle, ScreenTransform(Position)));
 	Novice::DrawQuad((int)Rect.LeftTop.x, (int)Rect.LeftTop.y, (int)Rect.RightTop.x, (int)Rect.RightTop.y, (int)Rect.LeftBottom.x, (int)Rect.LeftBottom.y, (int)Rect.RightBottom.x, (int)Rect.RightBottom.y, 0, 0, srcW, srcH, textureHandle, color);
+}
+
+
+void Screen::DrawAnime(Vec2 Position, float size, int srcX, int srcW, int srcH, int sheets, int frame, int& frameVariable, int textureHandle, unsigned int color) {
+	Quad OriginalPosition = RectAssign(size, size);
+	Quad Rect = Transform(OriginalPosition, MakeAffineMatrix({ mZoom,mZoom }, 0.0f, ScreenTransform(Position)));
+	srcX = srcW * (frameVariable / frame);
+	if (srcX >= srcW * sheets) {
+		frameVariable = 0;
+		srcX = 0;
+	}
+	Novice::DrawQuad((int)Rect.LeftTop.x, (int)Rect.LeftTop.y, (int)Rect.RightTop.x, (int)Rect.RightTop.y, (int)Rect.LeftBottom.x, (int)Rect.LeftBottom.y, (int)Rect.RightBottom.x, (int)Rect.RightBottom.y, srcX, 0, srcW, srcH, textureHandle, color);
+}
+
+
+void Screen::DrawUI(Vec2 Position, float width, float height, int srcX, int srcW, int srcH, int textureHandle, unsigned int color, Vec2 scale) {
+	Quad OriginalPosition = RectAssign(width, height);
+	Quad Rect = Transform(OriginalPosition, MakeAffineMatrix(scale, 0.0f, Position));
+	Novice::DrawQuad((int)Rect.LeftTop.x, (int)Rect.LeftTop.y, (int)Rect.RightTop.x, (int)Rect.RightTop.y, (int)Rect.LeftBottom.x, (int)Rect.LeftBottom.y, (int)Rect.RightBottom.x, (int)Rect.RightBottom.y, srcX, 0, srcW, srcH, textureHandle, color);
+}
+
+
+void Screen::DrawUI(Vec2 Position, float size, int srcX, int srcW, int srcH, int textureHandle, unsigned int color, Vec2 scale) {
+	DrawUI(Position, size, size, srcX, srcW, srcH, textureHandle, color, scale);
 }
 
 

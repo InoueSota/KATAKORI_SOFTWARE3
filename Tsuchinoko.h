@@ -11,15 +11,26 @@ public:
 	}
 
 	void Init();
-	void Update();
+	void Update(Vec2 playerposition);
 	void Draw(Screen& screen);
+
+	static constexpr int kMaxTsuchinoko = 10;
 
 
 	//’†SÀ•W
 	Vec2 mCenterPosition;
 	Vec2 mVelocity;
-	float mSpeed;
-	void Move();
+	float mCenterSpeed;
+
+
+	//¶¬ˆ—
+	bool mIsActive;
+	bool mIsDeath;
+	void Make(Vec2 playerPosition);
+
+
+	//ˆÚ“®ˆ—
+	void Move(Vec2 playerPosition);
 
 
 	//Šp“xˆ—
@@ -30,12 +41,14 @@ public:
 	//“ª‚Æ”ö
 	Vec2 mHeadPosition;
 	Vec2 mTailPosition;
-	int mRadius;
+	float mSize;
+	float mRadius;
 
 	//‘Ì
 	static constexpr int kBodyMax = 3;
 	Vec2 mBodyPosition[kBodyMax];
-	int mBodyRadius;
+	float mBodySize;
+	float mBodyRadius;
 	void Follow();
 
 

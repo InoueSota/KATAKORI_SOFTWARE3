@@ -1,9 +1,111 @@
 #include "Ingame.h"
 #include "Player.h"
+#include "Function.h"
 
 
 
-void Ingame::Init() {
+//ゲーム中のＵＩ
+void UI::Init() {
+
+	//制限時間
+	mTimeUISize = 48;
+	mTimePosition[0].x = Screen::kWindowWidth / 2.0 - mTimeUISize / 2.0 - 5.0f;
+	mTimePosition[0].y = mTimeUISize / 2.0 + 5.0f;
+	mTimePosition[1].x = Screen::kWindowWidth / 2.0 + mTimeUISize / 2.0 + 5.0f;
+	mTimePosition[1].y = mTimePosition[0].y;
+	mTimeLeft = kTimeLimit;
+	mTimeFrame = 0;
+	
+	//コンボ
+	mIsCombo = false;
+	mIsComboScaleAnime = false;
+	mComboPosition.x = Screen::kWindowWidth - mTimeUISize / 2.0 - 5.0f;
+	mComboPosition.y = 100.0f;
+	mComboScale.x = 1.0f;
+	mComboScale.y = 1.0f;
+	mCombo = 0;
+	mComboCoolTime = 0;
+
+}
+void UI::Update() {
+
+	//制限時間
+	TimeLimit();
+
+	//コンボ
+	Combo();
+}
+void UI::TimeLimit() {
+
+	//フレームが60になったら一秒経過
+	if (mTimeFrame == 60)
+	{
+		mTimeElapsed++;
+		mTimeFrame = 0;
+	}
+
+	//時間のフレームを加算する
+	mTimeFrame++;
+
+	//残り時間 = 制限時間 - 経過時間
+	mTimeLeft = kTimeLimit - mTimeElapsed;
+}
+void UI::Combo() {
+
+	//コンボを足す
+	if (mIsCombo) {
+		mCombo++;
+		mComboCoolTime = 0;
+		//拡縮アニメーション
+		mComboScale.x = 2.0f;
+		mComboScale.y = 2.0f;
+		mIsComboScaleAnime = true;
+		mIsCombo = false;
+	}
+
+	//クールタイムを加算する
+	mComboCoolTime++;
+
+	//コンボの初期化
+	if (mComboCoolTime > kComboCoolTime) {
+		mCombo = 0;
+	}
+
+	//拡縮アニメーション
+	if (mIsComboScaleAnime) {
+		mComboScale.x -= 0.2f;
+		mComboScale.y -= 0.2f;
+		mComboScale.x = Clamp(mComboScale.x, 1.0f, 2.0f);
+		mComboScale.y = Clamp(mComboScale.y, 1.0f, 2.0f);
+		if (mComboScale.x == 1.0f) {
+			mIsComboScaleAnime = false;
+		}
+		
+	}
+
+}
+void UI::Draw(Screen& screen) {
+
+	if (!mIsLoadTexture) {
+		mTimeNumber = Novice::LoadTexture("./Resources/UI/Time/number.png");
+		mIsLoadTexture = true;
+	}
+
+	//制限時間
+	//10の位
+	screen.DrawUI(mTimePosition[0], mTimeUISize, 32 * (mTimeLeft / 10), 32, 32, mTimeNumber, WHITE);
+	//1の位
+	screen.DrawUI(mTimePosition[1], mTimeUISize, 32 * (mTimeLeft % 10), 32, 32, mTimeNumber, WHITE);
+
+	//コンボ
+	//1の位
+	screen.DrawUI(mComboPosition, mTimeUISize, 32 * mCombo, 32, 32, mTimeNumber, WHITE, mComboScale);
+
+}
+
+
+//マップ
+void Map::Init() {
 
 	for (int i = 0; i < kAxisLength; i++)
 	{
@@ -18,8 +120,7 @@ void Ingame::Init() {
 	}
 
 }
-
-void Ingame::DebagUpdate(Player& player) {
+void Map::Update(Player& player) {
 
 	for (int i = 0; i < kAxisLength; i++)
 	{
@@ -36,8 +137,7 @@ void Ingame::DebagUpdate(Player& player) {
 	}
 
 }
-
-bool Ingame::XaxisNearPlayer(Vec2 startposition, Vec2 endposition, Player& player) {
+bool Map::XaxisNearPlayer(Vec2 startposition, Vec2 endposition, Player& player) {
 
 	float left  = player.mPosition.x - (Screen::kWindowWidth / 2);
 	float right = player.mPosition.x + (Screen::kWindowWidth / 2);
@@ -46,7 +146,7 @@ bool Ingame::XaxisNearPlayer(Vec2 startposition, Vec2 endposition, Player& playe
 	}
 	return false;
 }
-bool Ingame::YaxisNearPlayer(Vec2 startposition, Vec2 endposition, Player& player) {
+bool Map::YaxisNearPlayer(Vec2 startposition, Vec2 endposition, Player& player) {
 
 	float top    = player.mPosition.y + (Screen::kWindowHeight / 2);
 	float bottom = player.mPosition.y - (Screen::kWindowHeight / 2);
@@ -55,24 +155,15 @@ bool Ingame::YaxisNearPlayer(Vec2 startposition, Vec2 endposition, Player& playe
 	}
 	return false;
 }
+void Map::Draw(Screen& screen) {
 
-void Ingame::DebagDraw(Screen& screen) {
+	Novice::DrawBox(0, 0, Screen::kWindowWidth, Screen::kWindowHeight, 0.0, 0x589E35FF, kFillModeSolid);
 
 	for (int i = 0; i < kAxisLength; i++)
 	{
 		screen.DrawLine(mXaxisStartPosition[i], mXaxisEndPosition[i]);
 		screen.DrawLine(mYaxisStartPosition[i], mYaxisEndPosition[i]);
 	}
-
-}
-
-void Ingame::BackGroundDraw() {
-
-	Novice::DrawBox(0, 0, Screen::kWindowWidth, Screen::kWindowHeight, 0.0, 0x589E35FF, kFillModeSolid);
-
-}
-
-void Map::Draw(Screen& screen) {
 
 	screen.DrawLine({ kMapLeft, kMapTop }, { kMapRight, kMapTop }, BLACK);
 	screen.DrawLine({ kMapLeft, kMapTop }, { kMapLeft, kMapBottom }, BLACK);

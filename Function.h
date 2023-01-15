@@ -24,4 +24,5 @@ float Radian(float radian);
 
 /*@ƒ‰ƒ“ƒ_ƒ€@*/
 int RAND(int min, int max);
+float RAND(float min, float max);
 void SRAND();
