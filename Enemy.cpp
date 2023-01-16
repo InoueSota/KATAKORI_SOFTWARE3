@@ -177,5 +177,5 @@ void Snake::Draw(Screen& screen) {
 	if (IsCollision[4]) {
 		screen.DrawCircle(mFourthBodyPosition, mBodyRadius / 2, 0xFF000080, kFillModeSolid);
 	}
-	screen.DrawCircle(mHeadPosition, mLockonRadius, 0x0000FF80, kFillModeSolid);
+	//screen.DrawCircle(mHeadPosition, mLockonRadius, 0x0000FF80, kFillModeSolid);
 }

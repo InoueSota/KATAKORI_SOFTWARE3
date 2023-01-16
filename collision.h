@@ -121,15 +121,24 @@ void collisionTsuchinoko(Player& player, Tsuchinoko& tsuchinoko) {
 	}
 }
 
-bool Collision(Vec2 playerPosition, float playerRadius, Vec2 enemyPosition, float enemyRadius) {
+bool Collision(Vec2 position1, float radius1, Vec2 position2, float radius2) {
 
-	float A = playerPosition.x - enemyPosition.x;
-	float B = playerPosition.y - enemyPosition.y;
+	float A = position1.x - position2.x;
+	float B = position1.y - position2.y;
 	float Dis = sqrtf(A * A + B * B);
-	if (Dis <= playerRadius + enemyRadius) {
+	if (Dis <= radius1 + radius2) {
 		return true;
 	}
 	return false;
+}
+
+Vec2 AfterCollision(Vec2 position1, float radius1, Vec2 position2, float radius2) {
+
+	Vec2 direction = (position1 - position2).Normalized();
+	float length = (position1 - position2).Length();
+	float distance = radius1 + radius2;
+
+	return position1 + (direction * (distance - length));
 }
 
 float PlayerEnemyDist(Player& player, Vec2 enemyPosition) {

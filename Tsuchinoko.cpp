@@ -166,19 +166,19 @@ void Tsuchinoko::Draw(Screen& screen) {
 
 	//当たり判定のデバッグ
 	if (IsCollision[0]) {
-		screen.DrawCircle(mHeadPosition, mRadius / 2, 0xFF000080, kFillModeSolid);
+		screen.DrawCircle(mHeadPosition, mRadius, 0xFF000080, kFillModeSolid);
 	}
 	if (IsCollision[1]) {
-		screen.DrawCircle(mBodyPosition[0], mBodyRadius / 2, 0xFF000080, kFillModeSolid);
+		screen.DrawCircle(mBodyPosition[0], mBodyRadius, 0xFF000080, kFillModeSolid);
 	}
 	if (IsCollision[2]) {
-		screen.DrawCircle(mBodyPosition[1], mBodyRadius / 2, 0xFF000080, kFillModeSolid);
+		screen.DrawCircle(mBodyPosition[1], mBodyRadius, 0xFF000080, kFillModeSolid);
 	}
 	if (IsCollision[3]) {
-		screen.DrawCircle(mBodyPosition[2], mBodyRadius / 2, 0xFF000080, kFillModeSolid);
+		screen.DrawCircle(mBodyPosition[2], mBodyRadius, 0xFF000080, kFillModeSolid);
 	}
 	if (IsCollision[4]) {
-		screen.DrawCircle(mTailPosition, mRadius / 2, 0xFF000080, kFillModeSolid);
+		screen.DrawCircle(mTailPosition, mRadius, 0xFF000080, kFillModeSolid);
 	}
-	screen.DrawCircle(mCenterPosition, mLockonRadius, 0x0000FF80, kFillModeSolid);
+	//screen.DrawCircle(mCenterPosition, mLockonRadius, 0x0000FF80, kFillModeSolid);
 }
