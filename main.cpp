@@ -10,6 +10,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// 画像読み込み
 	int explanation = Novice::LoadTexture("./Resources/Debugs/Explanation.png");
+	int title = Novice::LoadTexture("./Resources/Outgame/Title/title.png");
+	int end = Novice::LoadTexture("./Resources/Outgame/End/end.png");
 
 	//乱数の初期化
 	srand(time(nullptr));
@@ -33,6 +35,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		switch (scene)
 		{
 		case TITLE:
+			//Aボタン押下時
+			if (Controller::IsTriggerButton(0, Controller::bA)) {
+				screen.Init();
+				player.Init();
+				for (int i = 0; i < Snake::kMaxSnake; i++) {
+					snake[i].Init();
+				}
+				for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
+					tsuchinoko[i].Init();
+				}
+				ui.Init();
+				scene = INGAME;
+			}
 			break;
 		case INGAME:
 
@@ -157,8 +172,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//スクロール値をアップデートする
 			screen.SetScroll(player);
 
+			if (ui.mTimeLeft == 0) {
+				scene = OUTGAME;
+			}
+
 			break;
 		case OUTGAME:
+			//Aボタン押下時
+			if (Controller::IsTriggerButton(0, Controller::bA)) {
+				scene = TITLE;
+			}
 			break;
 		}
 
@@ -185,6 +208,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		switch (scene)
 		{
 		case TITLE:
+			Novice::DrawSprite(0, 0, title, 1, 1, 0.0f, WHITE);
 			break;
 		case INGAME:
 
@@ -208,6 +232,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			break;
 		case OUTGAME:
+			Novice::DrawSprite(0, 0, end, 1, 1, 0.0f, WHITE);
 			break;
 		}
 
