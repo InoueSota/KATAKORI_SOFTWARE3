@@ -39,9 +39,12 @@ public:
 	//ƒXƒRƒA
 	const int kSnakeScore = 1000;
 	const int kTsuchinokoScore = 1500;
+	Vec2 mScorePosition[6];
 	int mScore;
 	void SnakeScore(bool playermIsStrikeActive);
+	void MissSnakeScore(bool playermIsStrikeActive);
 	void TsuchinokoScore(bool playermIsStrikeActive);
+	void MissTsuchinokoScore(bool playermIsStrikeActive);
 
 
 	//‰æ‘œ

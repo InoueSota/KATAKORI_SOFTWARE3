@@ -9,23 +9,30 @@ void UI::Init() {
 
 	//制限時間
 	mTimeUISize = 48;
-	mTimePosition[0].x = Screen::kWindowWidth / 2.0 - mTimeUISize / 2.0 - 5.0f;
+	mTimePosition[0].x = Screen::kWindowWidth / 2.0 + mTimeUISize / 2.0 + 5.0f;
 	mTimePosition[0].y = mTimeUISize / 2.0 + 5.0f;
-	mTimePosition[1].x = Screen::kWindowWidth / 2.0 + mTimeUISize / 2.0 + 5.0f;
+	mTimePosition[1].x = Screen::kWindowWidth / 2.0 - mTimeUISize / 2.0 - 5.0f;
 	mTimePosition[1].y = mTimePosition[0].y;
 	mTimeLeft = kTimeLimit;
 	mTimeFrame = 0;
 	
 	//コンボ
 	mIsComboScaleAnime = false;
-	mComboPosition[0].x = Screen::kWindowWidth - mTimeUISize * 1.5 - 25.0f;
+	mComboPosition[0].x = Screen::kWindowWidth - mTimeUISize;
 	mComboPosition[0].y = 300.0f;
-	mComboPosition[1].x = Screen::kWindowWidth - mTimeUISize / 2.0 - 15.0f;
-	mComboPosition[1].y = 300.0f;
+	mComboPosition[1].x = Screen::kWindowWidth - mTimeUISize * 2;
+	mComboPosition[1].y = mComboPosition[0].y;
 	mComboScale.x = 1.0f;
 	mComboScale.y = 1.0f;
 	mCombo = 0;
 	mComboCoolTime = 0;
+
+	//スコア
+	mScore = 0;
+	for (int i = 0; i < 6; i++) {
+		mScorePosition[i].x = Screen::kWindowWidth - mTimeUISize * (i + 1);
+		mScorePosition[i].y = 100.0f;
+	}
 
 }
 void UI::Update() {
@@ -86,10 +93,16 @@ void UI::AddCombo() {
 	mIsComboScaleAnime = true;
 }
 void UI::SnakeScore(bool playermIsStrikeActive) {
-
+	mScore += kSnakeScore;
+}
+void UI::MissSnakeScore(bool playermIsStrikeActive) {
+	mScore -= (kSnakeScore / 2.0);
 }
 void UI::TsuchinokoScore(bool playermIsStrikeActive) {
-
+	mScore += kTsuchinokoScore;
+}
+void UI::MissTsuchinokoScore(bool playermIsStrikeActive) {
+	mScore -= (kTsuchinokoScore / 2.0);
 }
 void UI::Draw(Screen& screen) {
 
@@ -99,25 +112,30 @@ void UI::Draw(Screen& screen) {
 	}
 
 	//制限時間
-	//10の位
 	if (10 <= mTimeLeft) {
-		screen.DrawUI(mTimePosition[0], mTimeUISize, 32 * (mTimeLeft / 10), 32, 32, mTimeNumber, WHITE);
+		screen.DrawUI(mTimePosition[1], mTimeUISize, 32 * (mTimeLeft / 10), 32, 32, mTimeNumber, WHITE);
 	}
-	//1の位
 	if (0 <= mTimeLeft) {
-		screen.DrawUI(mTimePosition[1], mTimeUISize, 32 * (mTimeLeft % 10), 32, 32, mTimeNumber, WHITE);
+		screen.DrawUI(mTimePosition[0], mTimeUISize, 32 * (mTimeLeft % 10), 32, 32, mTimeNumber, WHITE);
 	}
 
 	//コンボ
-	//10の位
 	if (10 <= mCombo) {
-		screen.DrawUI(mComboPosition[0], mTimeUISize, 32 * (mCombo / 10), 32, 32, mTimeNumber, WHITE, mComboScale);
+		screen.DrawUI(mComboPosition[1], mTimeUISize, 32 * (mCombo / 10), 32, 32, mTimeNumber, WHITE, mComboScale);
 	}
-	//1の位
 	if (1 <= mCombo) {
-		screen.DrawUI(mComboPosition[1], mTimeUISize, 32 * (mCombo % 10), 32, 32, mTimeNumber, WHITE, mComboScale);
+		screen.DrawUI(mComboPosition[0], mTimeUISize, 32 * (mCombo % 10), 32, 32, mTimeNumber, WHITE, mComboScale);
 	}
 
+	//スコア
+	mScore = Clamp(mScore, 0, 1000000);
+	int Result[6];
+	int tmpScore = mScore;
+	for (int i = 5; i > -1; i--) {
+		Result[i] = tmpScore / powf(10, i);
+		tmpScore = tmpScore % (int)powf(10, i);
+		screen.DrawUI(mScorePosition[i], mTimeUISize, 32 * Result[i], 32, 32, mTimeNumber, WHITE, mComboScale);
+	}
 }
 
 

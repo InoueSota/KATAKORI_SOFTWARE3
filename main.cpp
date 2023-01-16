@@ -52,6 +52,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
 					tsuchinoko[i].Init();
 				}
+				ui.Init();
 			}
 
 			//プレイヤーアップデート
@@ -110,7 +111,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				//頭と尾
 				if (!snake[i].mIsDeath && (CircleCapsuleCollsion(player, snake[i].mHeadPosition, snake[i].mHeadRadius)))
 				{
-
+					ui.MissSnakeScore(player.mIsStrikeActive);
+					ui.mCombo = 0;
+					snake[i].mIsDeath = true;
 				}
 
 				//体
@@ -118,7 +121,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				{
 					if (!snake[i].mIsDeath && CircleCapsuleCollsion(player, snake[i].mBodyPosition[j], snake[i].mBodyRadius))
 					{
-						ui.TsuchinokoScore(player.mIsStrikeActive);
+						ui.SnakeScore(player.mIsStrikeActive);
 						ui.AddCombo();
 						snake[i].mIsDeath = true;
 					}
@@ -131,7 +134,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				//頭と尾
 				if (!tsuchinoko[i].mIsDeath && (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius) || Collision(player.mPosition, player.mRadius, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius)))
 				{
-
+					ui.MissTsuchinokoScore(player.mIsStrikeActive);
+					ui.mCombo = 0;
+					tsuchinoko[i].mIsDeath = true;
 				}
 
 				//体
