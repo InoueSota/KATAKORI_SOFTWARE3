@@ -40,7 +40,7 @@ public:
 	const int kSnakeScore = 1000;
 	const int kTsuchinokoScore = 1500;
 	Vec2 mScorePosition[6];
-	int mScore;
+	float mScore;
 	void SnakeScore(bool playermIsStrikeActive);
 	void MissSnakeScore(bool playermIsStrikeActive);
 	void TsuchinokoScore(bool playermIsStrikeActive);
@@ -51,6 +51,8 @@ public:
 	bool mIsLoadTexture = false;
 	int mTimeUISize;
 	int mTimeNumber;
+	int mComboLetter;
+	int mScoreLetter;
 
 };
 

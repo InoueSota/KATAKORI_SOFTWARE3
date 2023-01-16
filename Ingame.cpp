@@ -14,6 +14,7 @@ void UI::Init() {
 	mTimePosition[1].x = Screen::kWindowWidth / 2.0 - mTimeUISize / 2.0 - 5.0f;
 	mTimePosition[1].y = mTimePosition[0].y;
 	mTimeLeft = kTimeLimit;
+	mTimeElapsed = 0;
 	mTimeFrame = 0;
 	
 	//コンボ
@@ -94,10 +95,10 @@ void UI::AddCombo() {
 }
 void UI::SnakeScore(bool playermIsStrikeActive) {
 	if (playermIsStrikeActive) {
-		mScore += kSnakeScore * 2;
+		mScore += (kSnakeScore * 2) * (1.0f + (float)mCombo / 10);
 	}
 	else {
-		mScore += kSnakeScore;
+		mScore += kSnakeScore * (1.0f + (float)mCombo / 10);
 	}
 }
 void UI::MissSnakeScore(bool playermIsStrikeActive) {
@@ -110,10 +111,10 @@ void UI::MissSnakeScore(bool playermIsStrikeActive) {
 }
 void UI::TsuchinokoScore(bool playermIsStrikeActive) {
 	if (playermIsStrikeActive) {
-		mScore += kTsuchinokoScore * 2;
+		mScore += kTsuchinokoScore * 2 * (1.0f + (float)mCombo / 10);
 	}
 	else {
-		mScore += kTsuchinokoScore;
+		mScore += kTsuchinokoScore * (1.0f + (float)mCombo / 10);
 	}
 }
 void UI::MissTsuchinokoScore(bool playermIsStrikeActive) {
@@ -128,6 +129,8 @@ void UI::Draw(Screen& screen) {
 
 	if (!mIsLoadTexture) {
 		mTimeNumber = Novice::LoadTexture("./Resources/UI/Time/number.png");
+		mComboLetter = Novice::LoadTexture("./Resources/UI/Combo/combo.png");
+		mScoreLetter = Novice::LoadTexture("./Resources/UI/Score/score.png");
 		mIsLoadTexture = true;
 	}
 
@@ -146,16 +149,18 @@ void UI::Draw(Screen& screen) {
 	if (1 <= mCombo) {
 		screen.DrawUI(mComboPosition[0], mTimeUISize, 32 * (mCombo % 10), 32, 32, mTimeNumber, WHITE, mComboScale);
 	}
+	screen.DrawUI({ mScorePosition[0].x, mComboPosition[0].y + 50.0f }, 100, 50, 0, 200, 100, mComboLetter, WHITE);
 
 	//スコア
 	mScore = Clamp(mScore, 0, 1000000);
-	int Result[6];
-	int tmpScore = mScore;
+	float Result[6];
+	float tmpScore = mScore;
 	for (int i = 5; i > -1; i--) {
 		Result[i] = tmpScore / powf(10, i);
-		tmpScore = tmpScore % (int)powf(10, i);
-		screen.DrawUI(mScorePosition[i], mTimeUISize, 32 * Result[i], 32, 32, mTimeNumber, WHITE, mComboScale);
+		tmpScore = (int)tmpScore % (int)powf(10, i);
+		screen.DrawUI(mScorePosition[i], mTimeUISize, 32 * (int)Result[i], 32, 32, mTimeNumber, WHITE, mComboScale);
 	}
+	screen.DrawUI({ mScorePosition[0].x, mScorePosition[0].y + 50.0f }, 100, 50, 0, 200, 100, mScoreLetter, WHITE);
 }
 
 
