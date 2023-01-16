@@ -36,7 +36,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			break;
 		case INGAME:
 
-			//ＵＩアップデート
+			//UIアップデート
 			ui.Update();
 
 			//ズーム値アップデート
@@ -104,14 +104,32 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 			//プレイヤーとの当たり判定
+			//ヘビ
 			for (int i = 0; i < Snake::kMaxSnake; i++) {
 				collision(player, snake[i]);
+				//頭と尾
+				if (!snake[i].mIsDeath && (CircleCapsuleCollsion(player, snake[i].mHeadPosition, snake[i].mHeadRadius)))
+				{
+
+				}
+
+				//体
+				for (int j = 0; j < Snake::kBodyMax; j++)
+				{
+					if (!snake[i].mIsDeath && CircleCapsuleCollsion(player, snake[i].mBodyPosition[j], snake[i].mBodyRadius))
+					{
+						ui.TsuchinokoScore(player.mIsStrikeActive);
+						ui.AddCombo();
+						snake[i].mIsDeath = true;
+					}
+				}
 			}
+			//ツチノコ
 			for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
 
 				collisionTsuchinoko(player, tsuchinoko[i]);
 				//頭と尾
-				if (!tsuchinoko[i].mIsDeath && (Collision(player.mPosition, player.mRadius, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius) || Collision(player.mPosition, player.mRadius, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius)))
+				if (!tsuchinoko[i].mIsDeath && (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius) || Collision(player.mPosition, player.mRadius, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius)))
 				{
 
 				}
@@ -121,7 +139,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				{
 					if (!tsuchinoko[i].mIsDeath && CircleCapsuleCollsion(player,tsuchinoko[i].mBodyPosition[j], tsuchinoko[i].mBodyRadius))
 					{
-						ui.mIsCombo = true;
+						ui.TsuchinokoScore(player.mIsStrikeActive);
+						ui.AddCombo();
 						tsuchinoko[i].mIsDeath = true;
 					}
 				}

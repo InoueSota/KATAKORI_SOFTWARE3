@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "Player.h"
 #include "Novice.h"
+#include "Function.h"
 
 
 
@@ -17,8 +18,8 @@ void collision(Player &player, Snake &snake) {
 		snake.IsCollision[0] = false;
 	}
 
-	A = player.mPosition.x - snake.mFirstBodyPosition.x;
-	B = player.mPosition.y - snake.mFirstBodyPosition.y;
+	A = player.mPosition.x - snake.mBodyPosition[0].x;
+	B = player.mPosition.y - snake.mBodyPosition[0].y;
 	Dis = sqrtf(A * A + B * B);
 	if (Dis <= player.mSize / 2 + snake.mBodyRadius / 2) {
 		snake.IsCollision[1] = true;
@@ -26,8 +27,8 @@ void collision(Player &player, Snake &snake) {
 		snake.IsCollision[1] = false;
 	}
 
-	A = player.mPosition.x - snake.mSecondBodyPosition.x;
-	B = player.mPosition.y - snake.mSecondBodyPosition.y;
+	A = player.mPosition.x - snake.mBodyPosition[1].x;
+	B = player.mPosition.y - snake.mBodyPosition[1].y;
 	Dis = sqrtf(A * A + B * B);
 	if (Dis <= player.mSize / 2 + snake.mBodyRadius / 2) {
 		snake.IsCollision[2] = true;
@@ -35,8 +36,8 @@ void collision(Player &player, Snake &snake) {
 		snake.IsCollision[2] = false;
 	}
 
-	A = player.mPosition.x - snake.mThirdBodyPosition.x;
-	B = player.mPosition.y - snake.mThirdBodyPosition.y;
+	A = player.mPosition.x - snake.mBodyPosition[2].x;
+	B = player.mPosition.y - snake.mBodyPosition[2].y;
 	Dis = sqrtf(A * A + B * B);
 	if (Dis <= player.mSize / 2 + snake.mBodyRadius / 2) {
 		snake.IsCollision[3] = true;
@@ -44,8 +45,8 @@ void collision(Player &player, Snake &snake) {
 		snake.IsCollision[3] = false;
 	}
 
-	A = player.mPosition.x - snake.mFourthBodyPosition.x;
-	B = player.mPosition.y - snake.mFourthBodyPosition.y;
+	A = player.mPosition.x - snake.mBodyPosition[3].x;
+	B = player.mPosition.y - snake.mBodyPosition[3].y;
 	Dis = sqrtf(A * A + B * B);
 	if (Dis <= player.mSize / 2 + snake.mBodyRadius / 2) {
 		snake.IsCollision[4] = true;
@@ -57,8 +58,19 @@ void collision(Player &player, Snake &snake) {
 	B = player.mPosition.y - snake.mHeadPosition.y;
 	Dis = sqrtf(A * A + B * B);
 	if (Dis <= player.mSize / 2 + snake.mLockonRadius) {
-		snake.IsPlayerLockon = true;
-		snake.mTargetPoint = player.mPosition;
+
+		Vec2 toPlayer = player.mPosition - snake.mHeadPosition;
+
+		//‚È‚·Šp‚ð‹‚ß‚é
+		float dp = snake.mVelocity.Dot(toPlayer);
+		float cp = snake.mVelocity.Cross(toPlayer);
+		if (-Degree(30) < atan2(cp, dp) && atan2(cp, dp) < Degree(30)) {
+			snake.IsPlayerLockon = true;
+			snake.mTargetPoint = player.mPosition;
+		}
+		else {
+			snake.IsPlayerLockon = false;
+		}
 	} else {
 		snake.IsPlayerLockon = false;
 	}
@@ -114,8 +126,19 @@ void collisionTsuchinoko(Player& player, Tsuchinoko& tsuchinoko) {
 	B = player.mPosition.y - tsuchinoko.mCenterPosition.y;
 	Dis = sqrtf(A * A + B * B);
 	if (Dis <= player.mSize / 2 + tsuchinoko.mLockonRadius) {
-		tsuchinoko.IsPlayerLockon = true;
-		tsuchinoko.mTargetPoint = player.mPosition;
+
+		Vec2 toPlayer = player.mPosition - tsuchinoko.mCenterPosition;
+
+		//‚È‚·Šp‚ð‹‚ß‚é
+		float dp = tsuchinoko.mVelocity.Dot(toPlayer);
+		float cp = tsuchinoko.mVelocity.Cross(toPlayer);
+		if (-Degree(30) < atan2(cp, dp) && atan2(cp, dp) < Degree(30)) {
+			tsuchinoko.IsPlayerLockon = true;
+			tsuchinoko.mTargetPoint = player.mPosition;
+		}
+		else {
+			tsuchinoko.IsPlayerLockon = false;
+		}
 	} else {
 		tsuchinoko.IsPlayerLockon = false;
 	}

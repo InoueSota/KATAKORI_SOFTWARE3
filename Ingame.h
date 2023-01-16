@@ -15,23 +15,34 @@ public:
 	void Update();
 	void Draw(Screen& screen);
 
+
 	//制限時間
-	static constexpr int kTimeLimit = 60;
+	const int kTimeLimit = 60;
 	Vec2 mTimePosition[2];
 	int mTimeFrame;
 	int mTimeElapsed;
 	int mTimeLeft;
 	void TimeLimit();
 
+
 	//コンボ
-	static constexpr int kComboCoolTime = 180;
-	bool mIsCombo;
+	const int kComboCoolTime = 180;
 	bool mIsComboScaleAnime;
-	Vec2 mComboPosition;
+	Vec2 mComboPosition[2];
 	Vec2 mComboScale;
 	int mCombo;
 	int mComboCoolTime;
 	void Combo();
+	void AddCombo();
+
+
+	//スコア
+	const int kSnakeScore = 1000;
+	const int kTsuchinokoScore = 1500;
+	int mScore;
+	void SnakeScore(bool playermIsStrikeActive);
+	void TsuchinokoScore(bool playermIsStrikeActive);
+
 
 	//画像
 	bool mIsLoadTexture = false;

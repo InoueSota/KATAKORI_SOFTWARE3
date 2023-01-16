@@ -1,24 +1,57 @@
 #include "Enemy.h"
 #include "Key.h"
-#include "Function.h"
+#include "Ingame.h"
 
 
 
 
 void Snake::Init() {
+	//ê∂ê¨
+	mIsActive = false;
+	mIsDeath = false;
 	mHeadRadius = 50;
 	mBodyRadius = 30;
 	mFollowFrame = 0;
-	mHeadPosition = { 0, 0 };
-	for (int i = 0; i < kMaxFrame; i++){
-		mOldHeadPosition[i] = mHeadPosition;
-	}
-	mTargetPoint.x = rand() % 6400 - (6400 / 2);
-	mTargetPoint.y = rand() % 3200 - (3200 / 2);
 }
 
 void Snake::Update() {
-	Move();
+
+	//ë¨ìxÇÃèâä˙âª
+	mVelocity.setZero();
+
+	//ê∂ê¨èàóù
+	Make();
+
+	if (mIsActive && !mIsDeath)
+	{
+		Move();
+
+		//å¸Ç´ÇïœÇ¶ÇÈèàóù
+		Angle();
+
+		//ë¨ìxÇÉ|ÉWÉVÉáÉìÇ…ë„ì¸Ç∑ÇÈ
+		mHeadPosition += mVelocity;
+
+		//ëÃïîï™Ç™í«Ç§èàóù
+		Follow();
+	}
+}
+
+void Snake::Make() {
+
+	if (!mIsActive && !mIsDeath)
+	{
+		mHeadPosition.x = RAND(Map::kMapLeft, Map::kMapRight);
+		mHeadPosition.y = RAND(Map::kMapBottom, Map::kMapTop);
+		mHeadPositionStart = mHeadPosition;
+		mTargetPoint.x = rand() % 6400 - (6400 / 2);
+		mTargetPoint.y = rand() % 3200 - (3200 / 2);
+		for (int i = 0; i < kMaxFrame; i++) {
+			mOldHeadPosition[i] = mHeadPosition;
+		}
+		mIsActive = true;
+	}
+
 }
 
 void Snake::Move() {
@@ -40,37 +73,34 @@ void Snake::Move() {
 	}
 
 	if ((mTargetPoint.x > mHeadPositionStart.x && mTargetPoint.x > mHeadPosition.x) || (mTargetPoint.x < mHeadPositionStart.x && mTargetPoint.x < mHeadPosition.x)) {
-		mHeadPosition.x += cosf(rad) * mSpeed;
+		mVelocity.x += cosf(rad) * mSpeed;
 	} else {
 		mHeadPositionStart.x = mHeadPosition.x;
 		mTargetPoint.x = rand() % 6400 - (6400 / 2);
 	}
 
 	if ((mTargetPoint.y > mHeadPositionStart.y && mTargetPoint.y > mHeadPosition.y) || (mTargetPoint.y < mHeadPositionStart.y && mTargetPoint.y < mHeadPosition.y)) {
-		mHeadPosition.y += sinf(rad) * mSpeed;
+		mVelocity.y += sinf(rad) * mSpeed;
 	} else {
 		mHeadPositionStart.y = mHeadPosition.y;
 		mTargetPoint.y = rand() % 3200 - (3200 / 2);
 	}
-
-	//å¸Ç´ÇïœÇ¶ÇÈèàóù
-	Angle();
-
-	//ëÃïîï™Ç™í«Ç§èàóù
-	Follow();
 }
 
 void Snake::Angle() {
 
-	//äÓèÄê¸Ç∆å¸Ç´ÉxÉNÉgÉã
-	Vec2 base = { 1,0 };
-	Vec2 tmpDirection = mHeadPosition - mOldHeadPosition[1];
+	//à⁄ìÆÇµÇƒÇ¢ÇÈéûÇÃÇ›äpìxÇê›íËÇ∑ÇÈ
+	if (mVelocity.x != 0.0f || mVelocity.y != 0.0f)
+	{
+		//äÓèÄê¸Ç∆å¸Ç´ÉxÉNÉgÉã
+		Vec2 base = { 1,0 };
+		Vec2 tmpDirection = mVelocity;
 
-	//Ç»Ç∑äpÇãÅÇﬂÇÈ
-	float dp = tmpDirection.Dot(base);
-	float cp = tmpDirection.Cross(base);
-	mHeadAngle = atan2(cp, dp); 
-
+		//Ç»Ç∑äpÇãÅÇﬂÇÈ
+		float dp = tmpDirection.Dot(base);
+		float cp = tmpDirection.Cross(base);
+		mHeadAngle = atan2(cp, dp);
+	}
 }
 
 void Snake::Follow() {
@@ -113,17 +143,17 @@ void Snake::Follow() {
 	
 	//îCà”ÇÃOldPositionÇë„ì¸Ç∑ÇÈ
 	//ëÃÅiÇPÇ¬ñ⁄Åj
-	mFirstBodyPosition = mOldHeadPosition[19];
-	mFirstBodyAngle = mOldHeadAngle[19];
+	mBodyPosition[0] = mOldHeadPosition[19];
+	mBodyAngle[0] = mOldHeadAngle[19];
 	//ëÃÅiÇQÇ¬ñ⁄Åj
-	mSecondBodyPosition = mOldHeadPosition[39];
-	mSecondBodyAngle = mOldHeadAngle[39];
+	mBodyPosition[1] = mOldHeadPosition[39];
+	mBodyAngle[1] = mOldHeadAngle[39];
 	//ëÃÅiÇRÇ¬ñ⁄Åj
-	mThirdBodyPosition = mOldHeadPosition[59];
-	mThirdBodyAngle = mOldHeadAngle[59];
+	mBodyPosition[2] = mOldHeadPosition[59];
+	mBodyAngle[2] = mOldHeadAngle[59];
 	//ëÃÅiÇSÇ¬ñ⁄Åj
-	mFourthBodyPosition = mOldHeadPosition[79];
-	mFourthBodyAngle = mOldHeadAngle[79];
+	mBodyPosition[3] = mOldHeadPosition[79];
+	mBodyAngle[3] = mOldHeadAngle[79];
 
 }
 
@@ -131,37 +161,36 @@ void Snake::Follow() {
 
 void Snake::Draw(Screen& screen) {
 
-	if (!mIsLoadTexture){
+	if (!mIsLoadTexture) {
 		head = Novice::LoadTexture("./Resources/Debugs/head.png");
+		fov = Novice::LoadTexture("./Resources/Enemy/fov.png");
 		mIsLoadTexture = true;
 	}
 
-	//ëÃï`âÊ
-	screen.DrawPicture(mFourthBodyPosition, mBodyRadius, mFourthBodyAngle, 100, 100, head);
-	screen.DrawPicture(mThirdBodyPosition, mBodyRadius, mThirdBodyAngle, 100, 100, head);
-	screen.DrawPicture(mSecondBodyPosition, mBodyRadius, mSecondBodyAngle, 100, 100, head);
-	screen.DrawPicture(mFirstBodyPosition, mBodyRadius, mFirstBodyAngle, 100, 100, head);
+	//ê∂ê¨Ç≥ÇÍÇƒÇ¢ÇƒéÄÇÒÇ≈Ç¢Ç»Ç¢éû
+	if (mIsActive && !mIsDeath)
+	{
+		//ëÃï`âÊ
+		for (int i = 0; i < kBodyMax; i++)
+		{
+			screen.DrawPicture(mBodyPosition[i], mBodyRadius, mBodyAngle[i], 100, 100, head);
+		}
 
-	//ì™ï`âÊ
-	screen.DrawPicture(mHeadPosition, mHeadRadius, mHeadAngle, 100, 100, head);
+		//ì™ï`âÊ
+		screen.DrawPicture(mHeadPosition, mHeadRadius, mHeadAngle, 100, 100, head);
 
-	//ìñÇΩÇËîªíËï`âÊ
+		//ìñÇΩÇËîªíËï`âÊ
 
-	//ìñÇΩÇËîªíËÇÃÉfÉoÉbÉO
-	if (IsCollision[0]) {
-		screen.DrawCircle(mHeadPosition, mHeadRadius / 2, 0xFF000080, kFillModeSolid);
+		//ìñÇΩÇËîªíËÇÃÉfÉoÉbÉO
+		if (IsCollision[0]) {
+			screen.DrawCircle(mHeadPosition, mHeadRadius / 2, 0xFF000080, kFillModeSolid);
+		}
+		for (int i = 0; i < kBodyMax; i++)
+		{
+			if (IsCollision[i]) {
+				screen.DrawCircle(mBodyPosition[i], mBodyRadius / 2, 0xFF000080);
+			}
+		}
+		screen.DrawPicture({ mHeadPosition.x + mLockonRadius / 2 * cosf(mHeadAngle), mHeadPosition.y + mLockonRadius / 2 * -sinf(mHeadAngle) }, mLockonRadius, mHeadAngle, 500, 500, fov, 0x0000FF80);
 	}
-	if (IsCollision[1]) {
-		screen.DrawCircle(mFirstBodyPosition, mBodyRadius / 2, 0xFF000080, kFillModeSolid);
-	}
-	if (IsCollision[2]) {
-		screen.DrawCircle(mSecondBodyPosition, mBodyRadius / 2, 0xFF000080, kFillModeSolid);
-	}
-	if (IsCollision[3]) {
-		screen.DrawCircle(mThirdBodyPosition, mBodyRadius / 2, 0xFF000080, kFillModeSolid);
-	}
-	if (IsCollision[4]) {
-		screen.DrawCircle(mFourthBodyPosition, mBodyRadius / 2, 0xFF000080, kFillModeSolid);
-	}
-	screen.DrawCircle(mHeadPosition, mLockonRadius, 0x0000FF80, kFillModeSolid);
 }

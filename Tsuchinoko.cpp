@@ -30,7 +30,7 @@ void Tsuchinoko::Init() {
 void Tsuchinoko::Update(Vec2 playerposition) {
 
 	//速度を初期化する
-	mVelocity = mVelocity.Normalized();
+	mVelocity.setZero();
 
 	//生成処理
 	Make(playerposition);
@@ -68,46 +68,31 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 	float rad = atan2(mTargetPoint.y - mCenterPosition.y, mTargetPoint.x - mCenterPosition.x);
 	float rad_2 = 0;
 
-	/*if (rad > mHeadAngle + 3.14159) {
-		rad_2 = mHeadAngle + mAngleSpeed;
-		if (rad < mHeadAngle + 3.14159) {
+	if (rad > mCenterAngle + 3.14159) {
+		rad_2 = mCenterAngle + mAngleSpeed;
+		if (rad < mCenterAngle + 3.14159) {
 			rad_2 = rad;
 		}
 	} else {
-		rad_2 = mHeadAngle - mAngleSpeed;
-		if (rad > mHeadAngle + 3.14159) {
+		rad_2 = mCenterAngle - mAngleSpeed;
+		if (rad > mCenterAngle + 3.14159) {
 			rad_2 = rad;
 		}
-	}*/
+	}
 
-	if ((mTargetPoint.x > mCenterPositionStart.x && mTargetPoint.x > mHeadPosition.x) || (mTargetPoint.x < mCenterPositionStart.x && mTargetPoint.x < mHeadPosition.x)) {
+	if ((mTargetPoint.x > mCenterPositionStart.x && mTargetPoint.x > mCenterPosition.x) || (mTargetPoint.x < mCenterPositionStart.x && mTargetPoint.x < mCenterPosition.x)) {
 		mVelocity.x += cosf(rad) * mCenterSpeed;
 	} else {
 		mCenterPositionStart.x = mCenterPosition.x;
 		mTargetPoint.x = rand() % 6400 - (6400 / 2);
 	}
 
-	if ((mTargetPoint.y > mCenterPositionStart.y && mTargetPoint.y > mHeadPosition.y) || (mTargetPoint.y < mCenterPositionStart.y && mTargetPoint.y < mHeadPosition.y)) {
+	if ((mTargetPoint.y > mCenterPositionStart.y && mTargetPoint.y > mCenterPosition.y) || (mTargetPoint.y < mCenterPositionStart.y && mTargetPoint.y < mCenterPosition.y)) {
 		mVelocity.y += sinf(rad) * mCenterSpeed;
 	} else {
 		mCenterPositionStart.y = mCenterPosition.y;
 		mTargetPoint.y = rand() % 3200 - (3200 / 2);
 	}
-
-
-
-	////プレイヤーへの向きベクトル
-	//Vec2 toPlayer = { playerPosition.x - mCenterPosition.x, playerPosition.y - mCenterPosition.y };
-
-	////向きベクトルと速度を正規化する
-	//toPlayer = toPlayer.Normalized();
-	//mVelocity = mVelocity.Normalized();
-
-	////向きを設定する
-	//mVelocity += (toPlayer - mVelocity) * 0.08f;
-
-	////速度を設定する
-	//mVelocity *= mCenterSpeed;
 
 }
 
@@ -148,6 +133,7 @@ void Tsuchinoko::Draw(Screen& screen) {
 
 	if (!mIsLoadTexture) {
 		tsuchinoko = Novice::LoadTexture("./Resources/Debugs/tsuchinoko.png");
+		fov = Novice::LoadTexture("./Resources/Enemy/fov.png");
 		mIsLoadTexture = true;
 	}
 
@@ -182,7 +168,7 @@ void Tsuchinoko::Draw(Screen& screen) {
 		if (IsCollision[4]) {
 			screen.DrawCircle(mTailPosition, mRadius, 0xFF000080, kFillModeSolid);
 		}
-		screen.DrawCircle(mCenterPosition, mLockonRadius, 0x0000FF80, kFillModeSolid);
+		screen.DrawPicture({ mCenterPosition.x + mLockonRadius / 2 * cosf(mCenterAngle), mCenterPosition.y + mLockonRadius / 2 * -sinf(mCenterAngle) }, mLockonRadius, mCenterAngle, 500, 500, fov, 0x0000FF80);
 	}
 
 

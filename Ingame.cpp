@@ -17,10 +17,11 @@ void UI::Init() {
 	mTimeFrame = 0;
 	
 	//コンボ
-	mIsCombo = false;
 	mIsComboScaleAnime = false;
-	mComboPosition.x = Screen::kWindowWidth - mTimeUISize / 2.0 - 15.0f;
-	mComboPosition.y = 100.0f;
+	mComboPosition[0].x = Screen::kWindowWidth - mTimeUISize * 1.5 - 25.0f;
+	mComboPosition[0].y = 300.0f;
+	mComboPosition[1].x = Screen::kWindowWidth - mTimeUISize / 2.0 - 15.0f;
+	mComboPosition[1].y = 300.0f;
 	mComboScale.x = 1.0f;
 	mComboScale.y = 1.0f;
 	mCombo = 0;
@@ -49,19 +50,11 @@ void UI::TimeLimit() {
 
 	//残り時間 = 制限時間 - 経過時間
 	mTimeLeft = kTimeLimit - mTimeElapsed;
+
+	//残り時間の限界値の設定
+	mTimeLeft = Clamp(mTimeLeft, 0, kTimeLimit);
 }
 void UI::Combo() {
-
-	//コンボを足す
-	if (mIsCombo) {
-		mCombo++;
-		mComboCoolTime = 0;
-		//拡縮アニメーション
-		mComboScale.x = 1.8f;
-		mComboScale.y = 1.8f;
-		mIsComboScaleAnime = true;
-		mIsCombo = false;
-	}
 
 	//クールタイムを加算する
 	mComboCoolTime++;
@@ -82,6 +75,22 @@ void UI::Combo() {
 		}
 	}
 }
+void UI::AddCombo() {
+
+	//コンボを足す
+	mCombo++;
+	mComboCoolTime = 0;
+	//拡縮アニメーション
+	mComboScale.x = 1.8f;
+	mComboScale.y = 1.8f;
+	mIsComboScaleAnime = true;
+}
+void UI::SnakeScore(bool playermIsStrikeActive) {
+
+}
+void UI::TsuchinokoScore(bool playermIsStrikeActive) {
+
+}
 void UI::Draw(Screen& screen) {
 
 	if (!mIsLoadTexture) {
@@ -91,13 +100,23 @@ void UI::Draw(Screen& screen) {
 
 	//制限時間
 	//10の位
-	screen.DrawUI(mTimePosition[0], mTimeUISize, 32 * (mTimeLeft / 10), 32, 32, mTimeNumber, WHITE);
+	if (10 <= mTimeLeft) {
+		screen.DrawUI(mTimePosition[0], mTimeUISize, 32 * (mTimeLeft / 10), 32, 32, mTimeNumber, WHITE);
+	}
 	//1の位
-	screen.DrawUI(mTimePosition[1], mTimeUISize, 32 * (mTimeLeft % 10), 32, 32, mTimeNumber, WHITE);
+	if (0 <= mTimeLeft) {
+		screen.DrawUI(mTimePosition[1], mTimeUISize, 32 * (mTimeLeft % 10), 32, 32, mTimeNumber, WHITE);
+	}
 
 	//コンボ
+	//10の位
+	if (10 <= mCombo) {
+		screen.DrawUI(mComboPosition[0], mTimeUISize, 32 * (mCombo / 10), 32, 32, mTimeNumber, WHITE, mComboScale);
+	}
 	//1の位
-	screen.DrawUI(mComboPosition, mTimeUISize, 32 * mCombo, 32, 32, mTimeNumber, WHITE, mComboScale);
+	if (1 <= mCombo) {
+		screen.DrawUI(mComboPosition[1], mTimeUISize, 32 * (mCombo % 10), 32, 32, mTimeNumber, WHITE, mComboScale);
+	}
 
 }
 

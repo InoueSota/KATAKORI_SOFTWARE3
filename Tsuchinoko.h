@@ -18,8 +18,9 @@ public:
 	Vec2 mCenterPositionStart;//スタート地点
 	Vec2 mTargetPoint;//目標地点
 	bool IsPlayerLockon = false;//プレイヤーを補足しているかどうか
-	int mLockonRadius = 300;//敵の視界の範囲
+	int mLockonRadius = 600;//敵の視界の範囲
 
+	const float mAngleSpeed = 0.1;//回転の速さ
 	bool IsCollision[5] = {};
 
 
@@ -61,5 +62,6 @@ public:
 	//画像
 	bool mIsLoadTexture = false;
 	int tsuchinoko;
+	int fov;
 };
 
