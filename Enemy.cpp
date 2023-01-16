@@ -23,20 +23,6 @@ void Snake::Update() {
 
 void Snake::Move() {
 
-	//ˆÚ“®ˆ—
-	if (Key::IsPress(DIK_UP)){
-		mHeadPosition.y += 3;
-	}
-	if (Key::IsPress(DIK_DOWN)) {
-		mHeadPosition.y -= 3;
-	}
-	if (Key::IsPress(DIK_LEFT)) {
-		mHeadPosition.x -= 3;
-	}
-	if (Key::IsPress(DIK_RIGHT)) {
-		mHeadPosition.x += 3;
-	}
-
 	//ƒ‰ƒ“ƒ_ƒ€‚ÉˆÚ“®’n“_‚ğŒˆ‚ß‚ÄˆÚ“®
 	float rad = atan2(mTargetPoint.y - mHeadPosition.y, mTargetPoint.x - mHeadPosition.x);
 	float rad_2 = 0;
@@ -177,5 +163,5 @@ void Snake::Draw(Screen& screen) {
 	if (IsCollision[4]) {
 		screen.DrawCircle(mFourthBodyPosition, mBodyRadius / 2, 0xFF000080, kFillModeSolid);
 	}
-	//screen.DrawCircle(mHeadPosition, mLockonRadius, 0x0000FF80, kFillModeSolid);
+	screen.DrawCircle(mHeadPosition, mLockonRadius, 0x0000FF80, kFillModeSolid);
 }
