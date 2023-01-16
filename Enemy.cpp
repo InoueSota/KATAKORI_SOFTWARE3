@@ -39,7 +39,7 @@ void Snake::Update() {
 
 void Snake::Make() {
 
-	if (!mIsActive && !mIsDeath)
+	if (!mIsActive || mIsDeath)
 	{
 		mHeadPosition.x = RAND(Map::kMapLeft, Map::kMapRight);
 		mHeadPosition.y = RAND(Map::kMapBottom, Map::kMapTop);
@@ -49,6 +49,7 @@ void Snake::Make() {
 		for (int i = 0; i < kMaxFrame; i++) {
 			mOldHeadPosition[i] = mHeadPosition;
 		}
+		mIsDeath = false;
 		mIsActive = true;
 	}
 

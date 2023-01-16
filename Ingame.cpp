@@ -93,16 +93,36 @@ void UI::AddCombo() {
 	mIsComboScaleAnime = true;
 }
 void UI::SnakeScore(bool playermIsStrikeActive) {
-	mScore += kSnakeScore;
+	if (playermIsStrikeActive) {
+		mScore += kSnakeScore * 2;
+	}
+	else {
+		mScore += kSnakeScore;
+	}
 }
 void UI::MissSnakeScore(bool playermIsStrikeActive) {
-	mScore -= (kSnakeScore / 2.0);
+	if (playermIsStrikeActive) {
+		mScore -= kSnakeScore;
+	}
+	else {
+		mScore -= kSnakeScore / 2.0;
+	}
 }
 void UI::TsuchinokoScore(bool playermIsStrikeActive) {
-	mScore += kTsuchinokoScore;
+	if (playermIsStrikeActive) {
+		mScore += kTsuchinokoScore * 2;
+	}
+	else {
+		mScore += kTsuchinokoScore;
+	}
 }
 void UI::MissTsuchinokoScore(bool playermIsStrikeActive) {
-	mScore -= (kTsuchinokoScore / 2.0);
+	if (playermIsStrikeActive) {
+		mScore -= kTsuchinokoScore;
+	}
+	else {
+		mScore -= kTsuchinokoScore / 2.0;
+	}
 }
 void UI::Draw(Screen& screen) {
 

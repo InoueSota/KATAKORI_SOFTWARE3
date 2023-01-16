@@ -53,10 +53,11 @@ void Tsuchinoko::Update(Vec2 playerposition) {
 
 void Tsuchinoko::Make(Vec2 playerPosition) {
 
-	if (!mIsActive && !mIsDeath)
+	if (!mIsActive || mIsDeath)
 	{
 		mCenterPosition.x = RAND(Map::kMapLeft, Map::kMapRight);
 		mCenterPosition.y = RAND(Map::kMapBottom, Map::kMapTop);
+		mIsDeath = false;
 		mIsActive = true;
 	}
 
