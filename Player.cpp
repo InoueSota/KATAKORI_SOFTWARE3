@@ -346,8 +346,6 @@ void Player::Knockback() {
 	}
 }
 
-
-
 void Player::Draw(Screen& screen) {
 
 	//Žc‘œ•`‰æ
