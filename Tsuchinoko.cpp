@@ -93,7 +93,7 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 	//ƒvƒŒƒCƒ„[‚ğ’Ç‚¢‚©‚¯‚Ä"‚¢‚é"
 	else {
 
-		mDirectionPoint = mTargetPoint - mHeadPosition;
+		mDirectionPoint = mTargetPoint - mCenterPosition;
 
 		mDirectionPoint = mDirectionPoint.Normalized();
 

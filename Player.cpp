@@ -73,6 +73,8 @@ void Player::Update(Screen& screen) {
 	//c‘œˆ—
 	Shadow();
 
+
+
 }
 
 void Player::NormalMove() {
