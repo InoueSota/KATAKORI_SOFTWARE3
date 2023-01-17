@@ -12,6 +12,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	int explanation = Novice::LoadTexture("./Resources/Debugs/Explanation.png");
 	int title = Novice::LoadTexture("./Resources/Outgame/Title/title.png");
 	int end = Novice::LoadTexture("./Resources/Outgame/End/end.png");
+	ui.LoadTexture();
 
 	//乱数の初期化
 	srand(time(nullptr));
@@ -35,6 +36,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		switch (scene)
 		{
 		case TITLE:
+
 			//Aボタン押下時
 			if (Controller::IsTriggerButton(0, Controller::bA)) {
 				screen.Init();
@@ -58,7 +60,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			screen.SetZoom();
 
 			//初期化
-			if (Key::IsTrigger(DIK_R)){
+			if (Key::IsTrigger(DIK_R) || Controller::IsTriggerButton(0, Controller::bY)){
 				screen.Init();
 				player.Init();
 				for (int i = 0; i < Snake::kMaxSnake; i++) {
@@ -129,6 +131,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				{
 					ui.MissSnakeScore(player.mIsStrikeActive);
 					ui.mCombo = 0;
+					ui.mIsWarning = true;
 					snake[i].mIsDeath = true;
 				}
 
@@ -152,6 +155,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				{
 					ui.MissTsuchinokoScore(player.mIsStrikeActive);
 					ui.mCombo = 0;
+					ui.mIsWarning = true;
 					tsuchinoko[i].mIsDeath = true;
 				}
 
@@ -233,6 +237,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//背景描画
 			map.Draw(screen);
+			//カウントダウン描画
+			ui.DrawBackTimeLimit(screen);
 			//敵描画
 			for (int i = 0; i < Snake::kMaxSnake; i++) {
 				snake[i].Draw(screen);

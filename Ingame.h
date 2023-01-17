@@ -16,13 +16,23 @@ public:
 	void Draw(Screen& screen);
 
 
+	//‰æ–Ê‚Ì’†S
+	Vec2 mCenterPosition;
+
+
 	//§ŒÀŠÔ
-	const int kTimeLimit = 60;
+	const int kTimeLimit = 90;
 	Vec2 mTimePosition[2];
+	Vec2 mTimeLastScale;
 	int mTimeFrame;
 	int mTimeElapsed;
 	int mTimeLeft;
+	int mTimeUISize;
+	int mTimeLastUISize;
+	unsigned int mTimeLastColor;
+	float mTimeEasingt;
 	void TimeLimit();
+	void DrawBackTimeLimit(Screen& screen);
 
 
 	//ƒRƒ“ƒ{
@@ -47,12 +57,22 @@ public:
 	void MissTsuchinokoScore(bool playermIsStrikeActive);
 
 
+	//“ª‚©”ö‚É“–‚½‚Á‚Ä‚µ‚Ü‚Á‚½‚Æ‚«
+	bool mIsWarning;
+	bool mIsWarningRed;
+	float mWarningAlphat;
+	unsigned int mWarningColor;
+	void Warning();
+
+
 	//‰æ‘œ
 	bool mIsLoadTexture = false;
-	int mTimeUISize;
 	int mTimeNumber;
+	int mTimeLimitNumber;
 	int mComboLetter;
 	int mScoreLetter;
+	int mWarningRed;
+	void LoadTexture();
 
 };
 

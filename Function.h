@@ -14,7 +14,11 @@ float Lerp(float easing, int end);
 /*　数値を収める関数　*/
 float Clamp(float num, float min, float max); 
 
-/*　イージング使用時に増加量とクランプを楽に行うための関数　*/
+/// <summary>
+/// イージング使用時に増加量とクランプを楽に行うための関数
+/// </summary>
+/// <param name="increase">増加量</param>
+/// <param name="t">変数</param>
 float EasingClamp(float increase, float t);
 
 /*　度数を入れるとラジアンに変換する関数　*/

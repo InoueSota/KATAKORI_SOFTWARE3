@@ -1,14 +1,20 @@
 #include "Ingame.h"
 #include "Player.h"
 #include "Function.h"
+#include "Easing.h"
 
 
 
 //ゲーム中のＵＩ
 void UI::Init() {
 
+	//画面の中心
+	mCenterPosition.x = Screen::kWindowWidth / 2.0;
+	mCenterPosition.y = Screen::kWindowHeight / 2.0;
+
 	//制限時間
 	mTimeUISize = 48;
+	mTimeLastUISize = 256;
 	mTimePosition[0].x = Screen::kWindowWidth / 2.0 + mTimeUISize / 2.0 + 5.0f;
 	mTimePosition[0].y = mTimeUISize / 2.0 + 5.0f;
 	mTimePosition[1].x = Screen::kWindowWidth / 2.0 - mTimeUISize / 2.0 - 5.0f;
@@ -16,6 +22,8 @@ void UI::Init() {
 	mTimeLeft = kTimeLimit;
 	mTimeElapsed = 0;
 	mTimeFrame = 0;
+	mTimeLastColor = 0xFFFFFFFF;
+	mTimeEasingt = 0.0f;
 	
 	//コンボ
 	mIsComboScaleAnime = false;
@@ -35,6 +43,11 @@ void UI::Init() {
 		mScorePosition[i].y = 100.0f;
 	}
 
+	//頭か尾に当たってしまったとき
+	mIsWarning = false;
+	mIsWarningRed = false;
+	mWarningAlphat = 0.0f;
+	mWarningColor = 0xFFFFFF00;
 }
 void UI::Update() {
 
@@ -43,6 +56,9 @@ void UI::Update() {
 
 	//コンボ
 	Combo();
+
+	//頭か尾に当たってしまったとき
+	Warning();
 }
 void UI::TimeLimit() {
 
@@ -51,6 +67,13 @@ void UI::TimeLimit() {
 	{
 		mTimeElapsed++;
 		mTimeFrame = 0;
+
+		//カウントダウンの初期化
+		if (mTimeLeft < 10) {
+			mTimeEasingt = 0.0f;
+			mTimeLastColor = 0xFFFFFF70;
+			mTimeLastScale = { 1.0f, 1.0f };
+		}
 	}
 
 	//時間のフレームを加算する
@@ -61,6 +84,13 @@ void UI::TimeLimit() {
 
 	//残り時間の限界値の設定
 	mTimeLeft = Clamp(mTimeLeft, 0, kTimeLimit);
+
+	//カウントダウンの透明度と大きさをイージング処理する
+	if (mTimeLeft < 10) {
+		mTimeEasingt = EasingClamp(1.0f / 60.0f, mTimeEasingt);
+		mTimeLastColor = ColorEasingMove(0xFFFFFF70, 0xFFFFFF00, easeOutSine(mTimeEasingt));
+		mTimeLastScale = EasingMove({ 1.0f, 1.0f }, { 2.0f,2.0f }, easeOutSine(mTimeEasingt));
+	}
 }
 void UI::Combo() {
 
@@ -125,21 +155,58 @@ void UI::MissTsuchinokoScore(bool playermIsStrikeActive) {
 		mScore -= kTsuchinokoScore / 2.0;
 	}
 }
-void UI::Draw(Screen& screen) {
+void UI::Warning() {
 
+	if (mIsWarning) {
+		if (!mIsWarningRed) {
+			mWarningAlphat = EasingClamp(0.5f, mWarningAlphat);
+			mWarningColor = ColorEasingMove(0xFFFFFF00, WHITE, easeOutCirc(mWarningAlphat));
+			if (mWarningAlphat == 1.0f) {
+				mWarningAlphat = 0.0f;
+				mIsWarningRed = true;
+			}
+		}
+		else {
+			mWarningAlphat = EasingClamp(0.1f, mWarningAlphat);
+			mWarningColor = ColorEasingMove(WHITE, 0xFFFFFF00, easeInSine(mWarningAlphat));
+			if (mWarningAlphat == 1.0f) {
+				mIsWarning = false;
+			}
+		}
+	}
+	else {
+		mIsWarningRed = false;
+		mWarningAlphat = 0.0f;
+		mWarningColor = 0xFFFFFF00;
+	}
+}
+void UI::DrawBackTimeLimit(Screen& screen) {
+
+	//カウントダウンの描画
+	if (mTimeLeft < 10) {
+		screen.DrawUI(mCenterPosition, mTimeLastUISize, 288 * (mTimeLeft % 10), 288, 288, mTimeLimitNumber, 0xFFFFFF70);
+		screen.DrawUI(mCenterPosition, mTimeLastUISize, 288 * (mTimeLeft % 10), 288, 288, mTimeLimitNumber, mTimeLastColor, mTimeLastScale);
+	}
+}
+void UI::LoadTexture() {
 	if (!mIsLoadTexture) {
 		mTimeNumber = Novice::LoadTexture("./Resources/UI/Time/number.png");
+		mTimeLimitNumber = Novice::LoadTexture("./Resources/UI/Time/timelimit.png");
 		mComboLetter = Novice::LoadTexture("./Resources/UI/Combo/combo.png");
 		mScoreLetter = Novice::LoadTexture("./Resources/UI/Score/score.png");
+		mWarningRed = Novice::LoadTexture("./Resources/Player/warningred.png");
 		mIsLoadTexture = true;
 	}
+}
+void UI::Draw(Screen& screen) {
+
+	//頭か尾に当たってしまったとき
+	screen.DrawUI(mCenterPosition, Screen::kWindowWidth, Screen::kWindowHeight, 0, Screen::kWindowWidth, Screen::kWindowHeight, mWarningRed, mWarningColor);
 
 	//制限時間
 	if (10 <= mTimeLeft) {
-		screen.DrawUI(mTimePosition[1], mTimeUISize, 32 * (mTimeLeft / 10), 32, 32, mTimeNumber, WHITE);
-	}
-	if (0 <= mTimeLeft) {
-		screen.DrawUI(mTimePosition[0], mTimeUISize, 32 * (mTimeLeft % 10), 32, 32, mTimeNumber, WHITE);
+		screen.DrawUI(mTimePosition[1], mTimeUISize, 288 * (mTimeLeft / 10), 288, 288, mTimeLimitNumber, WHITE);
+		screen.DrawUI(mTimePosition[0], mTimeUISize, 288 * (mTimeLeft % 10), 288, 288, mTimeLimitNumber, WHITE);
 	}
 
 	//コンボ
