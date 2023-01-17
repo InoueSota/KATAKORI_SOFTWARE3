@@ -131,8 +131,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				{
 					ui.MissSnakeScore(player.mIsStrikeActive);
 					ui.mCombo = 0;
+					if (!player.mKnockbackFlag) {
+						player.mKnockbackFlag = 1;
+						player.mKnockbackEnemyPos = snake[i].mHeadPosition;
+					}
 					ui.mIsWarning = true;
-					snake[i].mIsDeath = true;
 				}
 
 				//体
@@ -155,8 +158,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				{
 					ui.MissTsuchinokoScore(player.mIsStrikeActive);
 					ui.mCombo = 0;
+					if (!player.mKnockbackFlag) {
+						player.mKnockbackFlag = 1;
+						player.mKnockbackEnemyPos = tsuchinoko[i].mHeadPosition;
+					}
 					ui.mIsWarning = true;
-					tsuchinoko[i].mIsDeath = true;
 				}
 
 				//体
@@ -175,10 +181,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//敵の数に応じてスピードを変える
 			if (SightCount(snake, tsuchinoko)) {
 				for (int i = 0; i < Snake::kMaxSnake; i++) {
-					snake[i].mSpeed = 5 + (SightCount(snake, tsuchinoko) * 1);
+					snake[i].mSpeed = 5 + (SightCount(snake, tsuchinoko) * 0.5);
 				}
 				for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
-					tsuchinoko[i].mCenterSpeed = 5 + (SightCount(snake, tsuchinoko) * 1);
+					tsuchinoko[i].mCenterSpeed = 5 + (SightCount(snake, tsuchinoko) * 0.3);
 				}
 			} else {
 				for (int i = 0; i < Snake::kMaxSnake; i++) {
@@ -254,6 +260,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//ＵＩ描画
 			ui.Draw(screen);
+
+			Novice::ScreenPrintf(0, 0, "%f", player.mKnockBackT);
+			Novice::ScreenPrintf(0, 20, "%d", player.mKnockbackFlag);
+			Novice::ScreenPrintf(0, 40, "%f", player.mKnockbackStart.x);
+			Novice::ScreenPrintf(0, 60, "%f", player.mKnockbackEnd.x);
+			Novice::ScreenPrintf(0, 80, "%f", player.mKnockbackStart.y);
+			Novice::ScreenPrintf(0, 100, "%f", player.mKnockbackEnd.y);
 
 			break;
 		case OUTGAME:

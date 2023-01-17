@@ -72,6 +72,12 @@ public:
 	void Shadow();
 
 	int LockonCount;//‰½‘Ì‚Ì“G‚É•â‘«‚³‚ê‚Ä‚¢‚é‚©
+	int mKnockbackFlag;
+	Vec2 mKnockbackEnemyPos;
+	Vec2 mKnockbackStart;
+	Vec2 mKnockbackEnd;
+	float mKnockBackT;
+	void Knockback();
 
 };
 
