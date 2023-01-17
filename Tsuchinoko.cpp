@@ -79,7 +79,7 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 		}
 		else {
 			mCenterPositionStart.x = mCenterPosition.x;
-			mTargetPoint.x = rand() % 6400 - (6400 / 2);
+			mTargetPoint.x = RAND(Map::kMapLeft, Map::kMapRight);
 		}
 
 		if ((mTargetPoint.y > mCenterPositionStart.y && mTargetPoint.y > mCenterPosition.y) || (mTargetPoint.y < mCenterPositionStart.y && mTargetPoint.y < mCenterPosition.y)) {
@@ -87,13 +87,13 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 		}
 		else {
 			mCenterPositionStart.y = mCenterPosition.y;
-			mTargetPoint.y = rand() % 3200 - (3200 / 2);
+			mTargetPoint.y = RAND(Map::kMapBottom, Map::kMapTop);
 		}
 	}
 	//ƒvƒŒƒCƒ„[‚ð’Ç‚¢‚©‚¯‚Ä"‚¢‚é"
 	else {
 
-		mDirectionPoint = mTargetPoint - mHeadPosition;
+		mDirectionPoint = mTargetPoint - mCenterPosition;
 
 		mDirectionPoint = mDirectionPoint.Normalized();
 

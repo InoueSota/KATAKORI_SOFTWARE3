@@ -74,7 +74,6 @@ void Player::Update(Screen& screen) {
 	Shadow();
 
 }
-
 void Player::NormalMove() {
 
 	//スティックの方向を取得する
@@ -94,7 +93,6 @@ void Player::NormalMove() {
 	//速度を代入する
 	mVelocity += mNormalVelocity;
 }
-
 void Player::Dush() {
 
 	//スティックの方向を取得する
@@ -122,7 +120,6 @@ void Player::Dush() {
 		mVelocity += mDushVelocity;
 	}
 }
-
 void Player::Mark() {
 
 	//Xボタン押下時にPositionを設定＆フラグをtrueにする
@@ -151,7 +148,6 @@ void Player::Mark() {
 	}
 
 }
-
 void Player::Strike() {
 
 	if (mIsMarkActive && !mIsStrikeActive){
@@ -208,7 +204,6 @@ void Player::Strike() {
 	}
 
 }
-
 void Player::StrikeLine(Screen& screen) {
 
 	if (mIsStrikeActive && 0.2f <= mStrikeEasingt && mStrikeEasingt <= 0.85f)
@@ -268,7 +263,6 @@ void Player::StrikeLine(Screen& screen) {
 	}
 
 }
-
 void Player::Shadow() {
 
 	//Aボタン押下時
