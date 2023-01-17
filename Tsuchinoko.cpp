@@ -68,22 +68,38 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 	//一応正規化する
 	Vec2 tmpTarget = mTargetPoint.Normalized();
 
-	//徐々に向きを変える
-	mDirectionPoint += (tmpTarget - mDirectionPoint) * 0.01f;
+	//プレイヤーを追いかけて"ない"
+	if (!IsPlayerLockon) {
 
-	if ((mTargetPoint.x > mCenterPositionStart.x && mTargetPoint.x > mCenterPosition.x) || (mTargetPoint.x < mCenterPositionStart.x && mTargetPoint.x < mCenterPosition.x)) {
+		//徐々に向きを変える
+		mDirectionPoint += (tmpTarget - mDirectionPoint) * 0.01f;
+
+		if ((mTargetPoint.x > mCenterPositionStart.x && mTargetPoint.x > mCenterPosition.x) || (mTargetPoint.x < mCenterPositionStart.x && mTargetPoint.x < mCenterPosition.x)) {
+			mVelocity = mDirectionPoint * mCenterSpeed;
+		}
+		else {
+			mCenterPositionStart.x = mCenterPosition.x;
+			mTargetPoint.x = rand() % 6400 - (6400 / 2);
+		}
+
+		if ((mTargetPoint.y > mCenterPositionStart.y && mTargetPoint.y > mCenterPosition.y) || (mTargetPoint.y < mCenterPositionStart.y && mTargetPoint.y < mCenterPosition.y)) {
+			mVelocity = mDirectionPoint * mCenterSpeed;
+		}
+		else {
+			mCenterPositionStart.y = mCenterPosition.y;
+			mTargetPoint.y = rand() % 3200 - (3200 / 2);
+		}
+	}
+	//プレイヤーを追いかけて"いる"
+	else {
+
+		mDirectionPoint = mTargetPoint - mHeadPosition;
+
+		mDirectionPoint = mDirectionPoint.Normalized();
+
 		mVelocity = mDirectionPoint * mCenterSpeed;
-	} else {
-		mCenterPositionStart.x = mCenterPosition.x;
-		mTargetPoint.x = rand() % 6400 - (6400 / 2);
 	}
 
-	if ((mTargetPoint.y > mCenterPositionStart.y && mTargetPoint.y > mCenterPosition.y) || (mTargetPoint.y < mCenterPositionStart.y && mTargetPoint.y < mCenterPosition.y)) {
-		mVelocity = mDirectionPoint * mCenterSpeed;
-	} else {
-		mCenterPositionStart.y = mCenterPosition.y;
-		mTargetPoint.y = rand() % 3200 - (3200 / 2);
-	}
 
 }
 

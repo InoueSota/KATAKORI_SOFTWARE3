@@ -44,8 +44,8 @@ void Snake::Make() {
 		mHeadPosition.x = RAND(Map::kMapLeft, Map::kMapRight);
 		mHeadPosition.y = RAND(Map::kMapBottom, Map::kMapTop);
 		mHeadPositionStart = mHeadPosition;
-		mTargetPoint.x = rand() % 6400 - (6400 / 2);
-		mTargetPoint.y = rand() % 3200 - (3200 / 2);
+		mTargetPoint.x = RAND(Map::kMapLeft, Map::kMapRight);
+		mTargetPoint.y = RAND(Map::kMapBottom, Map::kMapTop);
 		for (int i = 0; i < kMaxFrame; i++) {
 			mOldHeadPosition[i] = mHeadPosition;
 		}
@@ -57,25 +57,39 @@ void Snake::Make() {
 
 void Snake::Move() {
 
-
 	//一応正規化する
 	Vec2 tmpTarget = mTargetPoint.Normalized();
 
-	//徐々に向きを変える
-	mDirectionPoint += (tmpTarget - mDirectionPoint) * 0.01f;
+	//プレイヤーを追いかけて"ない"
+	if (!IsPlayerLockon) {
 
-	if ((mTargetPoint.x > mHeadPositionStart.x && mTargetPoint.x > mHeadPosition.x) || (mTargetPoint.x < mHeadPositionStart.x && mTargetPoint.x < mHeadPosition.x)) {
-		mVelocity = mDirectionPoint * mSpeed;
-	} else {
-		mHeadPositionStart.x = mHeadPosition.x;
-		mTargetPoint.x = rand() % 6400 - (6400 / 2);
+		//徐々に向きを変える
+		mDirectionPoint += (tmpTarget - mDirectionPoint) * 0.01f;
+
+		if ((mTargetPoint.x > mHeadPositionStart.x && mTargetPoint.x > mHeadPosition.x) || (mTargetPoint.x < mHeadPositionStart.x && mTargetPoint.x < mHeadPosition.x)) {
+			mVelocity = mDirectionPoint * mSpeed;
+		}
+		else {
+			mHeadPositionStart.x = mHeadPosition.x;
+			mTargetPoint.x = RAND(Map::kMapLeft, Map::kMapRight);
+		}
+
+		if ((mTargetPoint.y > mHeadPositionStart.y && mTargetPoint.y > mHeadPosition.y) || (mTargetPoint.y < mHeadPositionStart.y && mTargetPoint.y < mHeadPosition.y)) {
+			mVelocity = mDirectionPoint * mSpeed;
+		}
+		else {
+			mHeadPositionStart.y = mHeadPosition.y;
+			mTargetPoint.y = RAND(Map::kMapBottom, Map::kMapTop);
+		}
 	}
+	//プレイヤーを追いかけて"いる"
+	else {
 
-	if ((mTargetPoint.y > mHeadPositionStart.y && mTargetPoint.y > mHeadPosition.y) || (mTargetPoint.y < mHeadPositionStart.y && mTargetPoint.y < mHeadPosition.y)) {
+		mDirectionPoint = mTargetPoint - mHeadPosition;
+
+		mDirectionPoint = mDirectionPoint.Normalized();
+
 		mVelocity = mDirectionPoint * mSpeed;
-	} else {
-		mHeadPositionStart.y = mHeadPosition.y;
-		mTargetPoint.y = rand() % 3200 - (3200 / 2);
 	}
 }
 
