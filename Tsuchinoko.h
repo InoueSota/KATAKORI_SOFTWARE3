@@ -62,6 +62,7 @@ public:
 	//‰æ‘œ
 	bool mIsLoadTexture = false;
 	int tsuchinoko;
+	int tsuchinokobody;
 	int fov;
 };
 

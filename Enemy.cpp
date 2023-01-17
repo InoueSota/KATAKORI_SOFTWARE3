@@ -164,6 +164,7 @@ void Snake::Draw(Screen& screen) {
 
 	if (!mIsLoadTexture) {
 		head = Novice::LoadTexture("./Resources/Debugs/head.png");
+		body = Novice::LoadTexture("./Resources/Debugs/body.png");
 		fov = Novice::LoadTexture("./Resources/Enemy/fov.png");
 		mIsLoadTexture = true;
 	}
@@ -174,7 +175,7 @@ void Snake::Draw(Screen& screen) {
 		//‘Ì•`‰æ
 		for (int i = 0; i < kBodyMax; i++)
 		{
-			screen.DrawPicture(mBodyPosition[i], mBodyRadius, mBodyAngle[i], 100, 100, head);
+			screen.DrawPicture(mBodyPosition[i], mBodyRadius, mBodyAngle[i], 100, 100, body);
 		}
 
 		//“ª•`‰æ

@@ -56,6 +56,7 @@ public:
 	//‰æ‘œŠÖŒW
 	bool mIsLoadTexture = false;
 	int head;
+	int body;
 	int fov;
 
 };

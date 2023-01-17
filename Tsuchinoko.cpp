@@ -134,6 +134,7 @@ void Tsuchinoko::Draw(Screen& screen) {
 
 	if (!mIsLoadTexture) {
 		tsuchinoko = Novice::LoadTexture("./Resources/Debugs/tsuchinoko.png");
+		tsuchinokobody = Novice::LoadTexture("./Resources/Debugs/tsuchinokobody.png");
 		fov = Novice::LoadTexture("./Resources/Enemy/fov.png");
 		mIsLoadTexture = true;
 	}
@@ -148,7 +149,7 @@ void Tsuchinoko::Draw(Screen& screen) {
 		//‘Ì‚Ì•`‰æ
 		for (int i = 0; i < kBodyMax; i++)
 		{
-			screen.DrawPicture(mBodyPosition[i], mBodySize, mCenterAngle, 100, 100, tsuchinoko);
+			screen.DrawPicture(mBodyPosition[i], mBodySize, mCenterAngle, 100, 100, tsuchinokobody);
 		}
 
 		//“–‚½‚è”»’è•`‰æ
