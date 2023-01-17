@@ -31,6 +31,7 @@ public:
 	float mHeadAngle;
 	Vec2 mHeadPositionStart;//スタート地点
 	Vec2 mTargetPoint;//目標地点
+	Vec2 mDirectionPoint;
 	Vec2 mVelocity;//速度
 	void Move();
 	void Angle();

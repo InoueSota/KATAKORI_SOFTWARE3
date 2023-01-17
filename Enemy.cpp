@@ -57,31 +57,22 @@ void Snake::Make() {
 
 void Snake::Move() {
 
-	//ランダムに移動地点を決めて移動
-	float rad = atan2(mTargetPoint.y - mHeadPosition.y, mTargetPoint.x - mHeadPosition.x);
-	float rad_2 = 0;
 
-	if (rad > mHeadAngle + 3.14159) {
-		rad_2 = mHeadAngle + mAngleSpeed;
-		if (rad < mHeadAngle + 3.14159) {
-			rad_2 = rad;
-		}
-	} else {
-		rad_2 = mHeadAngle - mAngleSpeed;
-		if (rad > mHeadAngle + 3.14159) {
-			rad_2 = rad;
-		}
-	}
+	//一応正規化する
+	Vec2 tmpTarget = mTargetPoint.Normalized();
+
+	//徐々に向きを変える
+	mDirectionPoint += (tmpTarget - mDirectionPoint) * 0.01f;
 
 	if ((mTargetPoint.x > mHeadPositionStart.x && mTargetPoint.x > mHeadPosition.x) || (mTargetPoint.x < mHeadPositionStart.x && mTargetPoint.x < mHeadPosition.x)) {
-		mVelocity.x += cosf(rad) * mSpeed;
+		mVelocity = mDirectionPoint * mSpeed;
 	} else {
 		mHeadPositionStart.x = mHeadPosition.x;
 		mTargetPoint.x = rand() % 6400 - (6400 / 2);
 	}
 
 	if ((mTargetPoint.y > mHeadPositionStart.y && mTargetPoint.y > mHeadPosition.y) || (mTargetPoint.y < mHeadPositionStart.y && mTargetPoint.y < mHeadPosition.y)) {
-		mVelocity.y += sinf(rad) * mSpeed;
+		mVelocity = mDirectionPoint * mSpeed;
 	} else {
 		mHeadPositionStart.y = mHeadPosition.y;
 		mTargetPoint.y = rand() % 3200 - (3200 / 2);

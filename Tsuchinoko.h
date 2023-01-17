@@ -17,6 +17,7 @@ public:
 	static constexpr int kMaxTsuchinoko = 10;//敵の最大数
 	Vec2 mCenterPositionStart;//スタート地点
 	Vec2 mTargetPoint;//目標地点
+	Vec2 mDirectionPoint;
 	bool IsPlayerLockon = false;//プレイヤーを補足しているかどうか
 	int mLockonRadius = 600;//敵の視界の範囲
 

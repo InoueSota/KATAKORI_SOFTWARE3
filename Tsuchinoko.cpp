@@ -65,31 +65,21 @@ void Tsuchinoko::Make(Vec2 playerPosition) {
 
 void Tsuchinoko::Move(Vec2 playerPosition) {
 
-	//ランダムに移動地点を決めて移動
-	float rad = atan2(mTargetPoint.y - mCenterPosition.y, mTargetPoint.x - mCenterPosition.x);
-	float rad_2 = 0;
+	//一応正規化する
+	Vec2 tmpTarget = mTargetPoint.Normalized();
 
-	if (rad > mCenterAngle + 3.14159) {
-		rad_2 = mCenterAngle + mAngleSpeed;
-		if (rad < mCenterAngle + 3.14159) {
-			rad_2 = rad;
-		}
-	} else {
-		rad_2 = mCenterAngle - mAngleSpeed;
-		if (rad > mCenterAngle + 3.14159) {
-			rad_2 = rad;
-		}
-	}
+	//徐々に向きを変える
+	mDirectionPoint += (tmpTarget - mDirectionPoint) * 0.01f;
 
 	if ((mTargetPoint.x > mCenterPositionStart.x && mTargetPoint.x > mCenterPosition.x) || (mTargetPoint.x < mCenterPositionStart.x && mTargetPoint.x < mCenterPosition.x)) {
-		mVelocity.x += cosf(rad) * mCenterSpeed;
+		mVelocity = mDirectionPoint * mCenterSpeed;
 	} else {
 		mCenterPositionStart.x = mCenterPosition.x;
 		mTargetPoint.x = rand() % 6400 - (6400 / 2);
 	}
 
 	if ((mTargetPoint.y > mCenterPositionStart.y && mTargetPoint.y > mCenterPosition.y) || (mTargetPoint.y < mCenterPositionStart.y && mTargetPoint.y < mCenterPosition.y)) {
-		mVelocity.y += sinf(rad) * mCenterSpeed;
+		mVelocity = mDirectionPoint * mCenterSpeed;
 	} else {
 		mCenterPositionStart.y = mCenterPosition.y;
 		mTargetPoint.y = rand() % 3200 - (3200 / 2);
