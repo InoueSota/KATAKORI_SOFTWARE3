@@ -68,6 +68,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					tsuchinoko[i].Init();
 				}
 				ui.Init();
+				scene = TITLE;
 			}
 
 			//プレイヤーアップデート
