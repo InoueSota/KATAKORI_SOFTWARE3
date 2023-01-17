@@ -146,7 +146,7 @@ void UI::Draw(Screen& screen) {
 	if (10 <= mCombo) {
 		screen.DrawUI(mComboPosition[1], mTimeUISize, 32 * (mCombo / 10), 32, 32, mTimeNumber, WHITE, mComboScale);
 	}
-	if (1 <= mCombo) {
+	if (0 <= mCombo) {
 		screen.DrawUI(mComboPosition[0], mTimeUISize, 32 * (mCombo % 10), 32, 32, mTimeNumber, WHITE, mComboScale);
 	}
 	screen.DrawUI({ mScorePosition[0].x, mComboPosition[0].y + 50.0f }, 100, 50, 0, 200, 100, mComboLetter, WHITE);
