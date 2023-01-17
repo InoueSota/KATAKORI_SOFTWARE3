@@ -197,3 +197,20 @@ bool CircleCapsuleCollsion(Player& player, Vec2 enemyPosition, float enemyRadius
 	}
 	return false;
 }
+
+int SightCount(Snake snake[Snake::kMaxSnake], Tsuchinoko tsuchinoko[Tsuchinoko::kMaxTsuchinoko]) {
+	int Count = 0;
+
+	for (int i = 0; i < snake[i].kMaxSnake; i++) {
+		if (snake[i].IsPlayerLockon) {
+			Count++;
+		}
+	}
+	for (int i = 0; i < tsuchinoko[i].kMaxTsuchinoko; i++) {
+		if (tsuchinoko[i].IsPlayerLockon) {
+			Count++;
+		}
+	}
+
+	return Count;
+}

@@ -71,6 +71,8 @@ public:
 	unsigned int mShadowColor;
 	void Shadow();
 
+	int LockonCount;//‰½‘Ì‚Ì“G‚É•â‘«‚³‚ê‚Ä‚¢‚é‚©
+
 };
 
 

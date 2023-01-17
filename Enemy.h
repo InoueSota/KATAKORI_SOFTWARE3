@@ -35,7 +35,7 @@ public:
 	Vec2 mVelocity;//速度
 	void Move();
 	void Angle();
-	const int mSpeed = 5;
+	float mSpeed = 5;
 	const float mAngleSpeed = 0.1;//回転の速さ
 	bool IsCollision[5] = {};
 	bool IsPlayerLockon = false;//プレイヤーを補足しているかどうか
