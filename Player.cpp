@@ -125,9 +125,10 @@ void Player::Dush() {
 void Player::Mark() {
 
 	//Xボタン押下時にPositionを設定＆フラグをtrueにする
-	if (!mIsMarkActive && Controller::IsTriggerButton(0,Controller::bX)){
+	if (Controller::IsTriggerButton(0,Controller::bX)){
 
 		mMarkPosition = mPosition;
+		mMarkFrame = 0;
 		mIsMarkActive = true;
 
 	}
