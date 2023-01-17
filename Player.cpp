@@ -50,7 +50,9 @@ void Player::Update(Screen& screen) {
 	if (!mIsStrikeActive) {
 
 		//通常移動
-		NormalMove();
+		if (!mKnockbackFlag) {
+			NormalMove();
+		}
 
 		//ダッシュ
 		Dush();
@@ -73,8 +75,9 @@ void Player::Update(Screen& screen) {
 	//残像処理
 	Shadow();
 
+	Knockback();
 
-
+		
 }
 void Player::NormalMove() {
 
@@ -94,6 +97,7 @@ void Player::NormalMove() {
 
 	//速度を代入する
 	mVelocity += mNormalVelocity;
+
 }
 void Player::Dush() {
 
@@ -301,6 +305,45 @@ void Player::Shadow() {
 
 	}
 
+}
+
+void Player::Knockback() {
+
+	if (mKnockbackFlag == 1) {
+		int A = mPosition.x - mKnockbackEnemyPos.x;
+		int B = mPosition.y - mKnockbackEnemyPos.y;
+
+		float length = sqrtf(A * A + B * B);
+
+		float newA = A;
+		float newB = B;
+
+		if (length != 0) {
+			newA = A / length;
+			newB = B / length;
+		}
+
+		mKnockbackStart.x = mPosition.x;
+		mKnockbackStart.y = mPosition.y;
+		mKnockbackEnd.x = mPosition.x + newA * 300;
+		mKnockbackEnd.y = mPosition.y + newB * 300;
+		mKnockbackFlag = 2;
+
+	} else if (mKnockbackFlag == 2) {
+		if (mKnockBackT < 1) {
+			mKnockBackT += 0.033;
+			if (mKnockBackT > 1) {
+				mKnockBackT = 1;
+			}
+			float easedT = easeOutSine(mKnockBackT);
+
+			mPosition.x = ((1 - easedT) * mKnockbackStart.x) + (easedT * mKnockbackEnd.x);
+			mPosition.y = ((1 - easedT) * mKnockbackStart.y) + (easedT * mKnockbackEnd.y);
+		} else {
+			mKnockbackFlag = 0;
+			mKnockBackT = 0;
+		}
+	}
 }
 
 

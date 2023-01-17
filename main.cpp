@@ -129,7 +129,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				{
 					ui.MissSnakeScore(player.mIsStrikeActive);
 					ui.mCombo = 0;
-					snake[i].mIsDeath = true;
+					if (!player.mKnockbackFlag) {
+						player.mKnockbackFlag = 1;
+						player.mKnockbackEnemyPos = snake[i].mHeadPosition;
+					}
 				}
 
 				//体
@@ -152,7 +155,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				{
 					ui.MissTsuchinokoScore(player.mIsStrikeActive);
 					ui.mCombo = 0;
-					tsuchinoko[i].mIsDeath = true;
+					if (!player.mKnockbackFlag) {
+						player.mKnockbackFlag = 1;
+						player.mKnockbackEnemyPos = tsuchinoko[i].mHeadPosition;
+					}
 				}
 
 				//体
@@ -248,6 +254,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//ＵＩ描画
 			ui.Draw(screen);
+
+			Novice::ScreenPrintf(0, 0, "%f", player.mKnockBackT);
+			Novice::ScreenPrintf(0, 20, "%d", player.mKnockbackFlag);
+			Novice::ScreenPrintf(0, 40, "%f", player.mKnockbackStart.x);
+			Novice::ScreenPrintf(0, 60, "%f", player.mKnockbackEnd.x);
+			Novice::ScreenPrintf(0, 80, "%f", player.mKnockbackStart.y);
+			Novice::ScreenPrintf(0, 100, "%f", player.mKnockbackEnd.y);
 
 			break;
 		case OUTGAME:
