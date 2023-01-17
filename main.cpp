@@ -171,10 +171,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//敵の数に応じてスピードを変える
 			if (SightCount(snake, tsuchinoko)) {
 				for (int i = 0; i < Snake::kMaxSnake; i++) {
-					snake[i].mSpeed = 5 + (SightCount(snake, tsuchinoko) * 1);
+					snake[i].mSpeed = 5 + (SightCount(snake, tsuchinoko) * 0.5);
 				}
 				for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
-					tsuchinoko[i].mCenterSpeed = 5 + (SightCount(snake, tsuchinoko) * 1);
+					tsuchinoko[i].mCenterSpeed = 5 + (SightCount(snake, tsuchinoko) * 0.3);
 				}
 			} else {
 				for (int i = 0; i < Snake::kMaxSnake; i++) {
