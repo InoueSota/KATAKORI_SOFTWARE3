@@ -8,12 +8,8 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Tsuchinoko.h"
-<<<<<<< HEAD
 #include "Collision.h"
-=======
-#include "collision.h"
 #include "fever.h"
->>>>>>> 繝輔ぅ繝ｼ繝舌・
 
 //インスタンス化
 Screen screen;

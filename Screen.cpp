@@ -9,7 +9,7 @@
 
 void Screen::Init() {
 	mWorldCenter = { kWindowWidth / 2, kWindowHeight / 2 };
-	mMiniMapCenter = { kWindowWidth -  }
+	//mMiniMapCenter = { kWindowWidth -  }
 	mScroll.setZero();
 	mZoom = 0.4f;
 	mScreenShake.setZero();
@@ -159,7 +159,7 @@ void Screen::DrawUI(Vec2 Position, float size, int srcX, int srcW, int srcH, int
 
 void Screen::DrawMiniMap(Vec2 position, unsigned int color, FillMode fillMode) {
 	position = ScreenTransform(position);
-	Novice::DrawEllipse((int)Position.x, (int)Position.y, radiusX * mZoom, radiusY * mZoom, angle, color, fillMode);
+	//Novice::DrawEllipse((int)Position.x, (int)Position.y, radiusX * mZoom, radiusY * mZoom, angle, color, fillMode);
 }
 
 
@@ -178,7 +178,7 @@ Vec2 Screen::ScreenTransform(Vec2 position) {
 Vec2 Screen::MiniMapTransform(Vec2 position) {
 
 	return {
-		position.x* mZoom - mScroll.x + mWorldCenter.x,
-		position.y* mZoom * -1 - mScroll.y + mWorldCenter.y
-	}
+		position.x * mZoom - mScroll.x + mWorldCenter.x,
+		position.y * mZoom * -1 - mScroll.y + mWorldCenter.y
+	};
 }

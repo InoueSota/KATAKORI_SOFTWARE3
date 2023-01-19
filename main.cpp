@@ -291,13 +291,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//フィーバー
 			fever.Draw();
 
-			Novice::ScreenPrintf(0, 0, "%f", player.mKnockBackT);
-			Novice::ScreenPrintf(0, 20, "%d", player.mKnockbackFlag);
-			Novice::ScreenPrintf(0, 40, "%f", player.mKnockbackStart.x);
-			Novice::ScreenPrintf(0, 60, "%f", player.mKnockbackEnd.x);
-			Novice::ScreenPrintf(0, 80, "%f", player.mKnockbackStart.y);
-			Novice::ScreenPrintf(0, 100, "%f", player.mKnockbackEnd.y);
-
 			break;
 		case OUTGAME:
 			Novice::DrawSprite(0, 0, end, 1, 1, 0.0f, WHITE);
