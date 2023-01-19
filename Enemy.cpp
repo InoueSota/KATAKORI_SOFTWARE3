@@ -41,11 +41,11 @@ void Snake::Make() {
 
 	if (!mIsActive || mIsDeath)
 	{
-		mHeadPosition.x = RAND(Map::kMapLeft, Map::kMapRight);
-		mHeadPosition.y = RAND(Map::kMapBottom, Map::kMapTop);
+		mHeadPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+		mHeadPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 		mHeadPositionStart = mHeadPosition;
-		mTargetPoint.x = RAND(Map::kMapLeft, Map::kMapRight);
-		mTargetPoint.y = RAND(Map::kMapBottom, Map::kMapTop);
+		mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+		mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 		for (int i = 0; i < kMaxFrame; i++) {
 			mOldHeadPosition[i] = mHeadPosition;
 		}
@@ -64,8 +64,8 @@ void Snake::Move() {
 		mDirectionPoint += (mTargetPoint - mHeadPosition) * 0.00001f;
 
 		if (Collision(mHeadPosition, mHeadRadius, mTargetPoint, 30.0f)) {
-			mTargetPoint.x = RAND(Map::kMapLeft, Map::kMapRight);
-			mTargetPoint.y = RAND(Map::kMapBottom, Map::kMapTop);
+			mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+			mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 		}
 		else {
 			mDirectionPoint = mDirectionPoint.Normalized();
@@ -192,8 +192,11 @@ void Snake::Draw(Screen& screen) {
 		//“ª•`‰æ
 		screen.DrawPicture(mHeadPosition, mHeadRadius, mHeadAngle, 100, 100, head);
 
+		//Ž‹ŠE•`‰æ
 		screen.DrawPicture({ mHeadPosition.x + mLockonRadius / 2 * cosf(mHeadAngle), mHeadPosition.y + mLockonRadius / 2 * -sinf(mHeadAngle) }, mLockonRadius, mHeadAngle, 500, 500, fov, 0x0000FF80);
+		
+		//ƒ~ƒjƒ}ƒbƒv‚ÌˆÊ’u•`‰æ
+		screen.DrawMiniMap(mHeadPosition);
 	}
 
-	screen.DrawCircle(mTargetPoint, 100.0f);
 }

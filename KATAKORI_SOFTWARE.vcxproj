@@ -109,6 +109,7 @@
     <ClCompile Include="Key.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MatVec.cpp" />
+    <ClCompile Include="Outgame.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Quad.cpp" />
     <ClCompile Include="Screen.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="Key.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="MatVec.h" />
+    <ClInclude Include="Outgame.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="Screen.h" />

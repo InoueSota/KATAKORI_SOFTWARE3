@@ -56,8 +56,10 @@ void Tsuchinoko::Make(Vec2 playerPosition) {
 
 	if (!mIsActive || mIsDeath)
 	{
-		mCenterPosition.x = RAND(Map::kMapLeft, Map::kMapRight);
-		mCenterPosition.y = RAND(Map::kMapBottom, Map::kMapTop);
+		mCenterPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+		mCenterPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+		mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+		mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 		mIsDeath = false;
 		mIsActive = true;
 	}
@@ -72,9 +74,9 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 		//徐々に向きを変える
 		mDirectionPoint += (mTargetPoint - mCenterPosition) * 0.00001f;
 
-		if (Collision(mHeadPosition, mRadius, mTargetPoint, 30.0f)) {
-			mTargetPoint.x = RAND(Map::kMapLeft, Map::kMapRight);
-			mTargetPoint.y = RAND(Map::kMapBottom, Map::kMapTop);
+		if (Collision(mCenterPosition, mRadius, mTargetPoint, 30.0f)) {
+			mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+			mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 		}
 		else {
 			mDirectionPoint = mDirectionPoint.Normalized();
@@ -110,8 +112,8 @@ void Tsuchinoko::SetAngle() {
 
 void Tsuchinoko::Follow() {
 
-	mHeadPosition.x = mCenterPosition.x + ( cosf(mCenterAngle + Degree(90)) * (150.0f + (mSize - mBodySize)));
-	mHeadPosition.y = mCenterPosition.y + (-sinf(mCenterAngle + Degree(90)) * (150.0f + (mSize - mBodySize)));
+	mHeadPosition.x = mCenterPosition.x + ( cosf(mCenterAngle + Degree(90)) * ( 150.0f + (mSize - mBodySize)));
+	mHeadPosition.y = mCenterPosition.y + (-sinf(mCenterAngle + Degree(90)) * ( 150.0f + (mSize - mBodySize)));
 	mTailPosition.x = mCenterPosition.x + ( cosf(mCenterAngle + Degree(90)) * (-150.0f - (mSize - mBodySize)));
 	mTailPosition.y = mCenterPosition.y + (-sinf(mCenterAngle + Degree(90)) * (-150.0f - (mSize - mBodySize)));
 
@@ -163,10 +165,12 @@ void Tsuchinoko::Draw(Screen& screen) {
 			screen.DrawPicture(mBodyPosition[i], mBodySize, mCenterAngle, 100, 100, tsuchinokobody);
 		}
 
-		//当たり判定描画
-
-		//当たり判定のデバッグ
+		//視界描画
 		screen.DrawPicture({ mCenterPosition.x + mLockonRadius / 2 * cosf(mCenterAngle), mCenterPosition.y + mLockonRadius / 2 * -sinf(mCenterAngle) }, mLockonRadius, mCenterAngle, 500, 500, fov, 0x0000FF80);
+		
+		//ミニマップの位置描画
+		screen.DrawMiniMap(mCenterPosition);
+
 	}
 
 

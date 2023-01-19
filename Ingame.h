@@ -65,6 +65,10 @@ public:
 	void Warning();
 
 
+	//ミニマップ
+	Vec2 mMiniMapPosition;
+
+
 	//画像
 	bool mIsLoadTexture = false;
 	int mTimeNumber;

@@ -10,10 +10,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// 画像読み込み
 	int explanation = Novice::LoadTexture("./Resources/Debugs/Explanation.png");
-	int title = Novice::LoadTexture("./Resources/Outgame/Title/title.png");
 	int end = Novice::LoadTexture("./Resources/Outgame/End/end.png");
 	int Count;
 	ui.LoadTexture();
+	title.LoadTexture();
 
 	//乱数の初期化
 	srand(time(nullptr));
@@ -37,6 +37,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		switch (scene)
 		{
 		case TITLE:
+
+			title.Update();
 
 			//Aボタン押下時
 			if (Controller::IsTriggerButton(0, Controller::bA)) {
@@ -264,9 +266,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		switch (scene)
 		{
 		case TITLE:
-			Novice::DrawSprite(0, 0, title, 1, 1, 0.0f, WHITE);
+
+			title.Draw(screen);
+
 			break;
 		case INGAME:
+
 
 			//背景描画
 			map.Draw(screen);
@@ -283,7 +288,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			player.Draw(screen);
 
 			//制作中の操作説明を一時的に描画する
-			Novice::DrawSprite(Screen::kWindowWidth - 420, Screen::kWindowHeight - 220, explanation, 1, 1, 0.0f, WHITE);
+			//Novice::DrawSprite(Screen::kWindowWidth - 420, Screen::kWindowHeight - 220, explanation, 1, 1, 0.0f, WHITE);
 
 			//ＵＩ描画
 			ui.Draw(screen);

@@ -48,6 +48,10 @@ void UI::Init() {
 	mIsWarningRed = false;
 	mWarningAlphat = 0.0f;
 	mWarningColor = 0xFFFFFF00;
+
+	//ミニマップ
+	mMiniMapPosition = { Screen::kWindowWidth - Screen::kMiniMapSize, Screen::kWindowHeight - Screen::kMiniMapSize };
+
 }
 void UI::Update() {
 
@@ -228,6 +232,9 @@ void UI::Draw(Screen& screen) {
 		screen.DrawUI(mScorePosition[i], mTimeUISize, 32 * (int)Result[i], 32, 32, mTimeNumber, WHITE, mComboScale);
 	}
 	screen.DrawUI({ mScorePosition[0].x, mScorePosition[0].y + 50.0f }, 100, 50, 0, 200, 100, mScoreLetter, WHITE);
+
+	//ミニマップ
+	screen.DrawSquare(mMiniMapPosition, Screen::kMiniMapSize * 2, BLACK, kFillModeWireFrame, false);
 }
 
 

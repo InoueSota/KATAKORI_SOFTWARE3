@@ -9,7 +9,7 @@ public:
 
 	static constexpr int kWindowWidth = 1280;
 	static constexpr int kWindowHeight = 720;
-	static constexpr int kMiniMapSize = 50;
+	static constexpr int kMiniMapSize = 100;
 
 	Screen() {
 		Init();
@@ -23,7 +23,7 @@ private:
 	float mZoom;			//ズーム値
 
 	Vec2 mMiniMapCenter;	//ミニマップの中心
-	int mMiniMapSize;		//ミニマップのサイズ
+	float mMiniMapZoom;		//ミニマップのズーム値
 
 public:
 
@@ -114,7 +114,8 @@ public:
 	/// <param name="size">大きさ(= 直径)</param>
 	/// <param name="color">描画するスプライトの色</param>
 	/// <param name="fillMode">塗りつぶしモード</param>
-	void DrawSquare(Vec2 position, float size, unsigned int color = WHITE, FillMode fillMode = kFillModeSolid);
+	/// <param name="isScroll">スクロールするか</param>
+	void DrawSquare(Vec2 position, float size, unsigned int color = WHITE, FillMode fillMode = kFillModeSolid, bool isScroll = true);
 
 	/// <summary>
 	/// 長方形を描画する（傾きあり）
@@ -125,7 +126,8 @@ public:
 	/// <param name="angle">傾き</param>
 	/// <param name="color">描画するスプライトの色</param>
 	/// <param name="fillMode">塗りつぶしモード</param>
-	void DrawRectAngle(Vec2 position, float width, float height, float angle, unsigned int color = WHITE, FillMode fillMode = kFillModeSolid);
+	/// <param name="isScroll">スクロールするか</param>
+	void DrawRectAngle(Vec2 position, float width, float height, float angle, unsigned int color = WHITE, FillMode fillMode = kFillModeSolid, bool isScroll = true);
 	
 	/// <summary>
 	/// 長方形を描画する（傾きなし）
@@ -135,7 +137,8 @@ public:
 	/// <param name="height">縦幅</param>
 	/// <param name="color">描画するスプライトの色</param>
 	/// <param name="fillMode">塗りつぶしモード</param>
-	void DrawRectAngle(Vec2 position, float width, float height, unsigned int color = WHITE, FillMode fillMode = kFillModeSolid);
+	/// <param name="isScroll">スクロールするか</param>
+	void DrawRectAngle(Vec2 position, float width, float height, unsigned int color = WHITE, FillMode fillMode = kFillModeSolid, bool isScroll = true);
 
 	/// <summary>
 	/// 静止画（正方形）を描画する
@@ -209,14 +212,19 @@ public:
 
 
 	/// <summary>
-	/// スクリーン座標に変換する
+	/// ワールド座標に変換する
 	/// </summary>
-	Vec2 ScreenTransform(Vec2 position);
+	Vec2 WorldTransform(Vec2 position);
 
 	/// <summary>
 	/// ミニマップ座標に変換する
 	/// </summary>
 	Vec2 MiniMapTransform(Vec2 position);
+
+	/// <summary>
+	/// スクリーン座標に変換する
+	/// </summary>
+	Vec2 ScreenTransform(Vec2 position);
 };
 
 

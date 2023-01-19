@@ -4,6 +4,7 @@
 #include "Key.h"
 #include "Vec2.h"
 #include "Screen.h"
+#include "Outgame.h"
 #include "Ingame.h"
 #include "Player.h"
 #include "Enemy.h"
@@ -13,6 +14,7 @@
 
 //インスタンス化
 Screen screen;
+Title title;
 UI ui;
 Map map;
 Player player;
@@ -27,4 +29,4 @@ enum Scene
 	INGAME,
 	OUTGAME
 };
-Scene scene = INGAME;
+Scene scene = KATAKORI;
