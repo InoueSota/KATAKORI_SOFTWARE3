@@ -29,4 +29,4 @@ enum Scene
 	INGAME,
 	OUTGAME
 };
-Scene scene = KATAKORI;
+Scene scene = TITLE;
