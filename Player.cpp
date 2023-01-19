@@ -6,6 +6,7 @@
 #include "Ingame.h"
 
 
+
 void Player::Init() {
 	//ƒpƒ‰ƒ[ƒ^
 	mPosition.setZero();

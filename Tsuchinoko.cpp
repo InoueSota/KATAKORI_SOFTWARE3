@@ -3,6 +3,7 @@
 #include "Key.h"
 #include "Ingame.h"
 #include "Function.h"
+#include "Collision.h"
 
 
 
@@ -65,39 +66,27 @@ void Tsuchinoko::Make(Vec2 playerPosition) {
 
 void Tsuchinoko::Move(Vec2 playerPosition) {
 
-	//一応正規化する
-	Vec2 tmpTarget = mTargetPoint.Normalized();
-
 	//プレイヤーを追いかけて"ない"
 	if (!IsPlayerLockon) {
 
 		//徐々に向きを変える
-		mDirectionPoint += (tmpTarget - mDirectionPoint) * 0.01f;
+		mDirectionPoint += (mTargetPoint - mCenterPosition) * 0.00001f;
 
-		if ((mTargetPoint.x > mCenterPositionStart.x && mTargetPoint.x > mCenterPosition.x) || (mTargetPoint.x < mCenterPositionStart.x && mTargetPoint.x < mCenterPosition.x)) {
-			mVelocity = mDirectionPoint * mCenterSpeed;
-		}
-		else {
-			mCenterPositionStart.x = mCenterPosition.x;
+		if (Collision(mHeadPosition, mRadius, mTargetPoint, 30.0f)) {
 			mTargetPoint.x = RAND(Map::kMapLeft, Map::kMapRight);
-		}
-
-		if ((mTargetPoint.y > mCenterPositionStart.y && mTargetPoint.y > mCenterPosition.y) || (mTargetPoint.y < mCenterPositionStart.y && mTargetPoint.y < mCenterPosition.y)) {
-			mVelocity = mDirectionPoint * mCenterSpeed;
+			mTargetPoint.y = RAND(Map::kMapBottom, Map::kMapTop);
 		}
 		else {
-			mCenterPositionStart.y = mCenterPosition.y;
-			mTargetPoint.y = RAND(Map::kMapBottom, Map::kMapTop);
+			mDirectionPoint = mDirectionPoint.Normalized();
+			mVelocity += mDirectionPoint * mCenterSpeed;
 		}
 	}
 	//プレイヤーを追いかけて"いる"
 	else {
 
 		mDirectionPoint = mTargetPoint - mCenterPosition;
-
 		mDirectionPoint = mDirectionPoint.Normalized();
-
-		mVelocity = mDirectionPoint * mCenterSpeed;
+		mVelocity += mDirectionPoint * mCenterSpeed;
 	}
 
 
@@ -134,6 +123,22 @@ void Tsuchinoko::Follow() {
 
 }
 
+void Tsuchinoko::LockOn(Vec2 playerposition, float radius) {
+
+	Vec2 toPlayer = playerposition - mCenterPosition;
+
+	//なす角を求める
+	float dp = mVelocity.Dot(toPlayer);
+	float cp = mVelocity.Cross(toPlayer);
+	if (-Degree(30) < atan2(cp, dp) && atan2(cp, dp) < Degree(30)) {
+		IsPlayerLockon = true;
+		mTargetPoint = playerposition;
+	}
+	else {
+		IsPlayerLockon = false;
+	}
+}
+
 
 
 void Tsuchinoko::Draw(Screen& screen) {
@@ -161,21 +166,6 @@ void Tsuchinoko::Draw(Screen& screen) {
 		//当たり判定描画
 
 		//当たり判定のデバッグ
-		if (IsCollision[0]) {
-			screen.DrawCircle(mHeadPosition, mRadius, 0xFF000080, kFillModeSolid);
-		}
-		if (IsCollision[1]) {
-			screen.DrawCircle(mBodyPosition[0], mBodyRadius, 0xFF000080, kFillModeSolid);
-		}
-		if (IsCollision[2]) {
-			screen.DrawCircle(mBodyPosition[1], mBodyRadius, 0xFF000080, kFillModeSolid);
-		}
-		if (IsCollision[3]) {
-			screen.DrawCircle(mBodyPosition[2], mBodyRadius, 0xFF000080, kFillModeSolid);
-		}
-		if (IsCollision[4]) {
-			screen.DrawCircle(mTailPosition, mRadius, 0xFF000080, kFillModeSolid);
-		}
 		screen.DrawPicture({ mCenterPosition.x + mLockonRadius / 2 * cosf(mCenterAngle), mCenterPosition.y + mLockonRadius / 2 * -sinf(mCenterAngle) }, mLockonRadius, mCenterAngle, 500, 500, fov, 0x0000FF80);
 	}
 

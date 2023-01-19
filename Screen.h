@@ -9,6 +9,7 @@ public:
 
 	static constexpr int kWindowWidth = 1280;
 	static constexpr int kWindowHeight = 720;
+	static constexpr int kMiniMapSize = 50;
 
 	Screen() {
 		Init();
@@ -16,10 +17,13 @@ public:
 
 private:
 
-	Vec2 mWorldCenter;	//ワールドの中心
-	Vec2 mScreenShake;	//シェイク値
-	Vec2 mScroll;		//スクロール値
-	float mZoom;		//ズーム値
+	Vec2 mWorldCenter;		//ワールドの中心
+	Vec2 mScreenShake;		//シェイク値
+	Vec2 mScroll;			//スクロール値
+	float mZoom;			//ズーム値
+
+	Vec2 mMiniMapCenter;	//ミニマップの中心
+	int mMiniMapSize;		//ミニマップのサイズ
 
 public:
 
@@ -188,6 +192,18 @@ public:
 	/// <param name="scale">大きさを変化させる</param>
 	void DrawUI(Vec2 position, float size, int srcX, int srcW, int srcH, int textureHandle, unsigned int color = WHITE, Vec2 scale = { 1.0f, 1.0f });
 
+	/// <summary>
+	/// ミニマップの位置を円で描画する
+	/// </summary>
+	/// <param name="position">中心座標</param>
+	/// <param name="srcX">画像上の描画したい範囲左上座標 X（変数）</param>
+	/// <param name="srcW">画像上の描画したい範囲横幅</param>
+	/// <param name="srcH">画像上の描画したい範囲縦幅</param>
+	/// <param name="textureHandle">テクスチャのハンドル</param>
+	/// <param name="color">描画するスプライトの色</param>
+	/// <param name="scale">大きさを変化させる</param>
+	void DrawMiniMap(Vec2 position, unsigned int color = WHITE, FillMode fillMode = kFillModeSolid);
+
 
 	//--------------------------------------------------------------------------------------------//
 
@@ -196,6 +212,11 @@ public:
 	/// スクリーン座標に変換する
 	/// </summary>
 	Vec2 ScreenTransform(Vec2 position);
+
+	/// <summary>
+	/// ミニマップ座標に変換する
+	/// </summary>
+	Vec2 MiniMapTransform(Vec2 position);
 };
 
 

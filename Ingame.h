@@ -21,7 +21,7 @@ public:
 
 
 	//êßå¿éûä‘
-	const int kTimeLimit = 90;
+	const int kTimeLimit = 60;
 	Vec2 mTimePosition[2];
 	Vec2 mTimeLastScale;
 	int mTimeFrame;

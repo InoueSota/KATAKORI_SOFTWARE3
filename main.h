@@ -8,7 +8,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Tsuchinoko.h"
-#include "collision.h"
+#include "Collision.h"
 
 //インスタンス化
 Screen screen;

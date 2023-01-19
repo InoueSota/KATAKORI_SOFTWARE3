@@ -18,11 +18,12 @@ public:
 	Vec2 mCenterPositionStart;//スタート地点
 	Vec2 mTargetPoint;//目標地点
 	Vec2 mDirectionPoint;
+
+	//追尾
 	bool IsPlayerLockon = false;//プレイヤーを補足しているかどうか
 	int mLockonRadius = 600;//敵の視界の範囲
+	void LockOn(Vec2 playerposition, float radius);
 
-	const float mAngleSpeed = 0.1;//回転の速さ
-	bool IsCollision[5] = {};
 
 
 	//中心座標

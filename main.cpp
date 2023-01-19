@@ -12,6 +12,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	int explanation = Novice::LoadTexture("./Resources/Debugs/Explanation.png");
 	int title = Novice::LoadTexture("./Resources/Outgame/Title/title.png");
 	int end = Novice::LoadTexture("./Resources/Outgame/End/end.png");
+	int Count;
 	ui.LoadTexture();
 
 	//乱数の初期化
@@ -90,6 +91,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+			//敵がプレイヤーを追いかけるか判定
+			for (int i = 0; i < Snake::kMaxSnake; i++) {
+				if (Collision(player.mPosition, player.mRadius, snake[i].mHeadPosition, snake[i].mLockonRadius)) {
+					snake[i].LockOn(player.mPosition, player.mRadius);
+				}
+				else {
+					snake[i].IsPlayerLockon = false;
+				}
+			}
+			for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
+				if (Collision(player.mPosition, player.mRadius, tsuchinoko[i].mCenterPosition, tsuchinoko[i].mLockonRadius)) {
+					tsuchinoko[i].LockOn(player.mPosition, player.mRadius);
+				}
+				else {
+					tsuchinoko[i].IsPlayerLockon = false;
+				}
+			}
+
 			//敵同士の当たり判定
 			for (int i = 0; i < Snake::kMaxSnake; i++) {
 				for (int j = 0; j < Snake::kMaxSnake; j++) {
@@ -125,7 +144,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//プレイヤーとの当たり判定
 			//ヘビ
 			for (int i = 0; i < Snake::kMaxSnake; i++) {
-				collision(player, snake[i]);
 				//頭と尾
 				if (!snake[i].mIsDeath && (CircleCapsuleCollsion(player, snake[i].mHeadPosition, snake[i].mHeadRadius)))
 				{
@@ -152,7 +170,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//ツチノコ
 			for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
 
-				collisionTsuchinoko(player, tsuchinoko[i]);
 				//頭と尾
 				if (!tsuchinoko[i].mIsDeath && (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius) || Collision(player.mPosition, player.mRadius, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius)))
 				{
@@ -179,20 +196,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 			//敵の数に応じてスピードを変える
-			if (SightCount(snake, tsuchinoko)) {
-				for (int i = 0; i < Snake::kMaxSnake; i++) {
-					snake[i].mSpeed = 5 + (SightCount(snake, tsuchinoko) * 0.5);
+			Count = 0;
+
+			for (int i = 0; i < Snake::kMaxSnake; i++) {
+				if (snake[i].IsPlayerLockon) {
+					Count++;
 				}
-				for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
-					tsuchinoko[i].mCenterSpeed = 5 + (SightCount(snake, tsuchinoko) * 0.3);
+			}
+			for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
+				if (tsuchinoko[i].IsPlayerLockon) {
+					Count++;
 				}
-			} else {
-				for (int i = 0; i < Snake::kMaxSnake; i++) {
-					snake[i].mSpeed = 5;
-				}
-				for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
-					tsuchinoko[i].mCenterSpeed = 5;
-				}
+			}
+			for (int i = 0; i < Snake::kMaxSnake; i++) {
+				snake[i].mSpeed = 5 + Count * 0.5;
+			}
+			for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
+				tsuchinoko[i].mCenterSpeed = 5 + Count * 0.3;
 			}
 			
 
@@ -260,14 +280,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//ＵＩ描画
 			ui.Draw(screen);
-
-			Novice::ScreenPrintf(0, 0, "%f", player.mKnockBackT);
-			Novice::ScreenPrintf(0, 20, "%d", player.mKnockbackFlag);
-			Novice::ScreenPrintf(0, 40, "%f", player.mKnockbackStart.x);
-			Novice::ScreenPrintf(0, 60, "%f", player.mKnockbackEnd.x);
-			Novice::ScreenPrintf(0, 80, "%f", player.mKnockbackStart.y);
-			Novice::ScreenPrintf(0, 100, "%f", player.mKnockbackEnd.y);
-
 			break;
 		case OUTGAME:
 			Novice::DrawSprite(0, 0, end, 1, 1, 0.0f, WHITE);

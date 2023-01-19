@@ -99,6 +99,7 @@
     <ClCompile Include="C:\KamataEngine\DirectXGame\base\WinApp.cpp" />
     <ClCompile Include="C:\KamataEngine\DirectXGame\scene\GameScene.cpp" />
     <ClCompile Include="C:\KamataEngine\Adapter\Novice.cpp" />
+    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="ControllerInput.cpp" />
     <ClCompile Include="Easing.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -153,7 +154,7 @@
     <ClInclude Include="Screen.h" />
     <ClInclude Include="Tsuchinoko.h" />
     <ClInclude Include="Vec2.h" />
-    <ClInclude Include="collision.h" />
+    <ClInclude Include="Collision.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

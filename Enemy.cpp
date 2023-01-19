@@ -1,7 +1,7 @@
 #include "Enemy.h"
 #include "Key.h"
 #include "Ingame.h"
-
+#include "Collision.h"
 
 
 
@@ -57,29 +57,19 @@ void Snake::Make() {
 
 void Snake::Move() {
 
-	//一応正規化する
-	Vec2 tmpTarget = mTargetPoint.Normalized();
-
 	//プレイヤーを追いかけて"ない"
 	if (!IsPlayerLockon) {
 
 		//徐々に向きを変える
-		mDirectionPoint += (tmpTarget - mDirectionPoint) * 0.01f;
+		mDirectionPoint += (mTargetPoint - mHeadPosition) * 0.00001f;
 
-		if ((mTargetPoint.x > mHeadPositionStart.x && mTargetPoint.x > mHeadPosition.x) || (mTargetPoint.x < mHeadPositionStart.x && mTargetPoint.x < mHeadPosition.x)) {
-			mVelocity = mDirectionPoint * mSpeed;
-		}
-		else {
-			mHeadPositionStart.x = mHeadPosition.x;
+		if (Collision(mHeadPosition, mHeadRadius, mTargetPoint, 30.0f)) {
 			mTargetPoint.x = RAND(Map::kMapLeft, Map::kMapRight);
-		}
-
-		if ((mTargetPoint.y > mHeadPositionStart.y && mTargetPoint.y > mHeadPosition.y) || (mTargetPoint.y < mHeadPositionStart.y && mTargetPoint.y < mHeadPosition.y)) {
-			mVelocity = mDirectionPoint * mSpeed;
+			mTargetPoint.y = RAND(Map::kMapBottom, Map::kMapTop);
 		}
 		else {
-			mHeadPositionStart.y = mHeadPosition.y;
-			mTargetPoint.y = RAND(Map::kMapBottom, Map::kMapTop);
+			mDirectionPoint = mDirectionPoint.Normalized();
+			mVelocity += mDirectionPoint * mSpeed;
 		}
 	}
 	//プレイヤーを追いかけて"いる"
@@ -89,7 +79,7 @@ void Snake::Move() {
 
 		mDirectionPoint = mDirectionPoint.Normalized();
 
-		mVelocity = mDirectionPoint * mSpeed;
+		mVelocity += mDirectionPoint * mSpeed;
 	}
 }
 
@@ -106,6 +96,22 @@ void Snake::Angle() {
 		float dp = tmpDirection.Dot(base);
 		float cp = tmpDirection.Cross(base);
 		mHeadAngle = atan2(cp, dp);
+	}
+}
+
+void Snake::LockOn(Vec2 playerposition, float radius) {
+
+	Vec2 toPlayer = playerposition - mHeadPosition;
+
+	//なす角を求める
+	float dp = mVelocity.Dot(toPlayer);
+	float cp = mVelocity.Cross(toPlayer);
+	if (-Degree(30) < atan2(cp, dp) && atan2(cp, dp) < Degree(30)) {
+		IsPlayerLockon = true;
+		mTargetPoint = playerposition;
+	}
+	else {
+		IsPlayerLockon = false;
 	}
 }
 
@@ -186,18 +192,8 @@ void Snake::Draw(Screen& screen) {
 		//頭描画
 		screen.DrawPicture(mHeadPosition, mHeadRadius, mHeadAngle, 100, 100, head);
 
-		//当たり判定描画
-
-		//当たり判定のデバッグ
-		if (IsCollision[0]) {
-			screen.DrawCircle(mHeadPosition, mHeadRadius / 2, 0xFF000080, kFillModeSolid);
-		}
-		for (int i = 0; i < kBodyMax; i++)
-		{
-			if (IsCollision[i]) {
-				screen.DrawCircle(mBodyPosition[i], mBodyRadius / 2, 0xFF000080);
-			}
-		}
 		screen.DrawPicture({ mHeadPosition.x + mLockonRadius / 2 * cosf(mHeadAngle), mHeadPosition.y + mLockonRadius / 2 * -sinf(mHeadAngle) }, mLockonRadius, mHeadAngle, 500, 500, fov, 0x0000FF80);
 	}
+
+	screen.DrawCircle(mTargetPoint, 100.0f);
 }
