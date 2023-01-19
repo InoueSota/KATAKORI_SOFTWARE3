@@ -143,6 +143,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//プレイヤーとの当たり判定
 			//ヘビ
+			fever.mSnakeDefeat = 0;
 			for (int i = 0; i < Snake::kMaxSnake; i++) {
 				//頭と尾
 				if (!snake[i].mIsDeath && (CircleCapsuleCollsion(player, snake[i].mHeadPosition, snake[i].mHeadRadius)))
@@ -164,10 +165,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						ui.SnakeScore(player.mIsStrikeActive);
 						ui.AddCombo();
 						snake[i].mIsDeath = true;
+						fever.mSnakeDefeat++;
 					}
 				}
 			}
 			//ツチノコ
+			fever.mTsuchinokoDefeat = 0;
 			for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
 
 				//頭と尾
@@ -190,6 +193,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						ui.TsuchinokoScore(player.mIsStrikeActive);
 						ui.AddCombo();
 						tsuchinoko[i].mIsDeath = true;
+						fever.mTsuchinokoDefeat++;
 					}
 				}
 
@@ -216,6 +220,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 			//フィーバー
+			fever.Update();
 			
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -282,6 +287,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//ＵＩ描画
 			ui.Draw(screen);
+
+			//フィーバー
+			fever.Draw();
+
+			Novice::ScreenPrintf(0, 0, "%f", player.mKnockBackT);
+			Novice::ScreenPrintf(0, 20, "%d", player.mKnockbackFlag);
+			Novice::ScreenPrintf(0, 40, "%f", player.mKnockbackStart.x);
+			Novice::ScreenPrintf(0, 60, "%f", player.mKnockbackEnd.x);
+			Novice::ScreenPrintf(0, 80, "%f", player.mKnockbackStart.y);
+			Novice::ScreenPrintf(0, 100, "%f", player.mKnockbackEnd.y);
+
 			break;
 		case OUTGAME:
 			Novice::DrawSprite(0, 0, end, 1, 1, 0.0f, WHITE);

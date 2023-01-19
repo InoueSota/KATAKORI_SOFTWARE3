@@ -103,6 +103,7 @@
     <ClCompile Include="ControllerInput.cpp" />
     <ClCompile Include="Easing.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="fever.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="Ingame.cpp" />
     <ClCompile Include="Key.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="ControllerInput.h" />
     <ClInclude Include="Easing.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="fever.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="Ingame.h" />
     <ClInclude Include="Key.h" />
