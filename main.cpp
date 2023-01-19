@@ -148,13 +148,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				//頭と尾
 				if (!snake[i].mIsDeath && (CircleCapsuleCollsion(player, snake[i].mHeadPosition, snake[i].mHeadRadius)))
 				{
-					ui.MissSnakeScore(player.mIsStrikeActive);
-					ui.mCombo = 0;
-					if (!player.mKnockbackFlag) {
-						player.mKnockbackFlag = 1;
-						player.mKnockbackEnemyPos = snake[i].mHeadPosition;
+					if (!fever.mIsFever) {
+						ui.MissSnakeScore(player.mIsStrikeActive);
+						ui.mCombo = 0;
+						if (!player.mKnockbackFlag) {
+							player.mKnockbackFlag = 1;
+							player.mKnockbackEnemyPos = snake[i].mHeadPosition;
+						}
+						ui.mIsWarning = true;
+					} else {
+						ui.SnakeScore(player.mIsStrikeActive);
+						ui.AddCombo();
+						snake[i].mIsDeath = true;
+						fever.mSnakeDefeat++;
 					}
-					ui.mIsWarning = true;
+					
 				}
 
 				//体
@@ -166,6 +174,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						ui.AddCombo();
 						snake[i].mIsDeath = true;
 						fever.mSnakeDefeat++;
+						for (int k = 0; k < Fever::kMaxEnemy; k++) {
+							if (!fever.particlecreat[k].IsUse) {
+								fever.particlecreat[k].IsUse = 1;
+								fever.particlecreat[k].Pos = snake[i].mHeadPosition;
+								break;
+							}
+						}
 					}
 				}
 			}
@@ -176,13 +191,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				//頭と尾
 				if (!tsuchinoko[i].mIsDeath && (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius) || Collision(player.mPosition, player.mRadius, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius)))
 				{
-					ui.MissTsuchinokoScore(player.mIsStrikeActive);
-					ui.mCombo = 0;
-					if (!player.mKnockbackFlag) {
-						player.mKnockbackFlag = 1;
-						player.mKnockbackEnemyPos = tsuchinoko[i].mHeadPosition;
+					if (!fever.mIsFever) {
+						ui.MissTsuchinokoScore(player.mIsStrikeActive);
+						ui.mCombo = 0;
+						if (!player.mKnockbackFlag) {
+							player.mKnockbackFlag = 1;
+							player.mKnockbackEnemyPos = tsuchinoko[i].mHeadPosition;
+						}
+						ui.mIsWarning = true;
+					} else {
+						ui.TsuchinokoScore(player.mIsStrikeActive);
+						ui.AddCombo();
+						tsuchinoko[i].mIsDeath = true;
+						fever.mTsuchinokoDefeat++;
 					}
-					ui.mIsWarning = true;
+					
 				}
 
 				//体
@@ -194,7 +217,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						ui.AddCombo();
 						tsuchinoko[i].mIsDeath = true;
 						fever.mTsuchinokoDefeat++;
+						for (int k = 0; k < Fever::kMaxEnemy; k++) {
+							if (!fever.particlecreat[k].IsUse) {
+								fever.particlecreat[k].IsUse = 1;
+								fever.particlecreat[k].Pos = tsuchinoko[i].mCenterPosition;
+								break;
+							}
+						}
 					}
+
 				}
 
 			}
@@ -289,7 +320,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			ui.Draw(screen);
 
 			//フィーバー
-			fever.Draw();
+			fever.Draw(screen);
 
 			break;
 		case OUTGAME:
