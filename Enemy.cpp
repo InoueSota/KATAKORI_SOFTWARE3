@@ -14,13 +14,13 @@ void Snake::Init() {
 	mFollowFrame = 0;
 }
 
-void Snake::Update() {
+void Snake::Update(int mTimeLeft) {
 
 	//‘¬“x‚Ì‰Šú‰»
 	mVelocity.setZero();
 
 	//¶¬ˆ—
-	Make();
+	Make(mTimeLeft);
 
 	if (mIsActive && !mIsDeath)
 	{
@@ -37,7 +37,7 @@ void Snake::Update() {
 	}
 }
 
-void Snake::Make() {
+void Snake::Make(int mTimeLeft) {
 
 	if (!mIsActive || mIsDeath)
 	{
@@ -51,6 +51,9 @@ void Snake::Make() {
 		}
 		mIsDeath = false;
 		mIsActive = true;
+		if (mTimeLeft < 30) {
+			mIsSuper = 1;
+		}
 	}
 
 }
@@ -69,7 +72,11 @@ void Snake::Move() {
 		}
 		else {
 			mDirectionPoint = mDirectionPoint.Normalized();
-			mVelocity += mDirectionPoint * mSpeed;
+			if (mIsSuper) {
+				mVelocity += mDirectionPoint * mSuperSpeed;
+			} else {
+				mVelocity += mDirectionPoint * mSpeed;
+			}
 		}
 	}
 	//ƒvƒŒƒCƒ„[‚ğ’Ç‚¢‚©‚¯‚Ä"‚¢‚é"
@@ -79,7 +86,11 @@ void Snake::Move() {
 
 		mDirectionPoint = mDirectionPoint.Normalized();
 
-		mVelocity += mDirectionPoint * mSpeed;
+		if (mIsSuper) {
+			mVelocity += mDirectionPoint * mSuperSpeed;
+		} else {
+			mVelocity += mDirectionPoint * mSpeed;
+		}
 	}
 }
 
@@ -169,13 +180,13 @@ void Snake::Follow() {
 
 }
 
-
-
 void Snake::Draw(Screen& screen) {
 
 	if (!mIsLoadTexture) {
 		head = Novice::LoadTexture("./Resources/Debugs/head.png");
 		body = Novice::LoadTexture("./Resources/Debugs/body.png");
+		superhead = Novice::LoadTexture("./Resources/Debugs/superhead.png");
+		superbody = Novice::LoadTexture("./Resources/Debugs/superbody.png");
 		fov = Novice::LoadTexture("./Resources/Enemy/fov.png");
 		mIsLoadTexture = true;
 	}
@@ -184,13 +195,20 @@ void Snake::Draw(Screen& screen) {
 	if (mIsActive && !mIsDeath)
 	{
 		//‘Ì•`‰æ
-		for (int i = 0; i < kBodyMax; i++)
-		{
-			screen.DrawPicture(mBodyPosition[i], mBodyRadius, mBodyAngle[i], 100, 100, body);
+		for (int i = 0; i < kBodyMax; i++){
+			if (mIsSuper) {
+				screen.DrawPicture(mBodyPosition[i], mBodyRadius, mBodyAngle[i], 100, 100, superbody);
+			} else{
+				screen.DrawPicture(mBodyPosition[i], mBodyRadius, mBodyAngle[i], 100, 100, body);
+			}
 		}
 
 		//“ª•`‰æ
-		screen.DrawPicture(mHeadPosition, mHeadRadius, mHeadAngle, 100, 100, head);
+		if (mIsSuper) {
+			screen.DrawPicture(mHeadPosition, mHeadRadius, mHeadAngle, 100, 100, superhead);
+		} else {
+			screen.DrawPicture(mHeadPosition, mHeadRadius, mHeadAngle, 100, 100, head);
+		}
 
 		//‹ŠE•`‰æ
 		screen.DrawPicture({ mHeadPosition.x + mLockonRadius / 2 * cosf(mHeadAngle), mHeadPosition.y + mLockonRadius / 2 * -sinf(mHeadAngle) }, mLockonRadius, mHeadAngle, 500, 500, fov, 0x0000FF80);
