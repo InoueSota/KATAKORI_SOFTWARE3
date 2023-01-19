@@ -76,8 +76,8 @@ void Player::Update(Screen& screen) {
 	//残像処理
 	Shadow();
 
+	//ノックバック
 	Knockback();
-
 		
 }
 void Player::NormalMove() {
@@ -343,6 +343,8 @@ void Player::Knockback() {
 		} else {
 			mKnockbackFlag = 0;
 			mKnockBackT = 0;
+			mIsStrikeActive = false;
+			mIsMarkActive = false;
 		}
 	}
 }
