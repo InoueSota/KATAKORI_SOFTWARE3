@@ -303,7 +303,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			break;
 		case INGAME:
 
-
 			//背景描画
 			map.Draw(screen);
 			//カウントダウン描画
