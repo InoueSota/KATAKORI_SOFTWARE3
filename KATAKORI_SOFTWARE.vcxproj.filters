@@ -38,7 +38,7 @@
     <ClCompile Include="Easing.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
+    <ClCompile Include="Snake.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
     <ClCompile Include="Function.cpp">
@@ -69,6 +69,12 @@
       <Filter>KamataEngine</Filter>
     </ClCompile>
     <ClCompile Include="fever.cpp">
+      <Filter>KamataEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>KamataEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Outgame.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -153,7 +159,7 @@
     </ClInclude>
     <ClInclude Include="ControllerInput.h" />
     <ClInclude Include="Easing.h" />
-    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Snake.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="Ingame.h" />
     <ClInclude Include="Key.h" />
@@ -166,5 +172,6 @@
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Tsuchinoko.h" />
     <ClInclude Include="fever.h" />
+    <ClInclude Include="Outgame.h" />
   </ItemGroup>
 </Project>

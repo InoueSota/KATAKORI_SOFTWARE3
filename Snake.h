@@ -40,7 +40,6 @@ public:
 	//速度
 	float mSpeed = 5;
 	float mSuperSpeed = 7;
-	const float mAngleSpeed = 0.1;//回転の速さ
 
 	//追尾
 	bool IsPlayerLockon = false;//プレイヤーを補足しているかどうか

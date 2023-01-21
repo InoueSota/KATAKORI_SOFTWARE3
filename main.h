@@ -7,7 +7,7 @@
 #include "Outgame.h"
 #include "Ingame.h"
 #include "Player.h"
-#include "Enemy.h"
+#include "Snake.h"
 #include "Tsuchinoko.h"
 #include "Collision.h"
 #include "fever.h"

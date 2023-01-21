@@ -375,7 +375,5 @@ void Player::Draw(Screen& screen) {
 		screen.DrawRectAngle(mStrikeLinePosition[i], mStrikeLineWidth[i], mStrikeLineHeight[i], mStrikeLineAngle, mStrikeLineColor[i]);
 	}
 
-	//ミニマップの位置描画
-	screen.DrawMiniMap(mPosition, 0x606060FF);
 
 }

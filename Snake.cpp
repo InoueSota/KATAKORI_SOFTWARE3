@@ -1,4 +1,4 @@
-#include "Enemy.h"
+#include "Snake.h"
 #include "Key.h"
 #include "Ingame.h"
 #include "Collision.h"
@@ -66,7 +66,7 @@ void Snake::Move() {
 		//徐々に向きを変える
 		mDirectionPoint += (mTargetPoint - mHeadPosition) * 0.00001f;
 
-		if (Collision(mHeadPosition, mHeadRadius, mTargetPoint, 30.0f)) {
+		if (Collision(mHeadPosition, mHeadRadius, mTargetPoint, 50.0f)) {
 			mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
 			mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 		}
@@ -213,8 +213,6 @@ void Snake::Draw(Screen& screen) {
 		//視界描画
 		screen.DrawPicture({ mHeadPosition.x + mLockonRadius / 2 * cosf(mHeadAngle), mHeadPosition.y + mLockonRadius / 2 * -sinf(mHeadAngle) }, mLockonRadius, mHeadAngle, 500, 500, fov, 0x0000FF80);
 		
-		//ミニマップの位置描画
-		screen.DrawMiniMap(mHeadPosition);
 	}
 
 }

@@ -56,8 +56,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//UIアップデート
 			ui.Update();
 
+
 			//ズーム値アップデート
 			screen.SetZoom();
+
 
 			//初期化
 			if (Key::IsTrigger(DIK_R) || Controller::IsTriggerButton(0, Controller::bY)){
@@ -70,11 +72,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					tsuchinoko[i].Init();
 				}
 				ui.Init();
+				title.Init();
 				scene = TITLE;
 			}
 
+
 			//プレイヤーアップデート
 			player.Update(screen);
+
 
 			//ストライクしてないとき
 			if (!player.mIsStrikeActive)
@@ -91,7 +96,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				}
 			}
 
+
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 			//敵がプレイヤーを追いかけるか判定
 			for (int i = 0; i < Snake::kMaxSnake; i++) {
@@ -110,6 +117,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					tsuchinoko[i].IsPlayerLockon = false;
 				}
 			}
+
 
 			//敵同士の当たり判定
 			for (int i = 0; i < Snake::kMaxSnake; i++) {
@@ -142,6 +150,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					}
 				}
 			}
+
 
 			//プレイヤーとの当たり判定
 			//ヘビ
@@ -186,6 +195,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					}
 				}
 			}
+
+
 			//ツチノコ
 			fever.mTsuchinokoDefeat = 0;
 			for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
@@ -232,6 +243,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			}
 
+
 			//敵の数に応じてスピードを変える
 			Count = 0;
 
@@ -252,11 +264,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				tsuchinoko[i].mCenterSpeed = 5 + Count * 0.3;
 			}
 
+
 			//フィーバー
 			fever.Update(screen);
 			
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 			//スクロール値をアップデートする
 			screen.SetScroll(player);
@@ -264,6 +278,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			if (ui.mTimeLeft == 0) {
 				scene = OUTGAME;
 			}
+
 
 			break;
 		case OUTGAME:
@@ -323,6 +338,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//ＵＩ描画
 			ui.Draw(screen);
+
+			//ミニマップの位置の描画
+			for (int i = 0; i < Snake::kMaxSnake; i++) {
+				screen.DrawMiniMap(snake[i].mHeadPosition);
+			}
+			for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
+				screen.DrawMiniMap(tsuchinoko[i].mCenterPosition);
+			}
+			screen.DrawMiniMap(player.mPosition, 0x606060FF);
+
 
 			//フィーバー
 			fever.Draw(screen);

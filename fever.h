@@ -1,6 +1,6 @@
 #pragma once
 #include "Vec2.h"
-#include "Enemy.h"
+#include "Snake.h"
 #include "Tsuchinoko.h"
 class Fever
 {

@@ -15,7 +15,7 @@ void Screen::Init() {
 	mZoom = 0.4f;
 	mScreenShake.setZero();
 
-	mMiniMapCenter = { kWindowWidth - kMiniMapSize, kWindowHeight - kMiniMapSize };
+	mMiniMapCenter = { kWindowWidth - kMiniMapSize - 10.0f, kWindowHeight - kMiniMapSize - 10.0f };
 	mMiniMapZoom = (float)kMiniMapSize / (float)Map::kMapRadius;
 };
 

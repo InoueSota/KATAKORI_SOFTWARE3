@@ -49,9 +49,6 @@ void UI::Init() {
 	mWarningAlphat = 0.0f;
 	mWarningColor = 0xFFFFFF00;
 
-	//ミニマップ
-	mMiniMapPosition = { Screen::kWindowWidth - Screen::kMiniMapSize, Screen::kWindowHeight - Screen::kMiniMapSize };
-
 }
 void UI::Update() {
 
@@ -196,6 +193,7 @@ void UI::LoadTexture() {
 		mComboLetter = Novice::LoadTexture("./Resources/UI/Combo/combo.png");
 		mScoreLetter = Novice::LoadTexture("./Resources/UI/Score/score.png");
 		mWarningRed = Novice::LoadTexture("./Resources/Player/warningred.png");
+		mRadar = Novice::LoadTexture("./Resources/UI/Minimap/radar.png");
 		mIsLoadTexture = true;
 	}
 }
@@ -231,7 +229,9 @@ void UI::Draw(Screen& screen) {
 	screen.DrawUI({ mScorePosition[0].x, mScorePosition[0].y + 50.0f }, 100, 50, 0, 200, 100, mScoreLetter, WHITE);
 
 	//ミニマップ
-	screen.DrawSquare(mMiniMapPosition, Screen::kMiniMapSize * 2, BLACK, kFillModeWireFrame, false);
+	screen.DrawSquare(mMiniMapPosition, Screen::kMiniMapSize * 2, 0x00000080, kFillModeSolid, false);
+	screen.DrawSquare(mMiniMapPosition, Screen::kMiniMapSize * 2, 0xFFFF00FF, kFillModeWireFrame, false);
+	screen.DrawUI(mRadarPosition, 150, 75, 0, 200, 100, mRadar, WHITE);
 }
 
 

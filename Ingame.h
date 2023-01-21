@@ -66,7 +66,8 @@ public:
 
 
 	//ミニマップ
-	Vec2 mMiniMapPosition;
+	Vec2 mMiniMapPosition{ Screen::kWindowWidth - Screen::kMiniMapSize - 10.0f, Screen::kWindowHeight - Screen::kMiniMapSize - 10.0f };
+	Vec2 mRadarPosition{ mMiniMapPosition.x ,mMiniMapPosition.y - Screen::kMiniMapSize - 10.0f };
 
 
 	//画像
@@ -76,6 +77,7 @@ public:
 	int mComboLetter;
 	int mScoreLetter;
 	int mWarningRed;
+	int mRadar;
 	void LoadTexture();
 
 };

@@ -78,7 +78,7 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 		//徐々に向きを変える
 		mDirectionPoint += (mTargetPoint - mCenterPosition) * 0.00001f;
 
-		if (Collision(mCenterPosition, mRadius, mTargetPoint, 30.0f)) {
+		if (Collision(mCenterPosition, mRadius, mTargetPoint, 50.0f)) {
 			mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
 			mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 		}
@@ -184,9 +184,6 @@ void Tsuchinoko::Draw(Screen& screen) {
 		//視界描画
 		screen.DrawPicture({ mCenterPosition.x + mLockonRadius / 2 * cosf(mCenterAngle), mCenterPosition.y + mLockonRadius / 2 * -sinf(mCenterAngle) }, mLockonRadius, mCenterAngle, 500, 500, fov, 0x0000FF80);
 		
-		//ミニマップの位置描画
-		screen.DrawMiniMap(mCenterPosition);
-
 	}
 
 
