@@ -10,6 +10,7 @@
 void Tsuchinoko::Init() {
 
 	mCenterSpeed = 5.0f;
+	mSuperCenterSpeed = 7.0f;
 	mVelocity.setZero();
 	
 	//ê∂ê¨
@@ -28,13 +29,13 @@ void Tsuchinoko::Init() {
 
 
 
-void Tsuchinoko::Update(Vec2 playerposition) {
+void Tsuchinoko::Update(Vec2 playerposition, int mTimeLeft) {
 
 	//ë¨ìxÇèâä˙âªÇ∑ÇÈ
 	mVelocity.setZero();
 
 	//ê∂ê¨èàóù
-	Make(playerposition);
+	Make(playerposition, mTimeLeft);
 
 	if (mIsActive && !mIsDeath)
 	{
@@ -52,7 +53,7 @@ void Tsuchinoko::Update(Vec2 playerposition) {
 	}
 }
 
-void Tsuchinoko::Make(Vec2 playerPosition) {
+void Tsuchinoko::Make(Vec2 playerPosition, int mTimeLeft) {
 
 	if (!mIsActive || mIsDeath)
 	{
@@ -62,6 +63,9 @@ void Tsuchinoko::Make(Vec2 playerPosition) {
 		mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 		mIsDeath = false;
 		mIsActive = true;
+		if (mTimeLeft < 30) {
+			mIsSuper = 1;
+		}
 	}
 
 }
@@ -148,6 +152,8 @@ void Tsuchinoko::Draw(Screen& screen) {
 	if (!mIsLoadTexture) {
 		tsuchinoko = Novice::LoadTexture("./Resources/Debugs/tsuchinoko.png");
 		tsuchinokobody = Novice::LoadTexture("./Resources/Debugs/tsuchinokobody.png");
+		supertsuchinoko = Novice::LoadTexture("./Resources/Debugs/supertsuchinoko.png");
+		supertsuchinokobody = Novice::LoadTexture("./Resources/Debugs/supertsuchinokobody.png");
 		fov = Novice::LoadTexture("./Resources/Enemy/fov.png");
 		mIsLoadTexture = true;
 	}
@@ -156,13 +162,23 @@ void Tsuchinoko::Draw(Screen& screen) {
 	if (mIsActive && !mIsDeath)
 	{
 		//ì™Ç∆îˆÇÃï`âÊ
-		screen.DrawPicture(mHeadPosition, mSize, mCenterAngle, 100, 100, tsuchinoko);
-		screen.DrawPicture(mTailPosition, mSize, mCenterAngle, 100, 100, tsuchinoko);
+		if (mIsSuper) {
+			screen.DrawPicture(mHeadPosition, mSize, mCenterAngle, 100, 100, supertsuchinoko);
+			screen.DrawPicture(mTailPosition, mSize, mCenterAngle, 100, 100, supertsuchinoko);
+		} else {
+			screen.DrawPicture(mHeadPosition, mSize, mCenterAngle, 100, 100, tsuchinoko);
+			screen.DrawPicture(mTailPosition, mSize, mCenterAngle, 100, 100, tsuchinoko);
+		}
+		
 
 		//ëÃÇÃï`âÊ
 		for (int i = 0; i < kBodyMax; i++)
 		{
-			screen.DrawPicture(mBodyPosition[i], mBodySize, mCenterAngle, 100, 100, tsuchinokobody);
+			if (mIsSuper) {
+				screen.DrawPicture(mBodyPosition[i], mBodySize, mCenterAngle, 100, 100, supertsuchinokobody);
+			} else {
+				screen.DrawPicture(mBodyPosition[i], mBodySize, mCenterAngle, 100, 100, tsuchinokobody);
+			}
 		}
 
 		//éãäEï`âÊ

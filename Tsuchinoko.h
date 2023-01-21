@@ -11,13 +11,14 @@ public:
 	}
 
 	void Init();
-	void Update(Vec2 playerposition);
+	void Update(Vec2 playerposition, int mTimeLeft);
 	void Draw(Screen& screen);
 
 	static constexpr int kMaxTsuchinoko = 10;//敵の最大数
 	Vec2 mCenterPositionStart;//スタート地点
 	Vec2 mTargetPoint;//目標地点
 	Vec2 mDirectionPoint;
+	int mIsSuper = 0;
 
 	//追尾
 	bool IsPlayerLockon = false;//プレイヤーを補足しているかどうか
@@ -30,12 +31,13 @@ public:
 	Vec2 mCenterPosition;
 	Vec2 mVelocity;
 	float mCenterSpeed;
+	float mSuperCenterSpeed;
 
 
 	//生成処理
 	bool mIsActive;
 	bool mIsDeath;
-	void Make(Vec2 playerPosition);
+	void Make(Vec2 playerPosition, int mTimeLeft);
 
 
 	//移動処理
@@ -65,6 +67,8 @@ public:
 	bool mIsLoadTexture = false;
 	int tsuchinoko;
 	int tsuchinokobody;
+	int supertsuchinoko;
+	int supertsuchinokobody;
 	int fov;
 };
 

@@ -84,10 +84,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 				//敵アップデート
 				for (int i = 0; i < Snake::kMaxSnake; i++) {
-					snake[i].Update();
+					snake[i].Update(ui.mTimeLeft);
 				}
 				for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
-					tsuchinoko[i].Update(player.mPosition);
+					tsuchinoko[i].Update(player.mPosition, ui.mTimeLeft);
 				}
 			}
 

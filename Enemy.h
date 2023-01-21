@@ -16,7 +16,7 @@ public:
 	}
 
 	void Init();
-	void Update();
+	void Update(int mTimeLeft);
 	void Draw(Screen& screen);
 
 	static constexpr int kMaxLength = 10;
@@ -24,7 +24,8 @@ public:
 	//パラメータ
 	bool mIsActive;
 	bool mIsDeath;
-	void Make();
+	int mIsSuper = 0;
+	void Make(int mTimeLeft);
 	//頭部分
 	Vec2 mHeadPosition;
 	int mHeadRadius;
@@ -38,6 +39,7 @@ public:
 
 	//速度
 	float mSpeed = 5;
+	float mSuperSpeed = 7;
 	const float mAngleSpeed = 0.1;//回転の速さ
 
 	//追尾
@@ -62,6 +64,8 @@ public:
 	bool mIsLoadTexture = false;
 	int head;
 	int body;
+	int superhead;
+	int superbody;
 	int fov;
 
 };
