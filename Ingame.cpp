@@ -55,9 +55,6 @@ void UI::Init() {
 }
 void UI::Update() {
 
-	//§ŒÀŠÔ
-	TimeLimit();
-
 	//ƒRƒ“ƒ{
 	Combo();
 

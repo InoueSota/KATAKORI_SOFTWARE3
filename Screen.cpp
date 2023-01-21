@@ -2,6 +2,7 @@
 #include "MatVec.h"
 #include "Quad.h"
 #include "Function.h"
+#include "ControllerInput.h"
 #include "Key.h"
 #include "Player.h"
 #include "Ingame.h"
@@ -63,11 +64,11 @@ void Screen::SetScroll(Player& player) {
 
 void Screen::SetZoom() {
 
-	if (Key::IsPress(DIK_UP))
+	if (Key::IsPress(DIK_UP) || Controller::IsPressedButton(0,Controller::bUP))
 	{
 		mZoom += 0.01f;
 	}
-	else if (Key::IsPress(DIK_DOWN))
+	else if (Key::IsPress(DIK_DOWN) || Controller::IsPressedButton(0, Controller::bDOWN))
 	{
 		mZoom -= 0.01f;
 	}
@@ -81,20 +82,22 @@ void Screen::SetZoom() {
 
 
 void Screen::DrawLine(Vec2 startposition, Vec2 endposition, unsigned int color) {
-	startposition = WorldTransform(startposition);
-	endposition = WorldTransform(endposition);
+	startposition = ScreenTransform(startposition);
+	endposition = ScreenTransform(endposition);
 	Novice::DrawLine((int)startposition.x, (int)startposition.y, (int)endposition.x, (int)endposition.y, color);
 }
 
 
-void Screen::DrawBox(Vec2 Position, float w, float h, float angle, unsigned int color, FillMode fillMode) {
-	Position = WorldTransform(Position);
+void Screen::DrawBox(Vec2 Position, float w, float h, float angle, unsigned int color, FillMode fillMode, bool isScroll) {
+	if (isScroll) {
+		Position = ScreenTransform(Position);
+	}
 	Novice::DrawBox((int)Position.x, (int)Position.y, w * mZoom, h * mZoom, angle, color, fillMode);
 }
 
 
 void Screen::DrawEllipse(Vec2 Position, float radiusX, float radiusY, float angle, unsigned int color, FillMode fillMode) {
-	Position = WorldTransform(Position);
+	Position = ScreenTransform(Position);
 	Novice::DrawEllipse((int)Position.x, (int)Position.y, radiusX * mZoom, radiusY * mZoom, angle, color, fillMode);
 }
 
@@ -109,7 +112,7 @@ void Screen::DrawRectAngle(Vec2 position, float width, float height, float angle
 	Quad Rect;
 	if (isScroll) {
 		OriginalPosition = RectAssign(width, height);
-		Rect = Transform(OriginalPosition, MakeAffineMatrix({ mZoom, mZoom }, angle, WorldTransform(position)));
+		Rect = Transform(OriginalPosition, MakeAffineMatrix({ mZoom, mZoom }, angle, ScreenTransform(position)));
 	}
 	else {
 		OriginalPosition = RectAssign(width, height);
@@ -154,14 +157,14 @@ void Screen::DrawSquare(Vec2 Position, float size, unsigned int color, FillMode 
 
 void Screen::DrawPicture(Vec2 Position, float size, float angle, float srcW, float srcH, int textureHandle, unsigned int color) {
 	Quad OriginalPosition = RectAssign(size, size);
-	Quad Rect = Transform(OriginalPosition, MakeAffineMatrix({ mZoom, mZoom }, angle, WorldTransform(Position)));
+	Quad Rect = Transform(OriginalPosition, MakeAffineMatrix({ mZoom, mZoom }, angle, ScreenTransform(Position)));
 	Novice::DrawQuad((int)Rect.LeftTop.x, (int)Rect.LeftTop.y, (int)Rect.RightTop.x, (int)Rect.RightTop.y, (int)Rect.LeftBottom.x, (int)Rect.LeftBottom.y, (int)Rect.RightBottom.x, (int)Rect.RightBottom.y, 0, 0, srcW, srcH, textureHandle, color);
 }
 
 
 void Screen::DrawAnime(Vec2 Position, float size, int srcX, int srcW, int srcH, int sheets, int frame, int& frameVariable, int textureHandle, unsigned int color) {
 	Quad OriginalPosition = RectAssign(size, size);
-	Quad Rect = Transform(OriginalPosition, MakeAffineMatrix({ mZoom,mZoom }, 0.0f, WorldTransform(Position)));
+	Quad Rect = Transform(OriginalPosition, MakeAffineMatrix({ mZoom,mZoom }, 0.0f, ScreenTransform(Position)));
 	srcX = srcW * (frameVariable / frame);
 	if (srcX >= srcW * sheets) {
 		frameVariable = 0;
@@ -192,7 +195,7 @@ void Screen::DrawMiniMap(Vec2 position, unsigned int color, FillMode fillMode) {
 //--------------------------------------------------------------------------------------------//
 
 
-Vec2 Screen::WorldTransform(Vec2 position) {
+Vec2 Screen::ScreenTransform(Vec2 position) {
 
 	return{
 		position.x * mZoom - mScroll.x + mWorldCenter.x + mScreenShake.x,
@@ -210,10 +213,10 @@ Vec2 Screen::MiniMapTransform(Vec2 position) {
 }
 
 
-Vec2 Screen::ScreenTransform(Vec2 position) {
+Vec2 Screen::WorldTransform(Vec2 position) {
 
 	return {
-		position.x * mZoom + mScroll.y + mWorldCenter.x + mScreenShake.x,
-		position.y * mZoom + mScroll.y + mWorldCenter.y + mScreenShake.y
+		position.x * mZoom - mScroll.x + mWorldCenter.x,
+		position.y * mZoom * -1 - mScroll.y + mWorldCenter.y
 	};
 }

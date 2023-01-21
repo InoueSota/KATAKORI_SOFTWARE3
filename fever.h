@@ -9,7 +9,7 @@ public:
 	int mTsuchinokoDefeat = 0;//ツチノコを倒した数
 	int mFeverGauge = 0;//フィーバーゲージ
 	bool mIsFever = 0;//フィーバーしているかどうか
-	void Update();//アップデート
+	void Update(Screen& screen);//アップデート
 	void Draw(Screen& screen);//描画
 	static constexpr int kMaxParticle = 30;//パーティクルの最大数
 	static constexpr int kMaxEnemy = Snake::kMaxSnake + Tsuchinoko::kMaxTsuchinoko;//パーティクルの最大数

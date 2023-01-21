@@ -15,9 +15,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	ui.LoadTexture();
 	title.LoadTexture();
 
-	//乱数の初期化
-	srand(time(nullptr));
-
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
 		// フレームの開始
@@ -41,7 +38,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			title.Update();
 
 			//Aボタン押下時
-			if (Controller::IsTriggerButton(0, Controller::bA)) {
+			if (title.mIsKatakoriClear && Controller::IsTriggerButton(0, Controller::bA)) {
 				screen.Init();
 				player.Init();
 				for (int i = 0; i < Snake::kMaxSnake; i++) {
@@ -82,6 +79,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//ストライクしてないとき
 			if (!player.mIsStrikeActive)
 			{
+				//制限時間の経過を止める
+				ui.TimeLimit();
+
 				//敵アップデート
 				for (int i = 0; i < Snake::kMaxSnake; i++) {
 					snake[i].Update();
@@ -253,7 +253,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 			//フィーバー
-			fever.Update();
+			fever.Update(screen);
 			
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -269,6 +269,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		case OUTGAME:
 			//Aボタン押下時
 			if (Controller::IsTriggerButton(0, Controller::bX)) {
+				title.Init();
 				scene = TITLE;
 			}
 			break;

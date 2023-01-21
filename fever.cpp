@@ -2,7 +2,7 @@
 #include "Novice.h"
 #include "Easing.h"
 
-void Fever::Update() {
+void Fever::Update(Screen& screen) {
 
 	//フィーバーシステム
 	if (mIsFever) {
@@ -55,7 +55,7 @@ void Fever::Update() {
 					particlecreat[i].particle[j].T = 0;
 				}
 			} else if (particlecreat[i].particle[j].IsUse == 3) {
-				particlecreat[i].particle[j].StartPos = particlecreat[i].particle[j].Pos;
+				particlecreat[i].particle[j].StartPos = screen.WorldTransform(particlecreat[i].particle[j].Pos);
 				particlecreat[i].particle[j].EndPos.x = 50 + 1.18 * mFeverGauge;
 				particlecreat[i].particle[j].EndPos.y = 30;
 				particlecreat[i].particle[j].IsUse = 4;
@@ -89,7 +89,7 @@ void Fever::Draw(Screen& screen) {
 			if (!(particlecreat[i].particle[j].IsUse == 4)) {
 				screen.DrawBox(particlecreat[i].particle[j].Pos, 10, 10, 0, WHITE, kFillModeSolid);
 			} else {
-				Novice::DrawBox(particlecreat[i].particle[j].Pos.x, particlecreat[i].particle[j].Pos.y, 10, 10, 0, WHITE, kFillModeSolid);
+				screen.DrawBox(particlecreat[i].particle[j].Pos, 10, 10, 0, WHITE, kFillModeSolid, false);
 			}
 		}
 	}

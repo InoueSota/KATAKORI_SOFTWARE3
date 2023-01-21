@@ -86,7 +86,8 @@ public:
 	/// <param name="angle">•`‰æ‚·‚élŠpŒ`‚Ì‰ñ“]Šp</param>
 	/// <param name="color">•`‰æ‚·‚élŠpŒ`‚ÌF</param>
 	/// <param name="fillMode">“h‚è‚Â‚Ô‚µƒ‚[ƒh</param>
-	void DrawBox(Vec2 position, float width, float height, float angle = 0.0f, unsigned int color = WHITE, FillMode fillMode = kFillModeSolid);
+	/// <param name="isScroll">ƒXƒNƒ[ƒ‹‚·‚é‚©</param>
+	void DrawBox(Vec2 position, float width, float height, float angle = 0.0f, unsigned int color = WHITE, FillMode fillMode = kFillModeSolid, bool isScroll = true);
 
 	/// <summary>
 	/// ‘È‰~‚ğ•`‰æ‚·‚é
