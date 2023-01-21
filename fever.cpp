@@ -82,7 +82,8 @@ void Fever::Update(Screen& screen) {
 
 void Fever::Draw(Screen& screen) {
 	
-	Novice::DrawBox(50, 20, 1.18 * mFeverGauge, 20, 0, WHITE, kFillModeSolid);
+	screen.DrawBox({ 49,19 }, 1.18 * 1000, 22, 0.0f, BLACK, kFillModeWireFrame, false);
+	screen.DrawBox({ 50,20 }, 1.18 * mFeverGauge, 20, 0.0f, WHITE, kFillModeSolid, false);
 
 	for (int i = 0; i < kMaxEnemy; i++) {
 		for (int j = 0; j < kMaxParticle; j++) {

@@ -89,10 +89,15 @@ void Screen::DrawLine(Vec2 startposition, Vec2 endposition, unsigned int color) 
 
 
 void Screen::DrawBox(Vec2 Position, float w, float h, float angle, unsigned int color, FillMode fillMode, bool isScroll) {
+	float tmpZoom;
 	if (isScroll) {
+		tmpZoom = mZoom;
 		Position = ScreenTransform(Position);
 	}
-	Novice::DrawBox((int)Position.x, (int)Position.y, w * mZoom, h * mZoom, angle, color, fillMode);
+	else {
+		tmpZoom = 1.0f;
+	}
+	Novice::DrawBox((int)Position.x, (int)Position.y, w * tmpZoom, h * tmpZoom, angle, color, fillMode);
 }
 
 
