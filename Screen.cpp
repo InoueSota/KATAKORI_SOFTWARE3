@@ -2,6 +2,7 @@
 #include "MatVec.h"
 #include "Quad.h"
 #include "Function.h"
+#include "Easing.h"
 #include "ControllerInput.h"
 #include "Key.h"
 #include "Player.h"
@@ -13,11 +14,40 @@ void Screen::Init() {
 	mWorldCenter = { kWindowWidth / 2, kWindowHeight / 2 };
 	mScroll.setZero();
 	mZoom = 0.4f;
+
 	mScreenShake.setZero();
+	mShakeMag = 1.0f;
+	mShakeEasingt = 0.0f;
+	mIsShakeActive = false;
 
 	mMiniMapCenter = { kWindowWidth - kMiniMapSize - 10.0f, kWindowHeight - kMiniMapSize - 10.0f };
 	mMiniMapZoom = (float)kMiniMapSize / (float)Map::kMapRadius;
 };
+
+
+
+void Screen::SetShake(bool condition) {
+
+	if (condition)
+	{
+		mShakeEasingt = 0.0f;
+		mShakeMag = 1.0f;
+		mIsShakeActive = true;
+	}
+
+	if (mIsShakeActive) {
+
+		mShakeEasingt = EasingClamp(0.033f, mShakeEasingt);
+		mShakeMag = EasingMove(1.0f, 0.0f, easeOutSine(mShakeEasingt));
+
+		mScreenShake.x = RAND(-5.0f, 5.0f) * mShakeMag;
+		mScreenShake.y = RAND(-5.0f, 5.0f) * mShakeMag;
+
+		if (mShakeEasingt == 1.0f) {
+			mIsShakeActive = false;
+		}
+	}
+}
 
 void Screen::SetShake(int min, int max, bool condition) {
 

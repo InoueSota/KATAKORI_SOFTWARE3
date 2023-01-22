@@ -11,7 +11,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// 画像読み込み
 	int explanation = Novice::LoadTexture("./Resources/Debugs/Explanation.png");
 	int end = Novice::LoadTexture("./Resources/Outgame/End/end.png");
-	int Count;
 	ui.LoadTexture();
 	title.LoadTexture();
 
@@ -55,10 +54,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//UIアップデート
 			ui.Update();
-
-
-			//ズーム値アップデート
-			screen.SetZoom();
 
 
 			//初期化
@@ -162,11 +157,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					if (!fever.mIsFever) {
 						ui.MissSnakeScore(player.mIsStrikeActive);
 						ui.mCombo = 0;
-						if (!player.mKnockbackFlag) {
-							player.mKnockbackFlag = 1;
-							player.mKnockbackEnemyPos = snake[i].mHeadPosition;
-						}
 						ui.mIsWarning = true;
+						player.mKnockbackSet = true;
+						player.mKnockbackEnemyPos = snake[i].mHeadPosition;
 					} else {
 						ui.SnakeScore(player.mIsStrikeActive);
 						ui.AddCombo();
@@ -179,7 +172,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				//体
 				for (int j = 0; j < Snake::kBodyMax; j++)
 				{
-					if (!snake[i].mIsDeath && CircleCapsuleCollsion(player, snake[i].mBodyPosition[j], snake[i].mBodyRadius))
+					if (!snake[i].mIsDeath && CircleCapsuleCollsion(player, snake[i].mBodyPosition[j], snake[i].mBodyRadius) && !player.mKnockbackActive)
 					{
 						ui.SnakeScore(player.mIsStrikeActive);
 						ui.AddCombo();
@@ -207,11 +200,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					if (!fever.mIsFever) {
 						ui.MissTsuchinokoScore(player.mIsStrikeActive);
 						ui.mCombo = 0;
-						if (!player.mKnockbackFlag) {
-							player.mKnockbackFlag = 1;
-							player.mKnockbackEnemyPos = tsuchinoko[i].mHeadPosition;
-						}
 						ui.mIsWarning = true;
+						player.mKnockbackSet = true;
+						player.mKnockbackEnemyPos = tsuchinoko[i].mHeadPosition;
 					} else {
 						ui.TsuchinokoScore(player.mIsStrikeActive);
 						ui.AddCombo();
@@ -224,7 +215,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				//体
 				for (int j = 0; j < Tsuchinoko::kBodyMax; j++)
 				{
-					if (!tsuchinoko[i].mIsDeath && CircleCapsuleCollsion(player,tsuchinoko[i].mBodyPosition[j], tsuchinoko[i].mBodyRadius))
+					if (!tsuchinoko[i].mIsDeath && CircleCapsuleCollsion(player,tsuchinoko[i].mBodyPosition[j], tsuchinoko[i].mBodyRadius) && !player.mKnockbackActive)
 					{
 						ui.TsuchinokoScore(player.mIsStrikeActive);
 						ui.AddCombo();
@@ -245,23 +236,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 			//敵の数に応じてスピードを変える
-			Count = 0;
+			player.LockonCount = 0;
 
 			for (int i = 0; i < Snake::kMaxSnake; i++) {
 				if (snake[i].IsPlayerLockon) {
-					Count++;
+					player.LockonCount++;
 				}
 			}
 			for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
 				if (tsuchinoko[i].IsPlayerLockon) {
-					Count++;
+					player.LockonCount++;
 				}
 			}
 			for (int i = 0; i < Snake::kMaxSnake; i++) {
-				snake[i].mSpeed = 5 + Count * 0.5;
+				snake[i].mSpeed = 5 + player.LockonCount * 0.5;
 			}
 			for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
-				tsuchinoko[i].mCenterSpeed = 5 + Count * 0.3;
+				tsuchinoko[i].mCenterSpeed = 5 + player.LockonCount * 0.3;
 			}
 
 
@@ -272,8 +263,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-			//スクロール値をアップデートする
+			//ズームアップデート
+			screen.SetZoom();
+
+			//スクロールアップデート
 			screen.SetScroll(player);
+
+			//シェイクアップデート
+			screen.SetShake(player.mKnockbackSet);
+
 
 			if (ui.mTimeLeft == 0) {
 				scene = OUTGAME;

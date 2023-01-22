@@ -51,7 +51,7 @@ void Player::Update(Screen& screen) {
 	if (!mIsStrikeActive) {
 
 		//通常移動
-		if (!mKnockbackFlag) {
+		if (!mKnockbackActive) {
 			NormalMove();
 		}
 
@@ -69,15 +69,17 @@ void Player::Update(Screen& screen) {
 	Strike();
 	StrikeLine(screen);
 
+	//ノックバック
+	Knockback();
+
 	//マップ内に収める
 	mPosition.x = Clamp(mPosition.x, Map::kMapLeft + (mSize / 2), Map::kMapRight - (mSize / 2));
 	mPosition.y = Clamp(mPosition.y, Map::kMapBottom + (mSize / 2), Map::kMapTop - (mSize / 2));
 
 	//残像処理
-	Shadow();
-
-	//ノックバック
-	Knockback();
+	if (!mKnockbackActive) {
+		Shadow();
+	}
 		
 }
 void Player::NormalMove() {
@@ -130,7 +132,7 @@ void Player::Dush() {
 void Player::Mark() {
 
 	//Xボタン押下時にPositionを設定＆フラグをtrueにする
-	if (Controller::IsTriggerButton(0,Controller::bX)){
+	if (Controller::IsTriggerButton(0, Controller::bX)) {
 
 		mMarkPosition = mPosition;
 		mMarkFrame = 0;
@@ -310,7 +312,7 @@ void Player::Shadow() {
 
 void Player::Knockback() {
 
-	if (mKnockbackFlag == 1) {
+	if (mKnockbackSet) {
 		int A = mPosition.x - mKnockbackEnemyPos.x;
 		int B = mPosition.y - mKnockbackEnemyPos.y;
 
@@ -328,24 +330,21 @@ void Player::Knockback() {
 		mKnockbackStart.y = mPosition.y;
 		mKnockbackEnd.x = mPosition.x + newA * 300;
 		mKnockbackEnd.y = mPosition.y + newB * 300;
-		mKnockbackFlag = 2;
-
-	} else if (mKnockbackFlag == 2) {
-		if (mKnockBackT < 1) {
-			mKnockBackT += 0.033;
-			if (mKnockBackT > 1) {
-				mKnockBackT = 1;
-			}
-			float easedT = easeOutSine(mKnockBackT);
-
-			mPosition.x = ((1 - easedT) * mKnockbackStart.x) + (easedT * mKnockbackEnd.x);
-			mPosition.y = ((1 - easedT) * mKnockbackStart.y) + (easedT * mKnockbackEnd.y);
-		} else {
-			mKnockbackFlag = 0;
-			mKnockBackT = 0;
-			mIsStrikeActive = false;
-			mIsMarkActive = false;
+		mKnockbackActive = true;
+		mKnockbackSet = false;
+		mIsStrikeActive = false;
+		mIsMarkActive = false;
+	}
+	if (mKnockbackActive) {
+		mKnockBackT = EasingClamp(0.033f, mKnockBackT);
+		mPosition = EasingMove(mKnockbackStart, mKnockbackEnd, easeOutSine(mKnockBackT));
+		if (mKnockBackT == 1.0f) {
+			mKnockbackActive = false;
 		}
+	}
+	else {
+		mKnockBackT = 0.0f;
+		mKnockbackSet = false;
 	}
 }
 
@@ -375,5 +374,5 @@ void Player::Draw(Screen& screen) {
 		screen.DrawRectAngle(mStrikeLinePosition[i], mStrikeLineWidth[i], mStrikeLineHeight[i], mStrikeLineAngle, mStrikeLineColor[i]);
 	}
 
-
+	Novice::ScreenPrintf(0, 0, "mIsMarkActive : %d", mIsMarkActive);
 }

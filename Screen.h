@@ -18,9 +18,13 @@ public:
 private:
 
 	Vec2 mWorldCenter;		//ワールドの中心
-	Vec2 mScreenShake;		//シェイク値
 	Vec2 mScroll;			//スクロール値
 	float mZoom;			//ズーム値
+
+	Vec2 mScreenShake;		//シェイク値
+	float mShakeMag;		//シェイク倍率
+	float mShakeEasingt;	//シェイクを徐々に収めるイージング
+	bool mIsShakeActive;	//シェイクフラグ
 
 	Vec2 mMiniMapCenter;	//ミニマップの中心
 	float mMiniMapZoom;		//ミニマップのズーム値
@@ -32,6 +36,12 @@ public:
 	/// 初期化
 	/// </summary>
 	void Init();
+
+	/// <summary>
+	/// 被弾時のカメラシェイク
+	/// </summary>
+	/// <param name="condition">シェイクする条件</param>
+	void SetShake(bool condition);
 
 	/// <summary>
 	/// カメラシェイク（ X軸 と Y軸 どちらも同じ値 ）
