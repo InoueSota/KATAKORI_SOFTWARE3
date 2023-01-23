@@ -76,7 +76,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			{
 
 				//プレイヤーアップデート
-				player.Update(screen);
+				player.Update(screen, fever.mIsFever);
 
 
 				//ストライクしてないとき
@@ -178,7 +178,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				{
 					if (!snake[i].mIsDeath && CircleCapsuleCollsion(player, snake[i].mBodyPosition[j], snake[i].mBodyRadius) && !player.mKnockbackActive)
 					{
-						if (!player.mIsStrikeActive) {
+						if (!fever.mIsFever && !player.mIsStrikeActive) {
 							player.SetKnockbackPosition(snake[i].mBodyPosition[j], snake[i].mBodyRadius);
 						}
 						ui.SnakeScore(player.mIsStrikeActive);
@@ -216,14 +216,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						ui.mCombo = 0;
 						ui.mIsWarning = true;
 					} else {
-						if (!player.mIsStrikeActive) {
-							if (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius)) {
-								player.SetKnockbackPosition(tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius);
-							}
-							else {
-								player.SetKnockbackPosition(tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius);
-							}
-						}
 						ui.TsuchinokoScore(player.mIsStrikeActive);
 						ui.AddCombo();
 						screen.SetHitStop();
@@ -238,12 +230,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				{
 					if (!tsuchinoko[i].mIsDeath && CircleCapsuleCollsion(player,tsuchinoko[i].mBodyPosition[j], tsuchinoko[i].mBodyRadius) && !player.mKnockbackActive)
 					{
+						if (!fever.mIsFever && !player.mIsStrikeActive) {
+							player.SetKnockbackPosition(tsuchinoko[i].mBodyPosition[j], tsuchinoko[i].mBodyRadius);
+						}
 						ui.TsuchinokoScore(player.mIsStrikeActive);
 						ui.AddCombo();
 						screen.SetHitStop();
-						if (!player.mIsStrikeActive) {
-							player.SetKnockbackPosition(tsuchinoko[i].mBodyPosition[j], tsuchinoko[i].mBodyRadius);
-						}
 						tsuchinoko[i].mIsDeath = true;
 						fever.mTsuchinokoDefeat++;
 						for (int k = 0; k < Fever::kMaxEnemy; k++) {
@@ -293,7 +285,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 			//ズームアップデート
-			screen.ZoomUpdate();
+			screen.ZoomUpdate(fever.mIsFever, fever.mIsOldFever);
 
 			//スクロールアップデート
 			screen.ScrollUpdate(player);

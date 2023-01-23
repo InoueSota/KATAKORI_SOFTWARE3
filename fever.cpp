@@ -1,8 +1,19 @@
-#include "fever.h"
+#include "Fever.h"
 #include "Novice.h"
 #include "Easing.h"
 
+void Fever::Init() {
+	mSnakeDefeat = 0;
+	mTsuchinokoDefeat = 0;
+	mFeverGauge = 0;
+	mIsFever = false;
+	mIsOldFever = false;
+}
+
 void Fever::Update(Screen& screen) {
+
+	//前回のフィーバーフラグを取得
+	mIsOldFever = mIsFever;
 
 	//フィーバーシステム
 	if (mIsFever) {
@@ -12,8 +23,8 @@ void Fever::Update(Screen& screen) {
 			mFeverGauge = 0;
 		}
 	} else {
-		mFeverGauge += mSnakeDefeat * 100;
-		mFeverGauge += mTsuchinokoDefeat * 100;
+		mFeverGauge += mSnakeDefeat * 1000;
+		mFeverGauge += mTsuchinokoDefeat * 1000;
 	}
 
 	if (mFeverGauge >= 1000) {

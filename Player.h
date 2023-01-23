@@ -11,7 +11,7 @@ public:
 	}
 
 	void Init();
-	void Update(Screen& screen);
+	void Update(Screen& screen, bool isFever);
 	void Draw(Screen& screen);
 
 
@@ -49,7 +49,12 @@ public:
 	float mStrikeEasingtIncrementValue;
 	Vec2 mStrikeStartPosition;
 	Vec2 mStrikeEndPosition;
-	void Strike();
+	//フィーバーストライク
+	float mStrikeTheta;
+	float mStrikeThetaStartValue;
+	float mStrikeRadius;
+	float mStrikeRadiusStartValue;
+	void Strike(bool isFever);
 
 	//ストライク演出
 	static constexpr int kStrikeLineMax = 200;

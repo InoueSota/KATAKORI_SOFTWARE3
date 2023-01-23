@@ -68,7 +68,7 @@
     <ClCompile Include="Tsuchinoko.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
-    <ClCompile Include="fever.cpp">
+    <ClCompile Include="Fever.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
     <ClCompile Include="Collision.cpp">
@@ -171,7 +171,7 @@
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Tsuchinoko.h" />
-    <ClInclude Include="fever.h" />
+    <ClInclude Include="Fever.h" />
     <ClInclude Include="Outgame.h" />
   </ItemGroup>
 </Project>

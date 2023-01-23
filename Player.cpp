@@ -42,13 +42,17 @@ void Player::Init() {
 
 
 
-void Player::Update(Screen& screen) {
+void Player::Update(Screen& screen, bool isFever) {
 
 	//前回ポジションを取得する
 	mOldPosition = mPosition;
 
 	//速度を初期化する
 	mVelocity.setZero();
+
+	//大きさをズームにしたがって変える
+	mSize = 64 / screen.GetZoom() * 0.4f;
+	mRadius = mSize / 2.0f;
 
 	//ストライクをしていない時に可能
 	if (!mIsStrikeActive) {
@@ -69,8 +73,10 @@ void Player::Update(Screen& screen) {
 	}
 
 	//ストライク
-	Strike();
-	StrikeLine(screen);
+	Strike(isFever);
+	if (!isFever) {
+		StrikeLine(screen);
+	}
 
 	//ノックバック
 	Knockback();
@@ -156,9 +162,9 @@ void Player::Mark() {
 	}
 
 }
-void Player::Strike() {
+void Player::Strike(bool isFever) {
 
-	if (mIsMarkActive && !mIsStrikeActive){
+	if (mIsMarkActive && !mIsStrikeActive) {
 
 		//LTボタン＆RTボタン同時押下時にフラグをtrueにする
 		if (Controller::IsPressedButton(0, Controller::lTrigger) && Controller::IsPressedButton(0, Controller::rTrigger)) {
@@ -168,7 +174,7 @@ void Player::Strike() {
 			float tmpDistance = (mMarkPosition - mPosition).Length();
 
 			//距離が0だったら中止する
-			if (tmpDistance == 0){
+			if (tmpDistance == 0) {
 				mIsMarkActive = false;
 				mIsStrikeActive = false;
 			}
@@ -180,9 +186,26 @@ void Player::Strike() {
 				// n / tmpValue のとき、nは距離が100のときのEasingtの増加量になる
 				mStrikeEasingtIncrementValue = 0.25f / tmpValue;
 
-				//イージング時の始点と終点の設定
-				mStrikeStartPosition = mPosition;
-				mStrikeEndPosition = mMarkPosition;
+				if (!isFever) {
+					//イージング時の始点と終点の設定
+					mStrikeStartPosition = mPosition;
+					mStrikeEndPosition = mMarkPosition;
+				}
+				else {
+					//基準線と向きベクトル
+					Vec2 base = { 1,0 };
+					Vec2 tmpDirection = mMarkPosition - mPosition;
+
+					//なす角を求める
+					float dp = tmpDirection.Dot(base);
+					float cp = tmpDirection.Cross(base);
+					float tmpTheta = atan2(cp, dp);
+					if (tmpTheta < 0) {
+						tmpTheta = Degree(360) + tmpTheta;
+					}
+					mStrikeThetaStartValue = tmpTheta;
+					mStrikeRadiusStartValue = tmpDistance;
+				}
 
 				//フラグをtrueにする
 				mIsStrikeActive = true;
@@ -190,26 +213,43 @@ void Player::Strike() {
 		}
 	}
 
-	if (mIsStrikeActive){
+	if (mIsStrikeActive) {
 
-		//イージング移動
+		//イージング値加算
 		mStrikeEasingt = EasingClamp(mStrikeEasingtIncrementValue, mStrikeEasingt);
-		mPosition = EasingMove(mStrikeStartPosition, mStrikeEndPosition, easeInSine(mStrikeEasingt));
+
+		if (!isFever) {
+			mPosition = EasingMove(mStrikeStartPosition, mStrikeEndPosition, easeInSine(mStrikeEasingt));
+		}
+		else {
+			mStrikeTheta = EasingMove(mStrikeThetaStartValue, mStrikeThetaStartValue + Degree(360), easeLinear(mStrikeEasingt));
+			mStrikeRadius = EasingMove(mStrikeRadiusStartValue, 0.0f, easeLinear(mStrikeEasingt));
+
+			mPosition.x = mStrikeRadius * -cosf(mStrikeTheta) + mMarkPosition.x;
+			mPosition.y = mStrikeRadius * sinf(mStrikeTheta) + mMarkPosition.y;
+		}
 
 		//移動が終了したら
-		if (mStrikeEasingt == 1.0f){
+		if (mStrikeEasingt == 1.0f) {
 			mIsMarkActive = false;
 			mIsStrikeActive = false;
 		}
 
+
 	}
 
 	//初期化
-	if (!mIsStrikeActive){
-
+	if (!mIsStrikeActive) {
 		mStrikeEasingt = 0.0f;
-
 	}
+	if (mIsMarkActive && !mIsStrikeActive) {
+
+		//LTボタン＆RTボタン同時押下時にフラグをtrueにする
+		if (Controller::IsPressedButton(0, Controller::lTrigger) && Controller::IsPressedButton(0, Controller::rTrigger)) {
+
+		}
+	}
+
 
 }
 void Player::StrikeLine(Screen& screen) {
@@ -408,7 +448,8 @@ void Player::Draw(Screen& screen) {
 	//ストライク中の線描画
 	for (int i = 0; i < kStrikeLineMax; i++)
 	{
-		screen.DrawRectAngle(mStrikeLinePosition[i], mStrikeLineWidth[i], mStrikeLineHeight[i], mStrikeLineAngle, mStrikeLineColor[i]);
+		screen.DrawRectAngle(mStrikeLinePosition[i], mStrikeLineWidth[i] / screen.GetZoom(), mStrikeLineHeight[i] / screen.GetZoom(), mStrikeLineAngle, mStrikeLineColor[i]);
 	}
 
+	Novice::ScreenPrintf(0, 0, "mStrikeThetaStartValue : %f", mStrikeThetaStartValue);
 }

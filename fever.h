@@ -5,12 +5,18 @@
 class Fever
 {
 public:
-	int mSnakeDefeat = 0;//ヘビを倒した数
-	int mTsuchinokoDefeat = 0;//ツチノコを倒した数
-	int mFeverGauge = 0;//フィーバーゲージ
-	bool mIsFever = 0;//フィーバーしているかどうか
-	void Update(Screen& screen);//アップデート
-	void Draw(Screen& screen);//描画
+	Fever() {
+		Init();
+	}
+
+	int mSnakeDefeat = 0;			//ヘビを倒した数
+	int mTsuchinokoDefeat = 0;		//ツチノコを倒した数
+	int mFeverGauge = 0;			//フィーバーゲージ
+	bool mIsFever = 0;				//フィーバーしているかどうか
+	bool mIsOldFever = 0;			//フィーバーしていたかどうか
+	void Init();					//初期化
+	void Update(Screen& screen);	//アップデート
+	void Draw(Screen& screen);		//描画
 	static constexpr int kMaxParticle = 30;//パーティクルの最大数
 	static constexpr int kMaxEnemy = Snake::kMaxSnake + Tsuchinoko::kMaxTsuchinoko;//パーティクルの最大数
 	const float mParticleRadius = 200;//パーティクルを出す半径

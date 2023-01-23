@@ -10,7 +10,7 @@
 #include "Snake.h"
 #include "Tsuchinoko.h"
 #include "Collision.h"
-#include "fever.h"
+#include "Fever.h"
 
 //インスタンス化
 Screen screen;

@@ -11,15 +11,23 @@
 
 
 void Screen::Init() {
+
+	//座標
 	mWorldCenter = { kWindowWidth / 2, kWindowHeight / 2 };
 	mScroll.setZero();
-	mZoom = 0.4f;
 
+	//ズーム
+	mIsZoomEasing = false;
+	mZoom = 0.4f;
+	mZoomEasingt = 0.0f;
+
+	//シェイク
 	mScreenShake.setZero();
 	mShakeMag = 1.0f;
 	mShakeEasingt = 0.0f;
 	mIsShakeActive = false;
 
+	//ミニマップ
 	mMiniMapCenter = { kWindowWidth - kMiniMapSize - 10.0f, kWindowHeight - kMiniMapSize - 10.0f };
 	mMiniMapZoom = (float)kMiniMapSize / (float)Map::kMapRadius;
 };
@@ -40,8 +48,8 @@ void Screen::ShakeUpdate(bool condition) {
 		mShakeEasingt = EasingClamp(0.033f, mShakeEasingt);
 		mShakeMag = EasingMove(1.0f, 0.0f, easeOutSine(mShakeEasingt));
 
-		mScreenShake.x = RAND(-5.0f, 5.0f) * mShakeMag;
-		mScreenShake.y = RAND(-5.0f, 5.0f) * mShakeMag;
+		mScreenShake.x = RAND(-3.0f, 5.0f) * mShakeMag;
+		mScreenShake.y = RAND(-3.0f, 5.0f) * mShakeMag;
 
 		if (mShakeEasingt == 1.0f) {
 			mIsShakeActive = false;
@@ -82,7 +90,7 @@ void Screen::HitStopUpdate() {
 	if (mIsHitStop)
 	{
 		mHitStopFrame++;
-		if (20 < mHitStopFrame) {
+		if (10 < mHitStopFrame) {
 			mIsHitStop = false;
 		}
 	}
@@ -107,19 +115,35 @@ void Screen::ScrollUpdate(Player& player) {
 
 }
 
-void Screen::ZoomUpdate() {
+void Screen::ZoomUpdate(bool isFever, bool isOldFever) {
 
-	if (Key::IsPress(DIK_UP) || Controller::IsPressedButton(0,Controller::bUP))
+	//フィーバー時ズームにする
+	if (isFever && !isOldFever)
 	{
-		mZoom += 0.01f;
+		mZoomEasingt = 0.0f;
+		mZoomStartValue = 0.4f;
+		mZoomEndValue = 0.15f;
+		mIsZoomEasing = true;
 	}
-	else if (Key::IsPress(DIK_DOWN) || Controller::IsPressedButton(0, Controller::bDOWN))
+	//通常時ズームにする
+	if (!isFever && isOldFever)
 	{
-		mZoom -= 0.01f;
+		mZoomEasingt = 0.0f;
+		mZoomStartValue = 0.15f;
+		mZoomEndValue = 0.4f;
+		mIsZoomEasing = true;
 	}
 
-	mZoom = Clamp(mZoom, 0.1f, 5.0f);
+	//ズーム値の変化をさせる
+	if (mIsZoomEasing)
+	{
+		mZoomEasingt = EasingClamp(0.015f, mZoomEasingt);
+		mZoom = EasingMove(mZoomStartValue, mZoomEndValue, easeOutCirc(mZoomEasingt));
 
+		if (mZoomEasingt == 1.0f) {
+			mIsZoomEasing = false;
+		}
+	}
 }
 
 

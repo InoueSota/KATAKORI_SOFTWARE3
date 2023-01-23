@@ -19,7 +19,12 @@ private:
 
 	Vec2 mWorldCenter;		//ワールドの中心
 	Vec2 mScroll;			//スクロール値
+
+	bool mIsZoomEasing;		//ズームフラグ
 	float mZoom;			//ズーム値
+	float mZoomEasingt;		//ズームを徐々に行うイージング
+	float mZoomStartValue;	//ズーム開始値
+	float mZoomEndValue;	//ズーム終了値
 
 	bool mIsShakeActive;	//シェイクフラグ
 	Vec2 mScreenShake;		//シェイク値
@@ -92,7 +97,7 @@ public:
 	/// <summary>
 	/// ズーム
 	/// </summary>
-	void ZoomUpdate();
+	void ZoomUpdate(bool isFever, bool isOldFever);
 
 	/// <summary>
 	/// ズーム値を取得する
