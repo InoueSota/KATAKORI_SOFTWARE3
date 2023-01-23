@@ -26,7 +26,7 @@ void Screen::Init() {
 
 
 
-void Screen::SetShake(bool condition) {
+void Screen::ShakeUpdate(bool condition) {
 
 	if (condition)
 	{
@@ -49,7 +49,7 @@ void Screen::SetShake(bool condition) {
 	}
 }
 
-void Screen::SetShake(int min, int max, bool condition) {
+void Screen::ShakeUpdate(int min, int max, bool condition) {
 
 	if (condition == true)
 	{
@@ -63,7 +63,7 @@ void Screen::SetShake(int min, int max, bool condition) {
 
 }
 
-void Screen::SetShake(int minX, int maxX, int minY, int maxY, bool condition) {
+void Screen::ShakeUpdate(int minX, int maxX, int minY, int maxY, bool condition) {
 
 	if (condition == true)
 	{
@@ -77,7 +77,22 @@ void Screen::SetShake(int minX, int maxX, int minY, int maxY, bool condition) {
 
 }
 
-void Screen::SetScroll(Player& player) {
+void Screen::HitStopUpdate() {
+
+	if (mIsHitStop)
+	{
+		mHitStopFrame++;
+		if (20 < mHitStopFrame) {
+			mIsHitStop = false;
+		}
+	}
+	else
+	{
+		mHitStopFrame = 0;
+	}
+}
+
+void Screen::ScrollUpdate(Player& player) {
 
 	if (!player.mIsStrikeActive)
 	{
@@ -92,7 +107,7 @@ void Screen::SetScroll(Player& player) {
 
 }
 
-void Screen::SetZoom() {
+void Screen::ZoomUpdate() {
 
 	if (Key::IsPress(DIK_UP) || Controller::IsPressedButton(0,Controller::bUP))
 	{
@@ -221,9 +236,9 @@ void Screen::DrawUI(Vec2 Position, float size, int srcX, int srcW, int srcH, int
 }
 
 
-void Screen::DrawMiniMap(Vec2 position, unsigned int color, FillMode fillMode) {
+void Screen::DrawMiniMap(Vec2 position, unsigned int color, FillMode fillMode, float radius) {
 	position = MiniMapTransform(position);
-	Novice::DrawEllipse((int)position.x, (int)position.y, 2.0f, 2.0f, 0.0f, color, fillMode);
+	Novice::DrawEllipse((int)position.x, (int)position.y, radius, radius, 0.0f, color, fillMode);
 }
 
 

@@ -21,10 +21,13 @@ private:
 	Vec2 mScroll;			//スクロール値
 	float mZoom;			//ズーム値
 
+	bool mIsShakeActive;	//シェイクフラグ
 	Vec2 mScreenShake;		//シェイク値
 	float mShakeMag;		//シェイク倍率
 	float mShakeEasingt;	//シェイクを徐々に収めるイージング
-	bool mIsShakeActive;	//シェイクフラグ
+
+	bool mIsHitStop;		//ヒットストップシェイク
+	int mHitStopFrame;		//ヒットストップフレーム
 
 	Vec2 mMiniMapCenter;	//ミニマップの中心
 	float mMiniMapZoom;		//ミニマップのズーム値
@@ -41,7 +44,7 @@ public:
 	/// 被弾時のカメラシェイク
 	/// </summary>
 	/// <param name="condition">シェイクする条件</param>
-	void SetShake(bool condition);
+	void ShakeUpdate(bool condition);
 
 	/// <summary>
 	/// カメラシェイク（ X軸 と Y軸 どちらも同じ値 ）
@@ -49,7 +52,7 @@ public:
 	/// <param name="min">最小値</param>
 	/// <param name="max">最大値</param>
 	/// <param name="condition">シェイクする条件</param>
-	void SetShake(int min, int max, bool condition);
+	void ShakeUpdate(int min, int max, bool condition);
 
 	/// <summary>
 	/// カメラシェイク（ X軸 と Y 軸 別の値 ）
@@ -59,20 +62,41 @@ public:
 	/// <param name="minY">最小値（ Y軸 ）</param>
 	/// <param name="maxY">最大値（ Y軸 ）</param>
 	/// <param name="condition">シェイクする条件</param>
-	void SetShake(int minX, int maxX, int minY, int maxY, bool condition);
+	void ShakeUpdate(int minX, int maxX, int minY, int maxY, bool condition);
+
+	/// <summary>
+	///	ヒットストップ
+	/// </summary>
+	void HitStopUpdate();
+
+	/// <summary>
+	/// ヒットストップフラグをtrueにする
+	/// </summary>
+	inline void SetHitStop() { mIsHitStop = true; }
+
+	/// <summary>
+	/// ヒットストップフラグを取得する
+	/// </summary>
+	inline bool GetHitStop() { return mIsHitStop; }
 
 	/// <summary>
 	/// スクロール
 	/// </summary>
-	void SetScroll(Player& player);
+	void ScrollUpdate(Player& player);
 
+	/// <summary>
+	/// スクロール値を取得する
+	/// </summary>
 	inline Vec2 GetScroll() { return mScroll; }
 
 	/// <summary>
 	/// ズーム
 	/// </summary>
-	void SetZoom();
+	void ZoomUpdate();
 
+	/// <summary>
+	/// ズーム値を取得する
+	/// </summary>
 	inline float GetZoom() { return mZoom; }
 
 
@@ -210,13 +234,10 @@ public:
 	/// ミニマップの位置を円で描画する
 	/// </summary>
 	/// <param name="position">中心座標</param>
-	/// <param name="srcX">画像上の描画したい範囲左上座標 X（変数）</param>
-	/// <param name="srcW">画像上の描画したい範囲横幅</param>
-	/// <param name="srcH">画像上の描画したい範囲縦幅</param>
-	/// <param name="textureHandle">テクスチャのハンドル</param>
 	/// <param name="color">描画するスプライトの色</param>
-	/// <param name="scale">大きさを変化させる</param>
-	void DrawMiniMap(Vec2 position, unsigned int color = WHITE, FillMode fillMode = kFillModeSolid);
+	/// <param name="fillMode">塗りつぶしモード</param>
+	/// <param name="radius">半径</param>
+	void DrawMiniMap(Vec2 position, unsigned int color = WHITE, FillMode fillMode = kFillModeSolid, float radius = 2.0f);
 
 
 	//--------------------------------------------------------------------------------------------//

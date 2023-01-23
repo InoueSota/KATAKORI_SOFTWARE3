@@ -34,7 +34,10 @@ void Player::Init() {
 	}
 
 	//残像
-	mIsShadowActive = false;
+	mIsDushShadowActive = false;
+	for (int i = 0; i < kShadowMax; i++) {
+		mIsShadowActive[i] = false;
+	}
 }
 
 
@@ -75,11 +78,6 @@ void Player::Update(Screen& screen) {
 	//マップ内に収める
 	mPosition.x = Clamp(mPosition.x, Map::kMapLeft + (mSize / 2), Map::kMapRight - (mSize / 2));
 	mPosition.y = Clamp(mPosition.y, Map::kMapBottom + (mSize / 2), Map::kMapTop - (mSize / 2));
-
-	//残像処理
-	if (!mKnockbackActive) {
-		Shadow();
-	}
 		
 }
 void Player::NormalMove() {
@@ -273,43 +271,79 @@ void Player::StrikeLine(Screen& screen) {
 	}
 
 }
-void Player::Shadow() {
+void Player::Shadow(bool isHitStop) {
+
+	mShadowFrame++;
+
+	for (int i = 0; i < kShadowMax; i++)
+	{
+		if (!mIsShadowActive[i] && mShadowFrame % 3 == 0 && !isHitStop) {
+			mShadowPosition[i] = mPosition;
+			mShadowAlphat[i] = 0.0f;
+			mShadowColor[i] = 0x606060A0;
+			mIsShadowActive[i] = true;
+			break;
+		}
+
+		if (mIsShadowActive[i]) {
+			mShadowAlphat[i] = EasingClamp(0.05f, mShadowAlphat[i]);
+			mShadowColor[i] = ColorEasingMove(0x606060A0, 0x60606000, easeLinear(mShadowAlphat[i]));
+
+			if (mShadowAlphat[i] == 1.0f) {
+				mIsShadowActive[i] = false;
+			}
+		}
+	}
 
 	//Aボタン押下時
-	if (Controller::IsTriggerButton(0, Controller::bA)) {
+	if (Controller::IsTriggerButton(0, Controller::bA) && !mKnockbackActive) {
 
 		float distanceX = mPosition.x - mOldPosition.x;
 		float distanceY = mPosition.y - mOldPosition.y;
 
-		float intervalX = distanceX / kShadowMax;
-		float intervalY = distanceY / kShadowMax;
+		float intervalX = distanceX / 4;
+		float intervalY = distanceY / 4;
+
+		for (int i = 0; i < 4; i++) {
+
+			mDushShadowPosition[i].x = mOldPosition.x + (intervalX * i);
+			mDushShadowPosition[i].y = mOldPosition.y + (intervalY * i);
+		}
+
+		mDushShadowAlphat = 0.0f;
+		mDushShadowColor = 0x60606060;
+		mIsDushShadowActive = true;
 
 		for (int i = 0; i < kShadowMax; i++) {
 
-			mShadowPosition[i].x = mOldPosition.x + (intervalX * i);
-			mShadowPosition[i].y = mOldPosition.y + (intervalY * i);
-
+			mShadowAlphat[i] = 0.0f;
+			mShadowColor[i] = 0x60606000;
+			mIsShadowActive[i] = false;
 		}
-
-		mShadowAlphat = 0.0f;
-		mShadowColor = 0x60606060;
-		mIsShadowActive = true;
-
 	}
 
-	if (mIsShadowActive){
+	if (mIsDushShadowActive) {
 
-		mShadowAlphat = EasingClamp(0.08f, mShadowAlphat);
-		mShadowColor = ColorEasingMove(0x60606060, 0x60606000, easeLinear(mShadowAlphat));
+		mDushShadowAlphat = EasingClamp(0.05f, mDushShadowAlphat);
+		mDushShadowColor = ColorEasingMove(0x60606060, 0x60606000, easeLinear(mDushShadowAlphat));
 
-		if (mShadowAlphat == 1.0f) {
-			mIsShadowActive = false;
+		if (mDushShadowAlphat == 1.0f) {
+			mIsDushShadowActive = false;
 		}
 
 	}
 
 }
 
+void Player::SetKnockbackPosition(Vec2 enemyPosition, float enemyRadius) {
+
+	if (!mKnockbackActive) {
+		Vec2 tmpDirection = (mOldPosition - enemyPosition).Normalized();
+		mPosition = enemyPosition + tmpDirection * enemyRadius;
+		mKnockbackEnemyPos = enemyPosition;
+		mKnockbackSet = true;
+	}
+}
 void Player::Knockback() {
 
 	if (mKnockbackSet) {
@@ -351,10 +385,13 @@ void Player::Knockback() {
 void Player::Draw(Screen& screen) {
 
 	//残像描画
-	for (int i = 0; i < kShadowMax; i++){
+	for (int i = 0; i < kShadowMax; i++) {
+		screen.DrawSquare(mShadowPosition[i], mSize, mShadowColor[i]);
+	}
 
-		screen.DrawSquare(mShadowPosition[i], mSize, mShadowColor);
 
+	for (int i = 0; i < 4; i++) {
+		screen.DrawSquare(mDushShadowPosition[i], mSize, mDushShadowColor);
 	}
 
 	//マーク描画
@@ -374,5 +411,4 @@ void Player::Draw(Screen& screen) {
 		screen.DrawRectAngle(mStrikeLinePosition[i], mStrikeLineWidth[i], mStrikeLineHeight[i], mStrikeLineAngle, mStrikeLineColor[i]);
 	}
 
-	Novice::ScreenPrintf(0, 0, "mIsMarkActive : %d", mIsMarkActive);
 }

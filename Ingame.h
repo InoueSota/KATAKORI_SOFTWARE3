@@ -28,9 +28,14 @@ public:
 	int mTimeElapsed;
 	int mTimeLeft;
 	int mTimeUISize;
+	//カウントダウン
 	int mTimeLastUISize;
 	unsigned int mTimeLastColor;
 	float mTimeEasingt;
+	//タイムアップ
+	bool mIsTimeUpFinish;
+	float mTimeUpAlphat;
+	unsigned int mTimeUpColor;
 	void TimeLimit();
 	void DrawBackTimeLimit(Screen& screen);
 
@@ -74,6 +79,7 @@ public:
 	bool mIsLoadTexture = false;
 	int mTimeNumber;
 	int mTimeLimitNumber;
+	int mTimeUp;
 	int mComboLetter;
 	int mScoreLetter;
 	int mWarningRed;

@@ -70,24 +70,28 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				title.Init();
 				scene = TITLE;
 			}
-
-
-			//プレイヤーアップデート
-			player.Update(screen);
-
-
-			//ストライクしてないとき
-			if (!player.mIsStrikeActive)
+			
+			//ヒットストップしてないとき
+			if (!screen.GetHitStop())
 			{
-				//制限時間の経過を止める
-				ui.TimeLimit();
 
-				//敵アップデート
-				for (int i = 0; i < Snake::kMaxSnake; i++) {
-					snake[i].Update(ui.mTimeLeft);
-				}
-				for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
-					tsuchinoko[i].Update(player.mPosition, ui.mTimeLeft);
+				//プレイヤーアップデート
+				player.Update(screen);
+
+
+				//ストライクしてないとき
+				if (!player.mIsStrikeActive)
+				{
+					//制限時間の経過を止める
+					ui.TimeLimit();
+
+					//敵アップデート
+					for (int i = 0; i < Snake::kMaxSnake; i++) {
+						snake[i].Update(ui.mTimeLeft);
+					}
+					for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
+						tsuchinoko[i].Update(player.mPosition, ui.mTimeLeft);
+					}
 				}
 			}
 
@@ -155,14 +159,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				if (!snake[i].mIsDeath && (CircleCapsuleCollsion(player, snake[i].mHeadPosition, snake[i].mHeadRadius)))
 				{
 					if (!fever.mIsFever) {
+						player.SetKnockbackPosition(snake[i].mHeadPosition, snake[i].mHeadRadius);
 						ui.MissSnakeScore(player.mIsStrikeActive);
 						ui.mCombo = 0;
 						ui.mIsWarning = true;
-						player.mKnockbackSet = true;
-						player.mKnockbackEnemyPos = snake[i].mHeadPosition;
 					} else {
 						ui.SnakeScore(player.mIsStrikeActive);
 						ui.AddCombo();
+						screen.SetHitStop();
 						snake[i].mIsDeath = true;
 						fever.mSnakeDefeat++;
 					}
@@ -174,8 +178,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				{
 					if (!snake[i].mIsDeath && CircleCapsuleCollsion(player, snake[i].mBodyPosition[j], snake[i].mBodyRadius) && !player.mKnockbackActive)
 					{
+						if (!player.mIsStrikeActive) {
+							player.SetKnockbackPosition(snake[i].mBodyPosition[j], snake[i].mBodyRadius);
+						}
 						ui.SnakeScore(player.mIsStrikeActive);
 						ui.AddCombo();
+						screen.SetHitStop();
 						snake[i].mIsDeath = true;
 						fever.mSnakeDefeat++;
 						for (int k = 0; k < Fever::kMaxEnemy; k++) {
@@ -195,17 +203,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
 
 				//頭と尾
-				if (!tsuchinoko[i].mIsDeath && (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius) || Collision(player.mPosition, player.mRadius, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius)))
+				if (!tsuchinoko[i].mIsDeath && (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius) || CircleCapsuleCollsion(player, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius)))
 				{
 					if (!fever.mIsFever) {
+						if (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius)) {
+							player.SetKnockbackPosition(tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius);
+						}
+						else {
+							player.SetKnockbackPosition(tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius);
+						}
 						ui.MissTsuchinokoScore(player.mIsStrikeActive);
 						ui.mCombo = 0;
 						ui.mIsWarning = true;
-						player.mKnockbackSet = true;
-						player.mKnockbackEnemyPos = tsuchinoko[i].mHeadPosition;
 					} else {
+						if (!player.mIsStrikeActive) {
+							if (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius)) {
+								player.SetKnockbackPosition(tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius);
+							}
+							else {
+								player.SetKnockbackPosition(tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius);
+							}
+						}
 						ui.TsuchinokoScore(player.mIsStrikeActive);
 						ui.AddCombo();
+						screen.SetHitStop();
 						tsuchinoko[i].mIsDeath = true;
 						fever.mTsuchinokoDefeat++;
 					}
@@ -219,6 +240,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					{
 						ui.TsuchinokoScore(player.mIsStrikeActive);
 						ui.AddCombo();
+						screen.SetHitStop();
+						if (!player.mIsStrikeActive) {
+							player.SetKnockbackPosition(tsuchinoko[i].mBodyPosition[j], tsuchinoko[i].mBodyRadius);
+						}
 						tsuchinoko[i].mIsDeath = true;
 						fever.mTsuchinokoDefeat++;
 						for (int k = 0; k < Fever::kMaxEnemy; k++) {
@@ -258,28 +283,36 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//フィーバー
 			fever.Update(screen);
+
+
+			//残像アップデート
+			player.Shadow(screen.GetHitStop());
 			
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 			//ズームアップデート
-			screen.SetZoom();
+			screen.ZoomUpdate();
 
 			//スクロールアップデート
-			screen.SetScroll(player);
+			screen.ScrollUpdate(player);
 
 			//シェイクアップデート
-			screen.SetShake(player.mKnockbackSet);
+			screen.ShakeUpdate(player.mKnockbackSet);
+
+			//ヒットストップアップデート
+			screen.HitStopUpdate();
 
 
-			if (ui.mTimeLeft == 0) {
+			if (ui.mIsTimeUpFinish) {
 				scene = OUTGAME;
 			}
 
 
 			break;
 		case OUTGAME:
+
 			//Aボタン押下時
 			if (Controller::IsTriggerButton(0, Controller::bX)) {
 				title.Init();
@@ -339,12 +372,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//ミニマップの位置の描画
 			for (int i = 0; i < Snake::kMaxSnake; i++) {
-				screen.DrawMiniMap(snake[i].mHeadPosition);
+				screen.DrawMiniMap(snake[i].mHeadPosition, WHITE);
 			}
 			for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
-				screen.DrawMiniMap(tsuchinoko[i].mCenterPosition);
+				screen.DrawMiniMap(tsuchinoko[i].mCenterPosition, WHITE);
 			}
-			screen.DrawMiniMap(player.mPosition, 0x606060FF);
+			screen.DrawMiniMap(player.mPosition, 0xFFFF00FF, kFillModeSolid, 4.0f);
 
 
 			//フィーバー

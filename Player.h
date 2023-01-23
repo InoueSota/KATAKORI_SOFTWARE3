@@ -17,6 +17,7 @@ public:
 
 	//パラメータ
 	Vec2 mPosition;
+	Vec2 mOldPosition;
 	Vec2 mVelocity;
 	float mSize;
 	float mRadius;
@@ -63,14 +64,21 @@ public:
 
 
 	//残像
-	static constexpr int kShadowMax = 4;
-	Vec2 mOldPosition;
+	int mShadowFrame;
+	static constexpr int kShadowMax = 10;
+	bool mIsShadowActive[kShadowMax];
 	Vec2 mShadowPosition[kShadowMax];
-	bool mIsShadowActive;
-	float mShadowAlphat;
-	unsigned int mShadowColor;
-	void Shadow();
+	float mShadowAlphat[kShadowMax];
+	unsigned int mShadowColor[kShadowMax];
+	//ダッシュ残像
+	bool mIsDushShadowActive;
+	Vec2 mDushShadowPosition[4];
+	float mDushShadowAlphat;
+	unsigned int mDushShadowColor;
+	void Shadow(bool isHitStop);
 
+
+	//ノックバック
 	int LockonCount;//何体の敵に補足されているか
 	bool mKnockbackSet;
 	bool mKnockbackActive;
@@ -79,6 +87,7 @@ public:
 	Vec2 mKnockbackEnd;
 	float mKnockBackT;
 	void Knockback();
+	void SetKnockbackPosition(Vec2 enemyPosition, float enemyRadius);
 
 };
 

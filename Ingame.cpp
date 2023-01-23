@@ -24,6 +24,9 @@ void UI::Init() {
 	mTimeFrame = 0;
 	mTimeLastColor = 0xFFFFFFFF;
 	mTimeEasingt = 0.0f;
+	mIsTimeUpFinish = false;
+	mTimeUpAlphat = 0.0f;
+	mTimeUpColor = 0xFFFFFF00;
 	
 	//コンボ
 	mIsComboScaleAnime = false;
@@ -61,7 +64,7 @@ void UI::Update() {
 void UI::TimeLimit() {
 
 	//フレームが60になったら一秒経過
-	if (mTimeFrame == 60)
+	if (mTimeFrame == 60 && mTimeLeft != 0)
 	{
 		mTimeElapsed++;
 		mTimeFrame = 0;
@@ -88,6 +91,19 @@ void UI::TimeLimit() {
 		mTimeEasingt = EasingClamp(1.0f / 60.0f, mTimeEasingt);
 		mTimeLastColor = ColorEasingMove(0xFFFFFF70, 0xFFFFFF00, easeOutSine(mTimeEasingt));
 		mTimeLastScale = EasingMove({ 1.0f, 1.0f }, { 2.0f,2.0f }, easeOutSine(mTimeEasingt));
+	}
+
+	//タイムアップ処理
+	if (mTimeLeft == 0) {
+
+		//タイムアップの文字を透明度イージングさせる
+		mTimeUpAlphat = EasingClamp(0.1f, mTimeUpAlphat);
+		mTimeUpColor = ColorEasingMove(0xFFFFFF00, WHITE, easeOutSine(mTimeUpAlphat));
+
+		//シーンをスコア画面に遷移させるフラグをtrueにする
+		if (240 < mTimeFrame) {
+			mIsTimeUpFinish = true;
+		}
 	}
 }
 void UI::Combo() {
@@ -181,7 +197,7 @@ void UI::Warning() {
 void UI::DrawBackTimeLimit(Screen& screen) {
 
 	//カウントダウンの描画
-	if (mTimeLeft < 10) {
+	if (0 < mTimeLeft && mTimeLeft < 10) {
 		screen.DrawUI(mCenterPosition, mTimeLastUISize, 288 * (mTimeLeft % 10), 288, 288, mTimeLimitNumber, 0xFFFFFF70);
 		screen.DrawUI(mCenterPosition, mTimeLastUISize, 288 * (mTimeLeft % 10), 288, 288, mTimeLimitNumber, mTimeLastColor, mTimeLastScale);
 	}
@@ -190,6 +206,7 @@ void UI::LoadTexture() {
 	if (!mIsLoadTexture) {
 		mTimeNumber = Novice::LoadTexture("./Resources/UI/Time/number.png");
 		mTimeLimitNumber = Novice::LoadTexture("./Resources/UI/Time/timelimit.png");
+		mTimeUp = Novice::LoadTexture("./Resources/UI/Time/timeup.png");
 		mComboLetter = Novice::LoadTexture("./Resources/UI/Combo/combo.png");
 		mScoreLetter = Novice::LoadTexture("./Resources/UI/Score/score.png");
 		mWarningRed = Novice::LoadTexture("./Resources/Player/warningred.png");
@@ -206,6 +223,10 @@ void UI::Draw(Screen& screen) {
 	if (10 <= mTimeLeft) {
 		screen.DrawUI(mTimePosition[1], mTimeUISize, 288 * (mTimeLeft / 10), 288, 288, mTimeLimitNumber, WHITE);
 		screen.DrawUI(mTimePosition[0], mTimeUISize, 288 * (mTimeLeft % 10), 288, 288, mTimeLimitNumber, WHITE);
+	}
+	//タイムアップ
+	if (mTimeLeft == 0) {
+		screen.DrawUI(mCenterPosition, Screen::kWindowWidth, Screen::kWindowHeight, 0, Screen::kWindowWidth, Screen::kWindowHeight, mTimeUp, mTimeUpColor);
 	}
 
 	//コンボ
