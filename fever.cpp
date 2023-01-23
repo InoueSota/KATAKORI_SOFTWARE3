@@ -23,8 +23,8 @@ void Fever::Update(Screen& screen) {
 			mFeverGauge = 0;
 		}
 	} else {
-		mFeverGauge += mSnakeDefeat * 1000;
-		mFeverGauge += mTsuchinokoDefeat * 1000;
+		mFeverGauge += mSnakeDefeat * 100;
+		mFeverGauge += mTsuchinokoDefeat * 100;
 	}
 
 	if (mFeverGauge >= 1000) {
@@ -106,7 +106,4 @@ void Fever::Draw(Screen& screen) {
 		}
 	}
 	
-
-	Novice::ScreenPrintf(0, 120, "%f", particlecreat[0].particle[0].EndPos.x);
-
 }

@@ -37,7 +37,6 @@ void UI::Init() {
 	mComboScale.x = 1.0f;
 	mComboScale.y = 1.0f;
 	mCombo = 0;
-	mComboCoolTime = 0;
 
 	//スコア
 	mScore = 0;
@@ -108,14 +107,6 @@ void UI::TimeLimit() {
 }
 void UI::Combo() {
 
-	//クールタイムを加算する
-	mComboCoolTime++;
-
-	//コンボの初期化
-	if (mComboCoolTime > kComboCoolTime) {
-		mCombo = 0;
-	}
-
 	//拡縮アニメーション
 	if (mIsComboScaleAnime) {
 		mComboScale.x -= 0.1f;
@@ -131,38 +122,37 @@ void UI::AddCombo() {
 
 	//コンボを足す
 	mCombo++;
-	mComboCoolTime = 0;
 	//拡縮アニメーション
 	mComboScale.x = 1.8f;
 	mComboScale.y = 1.8f;
 	mIsComboScaleAnime = true;
 }
-void UI::SnakeScore(bool playermIsStrikeActive) {
-	if (playermIsStrikeActive) {
-		mScore += (kSnakeScore * 2) * (1.0f + (float)mCombo / 10);
+void UI::SnakeScore(bool isStrikeActive, float playerSizeMax) {
+	if (isStrikeActive) {
+		mScore += kSnakeScore / (playerSizeMax / 80.0f) * (1.0f + (float)mCombo / 10);
 	}
 	else {
 		mScore += kSnakeScore * (1.0f + (float)mCombo / 10);
 	}
 }
-void UI::MissSnakeScore(bool playermIsStrikeActive) {
-	if (playermIsStrikeActive) {
+void UI::MissSnakeScore(bool isStrikeActive) {
+	if (isStrikeActive) {
 		mScore -= kSnakeScore;
 	}
 	else {
 		mScore -= kSnakeScore / 2.0;
 	}
 }
-void UI::TsuchinokoScore(bool playermIsStrikeActive) {
-	if (playermIsStrikeActive) {
-		mScore += kTsuchinokoScore * 2 * (1.0f + (float)mCombo / 10);
+void UI::TsuchinokoScore(bool isStrikeActive, float playerSizeMax) {
+	if (isStrikeActive) {
+		mScore += kTsuchinokoScore / (playerSizeMax / 80.0f) * (1.0f + (float)mCombo / 10);
 	}
 	else {
 		mScore += kTsuchinokoScore * (1.0f + (float)mCombo / 10);
 	}
 }
-void UI::MissTsuchinokoScore(bool playermIsStrikeActive) {
-	if (playermIsStrikeActive) {
+void UI::MissTsuchinokoScore(bool isStrikeActive) {
+	if (isStrikeActive) {
 		mScore -= kTsuchinokoScore;
 	}
 	else {

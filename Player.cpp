@@ -11,7 +11,8 @@ void Player::Init() {
 	//パラメータ
 	mPosition.setZero();
 	mVelocity.setZero();
-	mSize = 64;
+	mSizeMax = 70;
+	mSize = mSizeMax;
 	mRadius = mSize / 2.0f;
 
 	//通常移動
@@ -27,6 +28,7 @@ void Player::Init() {
 	//ストライク
 	mIsStrikeActive = false;
 	mStrikeEasingt = 0.0f;
+	mStrikePower = 0;
 
 	//ストライク演出
 	for (int i = 0; i < kStrikeLineMax; i++) {
@@ -42,7 +44,7 @@ void Player::Init() {
 
 
 
-void Player::Update(Screen& screen, bool isFever) {
+void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 
 	//前回ポジションを取得する
 	mOldPosition = mPosition;
@@ -51,8 +53,10 @@ void Player::Update(Screen& screen, bool isFever) {
 	mVelocity.setZero();
 
 	//大きさをズームにしたがって変える
-	mSize = 64 / screen.GetZoom() * 0.4f;
+	mSize = mSizeMax / screen.GetZoom() * 0.4f;
 	mRadius = mSize / 2.0f;
+	//サイズの代入値を収める
+	mSizeMax = Clamp(mSizeMax, 0.0f, 80.0f);
 
 	//ストライクをしていない時に可能
 	if (!mIsStrikeActive) {
@@ -73,7 +77,7 @@ void Player::Update(Screen& screen, bool isFever) {
 	}
 
 	//ストライク
-	Strike(isFever);
+	Strike(isFever, isOldFever);
 	if (!isFever) {
 		StrikeLine(screen);
 	}
@@ -162,7 +166,12 @@ void Player::Mark() {
 	}
 
 }
-void Player::Strike(bool isFever) {
+void Player::Strike(bool isFever, bool isOldFever) {
+
+	//フィーバー状態が始まった || 終わった
+	if ((isFever && !isOldFever) || (!isFever && isOldFever)) {
+		mIsStrikeActive = false;
+	}
 
 	if (mIsMarkActive && !mIsStrikeActive) {
 
@@ -206,6 +215,9 @@ void Player::Strike(bool isFever) {
 					mStrikeThetaStartValue = tmpTheta;
 					mStrikeRadiusStartValue = tmpDistance;
 				}
+
+				//ストライクパワーを消費する
+				mStrikePower = 0;
 
 				//フラグをtrueにする
 				mIsStrikeActive = true;
@@ -451,5 +463,10 @@ void Player::Draw(Screen& screen) {
 		screen.DrawRectAngle(mStrikeLinePosition[i], mStrikeLineWidth[i] / screen.GetZoom(), mStrikeLineHeight[i] / screen.GetZoom(), mStrikeLineAngle, mStrikeLineColor[i]);
 	}
 
-	Novice::ScreenPrintf(0, 0, "mStrikeThetaStartValue : %f", mStrikeThetaStartValue);
+}
+
+void Player::DrawStrikePower(Screen& screen) {
+
+	screen.DrawBox({ Screen::kWindowWidth - (Screen::kMiniMapSize * 4),599 }, 5 * 20, 22, 0.0f, BLACK, kFillModeWireFrame, false);
+	screen.DrawBox({ Screen::kWindowWidth - (Screen::kMiniMapSize * 4),600 }, 5 * mStrikePower, 20, 0.0f, WHITE, kFillModeSolid, false);
 }

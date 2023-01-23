@@ -76,7 +76,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			{
 
 				//プレイヤーアップデート
-				player.Update(screen, fever.mIsFever);
+				player.Update(screen, fever.mIsFever, fever.mIsOldFever);
 
 
 				//ストライクしてないとき
@@ -160,11 +160,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				{
 					if (!fever.mIsFever) {
 						player.SetKnockbackPosition(snake[i].mHeadPosition, snake[i].mHeadRadius);
+						player.mSizeMax -= 4;
 						ui.MissSnakeScore(player.mIsStrikeActive);
 						ui.mCombo = 0;
 						ui.mIsWarning = true;
 					} else {
-						ui.SnakeScore(player.mIsStrikeActive);
+						ui.SnakeScore(player.mIsStrikeActive, player.mSizeMax);
 						ui.AddCombo();
 						screen.SetHitStop();
 						snake[i].mIsDeath = true;
@@ -178,10 +179,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				{
 					if (!snake[i].mIsDeath && CircleCapsuleCollsion(player, snake[i].mBodyPosition[j], snake[i].mBodyRadius) && !player.mKnockbackActive)
 					{
-						if (!fever.mIsFever && !player.mIsStrikeActive) {
-							player.SetKnockbackPosition(snake[i].mBodyPosition[j], snake[i].mBodyRadius);
+						if (!player.mIsStrikeActive) {
+							player.mStrikePower++;
+							player.mSizeMax -= 2;
 						}
-						ui.SnakeScore(player.mIsStrikeActive);
+						else {
+							player.mSizeMax += 6;
+						}
+						ui.SnakeScore(player.mIsStrikeActive, player.mSizeMax);
 						ui.AddCombo();
 						screen.SetHitStop();
 						snake[i].mIsDeath = true;
@@ -212,11 +217,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						else {
 							player.SetKnockbackPosition(tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius);
 						}
+						player.mSizeMax -= 4;
 						ui.MissTsuchinokoScore(player.mIsStrikeActive);
 						ui.mCombo = 0;
 						ui.mIsWarning = true;
 					} else {
-						ui.TsuchinokoScore(player.mIsStrikeActive);
+						ui.TsuchinokoScore(player.mIsStrikeActive, player.mSizeMax);
 						ui.AddCombo();
 						screen.SetHitStop();
 						tsuchinoko[i].mIsDeath = true;
@@ -230,10 +236,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				{
 					if (!tsuchinoko[i].mIsDeath && CircleCapsuleCollsion(player,tsuchinoko[i].mBodyPosition[j], tsuchinoko[i].mBodyRadius) && !player.mKnockbackActive)
 					{
-						if (!fever.mIsFever && !player.mIsStrikeActive) {
-							player.SetKnockbackPosition(tsuchinoko[i].mBodyPosition[j], tsuchinoko[i].mBodyRadius);
+						if (!player.mIsStrikeActive) {
+							player.mStrikePower++;
+							player.mSizeMax -= 2;
 						}
-						ui.TsuchinokoScore(player.mIsStrikeActive);
+						else {
+							player.mSizeMax += 6;
+						}
+						ui.TsuchinokoScore(player.mIsStrikeActive, player.mSizeMax);
 						ui.AddCombo();
 						screen.SetHitStop();
 						tsuchinoko[i].mIsDeath = true;
@@ -297,7 +307,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			screen.HitStopUpdate();
 
 
-			if (ui.mIsTimeUpFinish) {
+			if (ui.mIsTimeUpFinish || player.mSizeMax == 0.0f) {
 				scene = OUTGAME;
 			}
 
@@ -371,6 +381,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 			screen.DrawMiniMap(player.mPosition, 0xFFFF00FF, kFillModeSolid, 4.0f);
 
+			//ストライクパワー描画
+			player.DrawStrikePower(screen);
 
 			//フィーバー
 			fever.Draw(screen);

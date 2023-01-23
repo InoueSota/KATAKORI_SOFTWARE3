@@ -41,12 +41,10 @@ public:
 
 
 	//ƒRƒ“ƒ{
-	const int kComboCoolTime = 180;
 	bool mIsComboScaleAnime;
 	Vec2 mComboPosition[2];
 	Vec2 mComboScale;
 	int mCombo;
-	int mComboCoolTime;
 	void Combo();
 	void AddCombo();
 
@@ -56,10 +54,10 @@ public:
 	const int kTsuchinokoScore = 1500;
 	Vec2 mScorePosition[6];
 	float mScore;
-	void SnakeScore(bool playermIsStrikeActive);
-	void MissSnakeScore(bool playermIsStrikeActive);
-	void TsuchinokoScore(bool playermIsStrikeActive);
-	void MissTsuchinokoScore(bool playermIsStrikeActive);
+	void SnakeScore(bool isStrikeActive, float playerSizeMax);
+	void MissSnakeScore(bool isStrikeActive);
+	void TsuchinokoScore(bool isStrikeActive, float playerSizeMax);
+	void MissTsuchinokoScore(bool isStrikeActive);
 
 
 	//“ª‚©”ö‚É“–‚½‚Á‚Ä‚µ‚Ü‚Á‚½‚Æ‚«
