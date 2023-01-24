@@ -11,7 +11,8 @@ void Player::Init() {
 	//パラメータ
 	mPosition.setZero();
 	mVelocity.setZero();
-	mSize = 80;
+	mSizeValue = 80;
+	mSize = mSizeValue;
 	mRadius = mSize / 2.0f;
 
 	//通常移動
@@ -53,12 +54,15 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 
 	//大きさをズームにしたがって変える
 	if (!isFever && isOldFever) {
-		mSize = 80;
+		mSizeValue = 80;
+	}
+	mSizeValue = Clamp(mSizeValue, 0.0f, 200.0f);
+	if (!isFever) {
+		mSize += (mSizeValue - mSize) * 0.5f;
 	}
 	else if (isFever) {
 		mSize = 80 / screen.GetZoom() * 0.4f;
 	}
-	mSize = Clamp(mSize, 0.0f, 200.0f);
 	mRadius = mSize / 2.0f;
 
 	//ストライクをしていない時に可能
@@ -474,5 +478,8 @@ void Player::DrawStrikePower(Screen& screen) {
 
 	screen.DrawBox({ Screen::kWindowWidth - (Screen::kMiniMapSize * 4),599 }, 10 * kStrikePowerMax, 22, 0.0f, BLACK, kFillModeWireFrame, false);
 	screen.DrawBox({ Screen::kWindowWidth - (Screen::kMiniMapSize * 4),600 }, 10 * mStrikePower, 20, 0.0f, WHITE, kFillModeSolid, false);
+
+	Novice::ScreenPrintf(0, 40, "mSize : %f", mSize);
+	Novice::ScreenPrintf(0, 60, "mSizeValue : %f", mSizeValue);
 
 }

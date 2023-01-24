@@ -19,6 +19,7 @@ public:
 	Vec2 mPosition;
 	Vec2 mOldPosition;
 	Vec2 mVelocity;
+	float mSizeValue;
 	float mSize;
 	float mRadius;
 
