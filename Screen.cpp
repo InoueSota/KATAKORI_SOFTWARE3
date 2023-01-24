@@ -115,7 +115,7 @@ void Screen::ScrollUpdate(Player& player) {
 
 }
 
-void Screen::ZoomUpdate(bool isFever, bool isOldFever) {
+void Screen::ZoomUpdate(bool isFever, bool isOldFever, float playerSize) {
 
 	//フィーバー時ズームにする
 	if (isFever && !isOldFever)
@@ -144,6 +144,13 @@ void Screen::ZoomUpdate(bool isFever, bool isOldFever) {
 			mIsZoomEasing = false;
 		}
 	}
+	else if (!isFever)
+	{
+		float tmpZoom = 32 / playerSize;
+		mZoom += (tmpZoom - mZoom) * 0.025f;
+	}
+
+	mZoom = Clamp(mZoom, 0.15f, 0.8f);
 }
 
 

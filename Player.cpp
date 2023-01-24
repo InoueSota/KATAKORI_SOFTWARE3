@@ -11,8 +11,7 @@ void Player::Init() {
 	//パラメータ
 	mPosition.setZero();
 	mVelocity.setZero();
-	mSizeMax = 70;
-	mSize = mSizeMax;
+	mSize = 80;
 	mRadius = mSize / 2.0f;
 
 	//通常移動
@@ -53,10 +52,14 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 	mVelocity.setZero();
 
 	//大きさをズームにしたがって変える
-	mSize = mSizeMax / screen.GetZoom() * 0.4f;
+	if (!isFever && isOldFever) {
+		mSize = 80;
+	}
+	else if (isFever) {
+		mSize = 80 / screen.GetZoom() * 0.4f;
+	}
+	mSize = Clamp(mSize, 0.0f, 200.0f);
 	mRadius = mSize / 2.0f;
-	//サイズの代入値を収める
-	mSizeMax = Clamp(mSizeMax, 0.0f, 80.0f);
 
 	//ストライクをしていない時に可能
 	if (!mIsStrikeActive) {
@@ -168,6 +171,9 @@ void Player::Mark() {
 }
 void Player::Strike(bool isFever, bool isOldFever) {
 
+	//ストライクパワーを収める
+	mStrikePower = Clamp(mStrikePower, 0, kStrikePowerMax);
+
 	//フィーバー状態が始まった || 終わった
 	if ((isFever && !isOldFever) || (!isFever && isOldFever)) {
 		mIsStrikeActive = false;
@@ -216,9 +222,6 @@ void Player::Strike(bool isFever, bool isOldFever) {
 					mStrikeRadiusStartValue = tmpDistance;
 				}
 
-				//ストライクパワーを消費する
-				mStrikePower = 0;
-
 				//フラグをtrueにする
 				mIsStrikeActive = true;
 			}
@@ -243,6 +246,8 @@ void Player::Strike(bool isFever, bool isOldFever) {
 
 		//移動が終了したら
 		if (mStrikeEasingt == 1.0f) {
+			//ストライクパワーを消費する
+			mStrikePower = 0;
 			mIsMarkActive = false;
 			mIsStrikeActive = false;
 		}
@@ -467,6 +472,7 @@ void Player::Draw(Screen& screen) {
 
 void Player::DrawStrikePower(Screen& screen) {
 
-	screen.DrawBox({ Screen::kWindowWidth - (Screen::kMiniMapSize * 4),599 }, 5 * 20, 22, 0.0f, BLACK, kFillModeWireFrame, false);
-	screen.DrawBox({ Screen::kWindowWidth - (Screen::kMiniMapSize * 4),600 }, 5 * mStrikePower, 20, 0.0f, WHITE, kFillModeSolid, false);
+	screen.DrawBox({ Screen::kWindowWidth - (Screen::kMiniMapSize * 4),599 }, 10 * kStrikePowerMax, 22, 0.0f, BLACK, kFillModeWireFrame, false);
+	screen.DrawBox({ Screen::kWindowWidth - (Screen::kMiniMapSize * 4),600 }, 10 * mStrikePower, 20, 0.0f, WHITE, kFillModeSolid, false);
+
 }

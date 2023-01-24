@@ -23,8 +23,8 @@ void Fever::Update(Screen& screen) {
 			mFeverGauge = 0;
 		}
 	} else {
-		mFeverGauge += mSnakeDefeat * 100;
-		mFeverGauge += mTsuchinokoDefeat * 100;
+		mFeverGauge += mSnakeDefeat * 50;
+		mFeverGauge += mTsuchinokoDefeat * 50;
 	}
 
 	if (mFeverGauge >= 1000) {

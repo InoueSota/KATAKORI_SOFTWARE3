@@ -158,14 +158,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				//頭と尾
 				if (!snake[i].mIsDeath && (CircleCapsuleCollsion(player, snake[i].mHeadPosition, snake[i].mHeadRadius)))
 				{
-					if (!fever.mIsFever) {
+					//フィーバーじゃないとき || ストライク使用時パワーが最大に達していなかったら
+					if (!fever.mIsFever && ((player.mStrikePower != Player::kStrikePowerMax && player.mIsStrikeActive) || !player.mIsStrikeActive)) {
 						player.SetKnockbackPosition(snake[i].mHeadPosition, snake[i].mHeadRadius);
-						player.mSizeMax -= Player::kToHeadMinusValue;
+						player.mSize -= Player::kToHeadMinusValue;
 						ui.MissSnakeScore(player.mIsStrikeActive);
 						ui.mCombo = 0;
 						ui.mIsWarning = true;
-					} else {
-						ui.SnakeScore(player.mIsStrikeActive, player.mSizeMax);
+					} 
+					//フィーバーのとき || ストライク使用時パワーが最大に達していたら
+					else if (fever.mIsFever || (player.mStrikePower == Player::kStrikePowerMax && player.mIsStrikeActive)) {
+						ui.SnakeScore(player.mIsStrikeActive, player.mSize);
 						ui.AddCombo();
 						screen.SetHitStop();
 						snake[i].mIsDeath = true;
@@ -181,12 +184,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					{
 						if (!player.mIsStrikeActive) {
 							player.mStrikePower++;
-							player.mSizeMax -= Player::kToBodyMinusValue;
+							player.mSize -= Player::kToBodyMinusValue;
 						}
 						else {
-							player.mSizeMax += Player::kToBodyPlusValue;
+							player.mSize += Player::kToBodyPlusValue;
 						}
-						ui.SnakeScore(player.mIsStrikeActive, player.mSizeMax);
+						ui.SnakeScore(player.mIsStrikeActive, player.mSize);
 						ui.AddCombo();
 						screen.SetHitStop();
 						snake[i].mIsDeath = true;
@@ -210,19 +213,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				//頭と尾
 				if (!tsuchinoko[i].mIsDeath && (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius) || CircleCapsuleCollsion(player, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius)))
 				{
-					if (!fever.mIsFever) {
+					//フィーバーじゃないとき || ストライク使用時パワーが最大に達していなかったら
+					if (!fever.mIsFever && ((player.mStrikePower != Player::kStrikePowerMax && player.mIsStrikeActive) || !player.mIsStrikeActive)) {
 						if (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius)) {
 							player.SetKnockbackPosition(tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius);
 						}
 						else {
 							player.SetKnockbackPosition(tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius);
 						}
-						player.mSizeMax -= Player::kToHeadMinusValue;
+						player.mSize -= Player::kToHeadMinusValue;
 						ui.MissTsuchinokoScore(player.mIsStrikeActive);
 						ui.mCombo = 0;
 						ui.mIsWarning = true;
-					} else {
-						ui.TsuchinokoScore(player.mIsStrikeActive, player.mSizeMax);
+					}
+					//フィーバーのとき || ストライク使用時パワーが最大に達していたら
+					else if (fever.mIsFever || (player.mStrikePower == Player::kStrikePowerMax && player.mIsStrikeActive)) {
+						ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize);
 						ui.AddCombo();
 						screen.SetHitStop();
 						tsuchinoko[i].mIsDeath = true;
@@ -238,12 +244,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					{
 						if (!player.mIsStrikeActive) {
 							player.mStrikePower++;
-							player.mSizeMax -= Player::kToBodyMinusValue;
+							player.mSize -= Player::kToBodyMinusValue;
 						}
 						else {
-							player.mSizeMax += Player::kToBodyPlusValue;
+							player.mSize += Player::kToBodyPlusValue;
 						}
-						ui.TsuchinokoScore(player.mIsStrikeActive, player.mSizeMax);
+						ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize);
 						ui.AddCombo();
 						screen.SetHitStop();
 						tsuchinoko[i].mIsDeath = true;
@@ -295,7 +301,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 			//ズームアップデート
-			screen.ZoomUpdate(fever.mIsFever, fever.mIsOldFever);
+			screen.ZoomUpdate(fever.mIsFever, fever.mIsOldFever, player.mSize);
 
 			//スクロールアップデート
 			screen.ScrollUpdate(player);
@@ -307,7 +313,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			screen.HitStopUpdate();
 
 
-			if (ui.mIsTimeUpFinish || player.mSizeMax == 0.0f) {
+			if (ui.mIsTimeUpFinish || player.mSize == 0.0f) {
 				scene = OUTGAME;
 			}
 
@@ -386,6 +392,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//フィーバー
 			fever.Draw(screen);
+
+			Novice::ScreenPrintf(0, 0, "%f", screen.GetZoom());
 
 			break;
 		case OUTGAME:

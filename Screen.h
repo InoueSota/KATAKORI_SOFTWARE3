@@ -97,7 +97,7 @@ public:
 	/// <summary>
 	/// ズーム
 	/// </summary>
-	void ZoomUpdate(bool isFever, bool isOldFever);
+	void ZoomUpdate(bool isFever, bool isOldFever, float playerSize);
 
 	/// <summary>
 	/// ズーム値を取得する

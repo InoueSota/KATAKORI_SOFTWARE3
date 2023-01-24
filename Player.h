@@ -19,7 +19,6 @@ public:
 	Vec2 mPosition;
 	Vec2 mOldPosition;
 	Vec2 mVelocity;
-	float mSizeMax;
 	float mSize;
 	float mRadius;
 
@@ -49,6 +48,7 @@ public:
 	static constexpr int kToHeadMinusValue = 4;
 	static constexpr int kToBodyMinusValue = 2;
 	static constexpr int kToBodyPlusValue = 6;
+	static constexpr int kStrikePowerMax = 10;
 	Vec2 mStrikeStartPosition;
 	Vec2 mStrikeEndPosition;
 	Vec2 mStrikePowerPosition;
