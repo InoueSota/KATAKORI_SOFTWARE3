@@ -17,20 +17,56 @@ void Fever::Update(Screen& screen) {
 
 	//フィーバーシステム
 	if (mIsFever) {
-		mFeverGauge -= 1;
+		mFeverGauge--;
 		if (mFeverGauge < 0) {
 			mIsFever = false;
 			mFeverGauge = 0;
 		}
 	} else {
-		mFeverGauge += mSnakeDefeat * 1000;
-		mFeverGauge += mTsuchinokoDefeat * 1000;
+		mFeverGauge += mSnakeDefeat * 50;
+		mFeverGauge += mTsuchinokoDefeat * 50;
+		mFeverGauge += mSnakeDefeat * 50;
+		mFeverGauge += mTsuchinokoDefeat * 50;
+		if ((mSnakeDefeat) || (mTsuchinokoDefeat)) {
+			feverGauge.Flag = 1;
+			feverGauge.Timer = kfeverGaugeDelayTime;
+		}
 	}
 
 	if (mFeverGauge >= 1000) {
 		mFeverGauge = 1000;
 		mIsFever = true;
 	}
+
+	if (feverGauge.Flag == 1) {
+		feverGauge.StartPos = feverGauge.Pos;
+		feverGauge.EndPos.x = 50 + 1.18 * mFeverGauge;
+		feverGauge.Flag = 2;
+	} else if (feverGauge.Flag == 2) {
+		feverGauge.Timer--;
+		if (!feverGauge.Timer) {
+			feverGauge.Flag = 3;
+		}
+	}else if (feverGauge.Flag == 3) {
+		if (feverGauge.T < 1) {
+			feverGauge.T += 0.033;
+			if (feverGauge.T > 1) {
+				feverGauge.T = 1;
+			}
+			float easedT = easeOutSine(feverGauge.T);
+
+			feverGauge.Pos.x = ((1 - easedT) * feverGauge.StartPos.x) + (easedT * feverGauge.EndPos.x);
+			
+		} else {
+			feverGauge.Flag = 0;
+			feverGauge.T = 0;
+			feverGauge.Timer = kfeverGaugeDelayTime;
+		}
+	}
+	if (mIsFever) {
+		feverGauge.Pos.x = 50 + 1.18 * mFeverGauge;
+	}
+
 
 	//フィーバーパーティクル
 	for (int i = 0; i < kMaxEnemy; i++) {
@@ -94,6 +130,9 @@ void Fever::Draw(Screen& screen) {
 	
 	screen.DrawBox({ 49,19 }, 1.18 * 1000, 22, 0.0f, BLACK, kFillModeWireFrame, false);
 	screen.DrawBox({ 50,20 }, 1.18 * mFeverGauge, 20, 0.0f, WHITE, kFillModeSolid, false);
+	if (!(feverGauge.Pos.x <= 50)) {
+		screen.DrawBox({ 50,20 }, feverGauge.Pos.x - 50, 20, 0, 0xFF000080, kFillModeSolid, false);
+	}
 
 	for (int i = 0; i < kMaxEnemy; i++) {
 		for (int j = 0; j < kMaxParticle; j++) {

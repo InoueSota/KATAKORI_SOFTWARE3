@@ -20,7 +20,8 @@ public:
 	static constexpr int kMaxParticle = 30;//パーティクルの最大数
 	static constexpr int kMaxEnemy = Snake::kMaxSnake + Tsuchinoko::kMaxTsuchinoko;//パーティクルの最大数
 	const float mParticleRadius = 200;//パーティクルを出す半径
-	
+	static constexpr int kfeverGaugeDelayTime = 50;//フィーバーゲージ遅延フレーム数
+
 	typedef struct Particle {
 		Vec2 Pos;
 		int IsUse = 0;
@@ -35,6 +36,16 @@ public:
 		Particle particle[kMaxParticle];
 	};
 	ParticleCreat particlecreat[kMaxEnemy];
+
+	typedef struct FeverGauge {
+		Vec2 StartPos;
+		Vec2 EndPos;
+		Vec2 Pos;
+		float T = 0;
+		int Flag;
+		int Timer = kfeverGaugeDelayTime;
+	};
+	FeverGauge feverGauge;
 
 };
 
