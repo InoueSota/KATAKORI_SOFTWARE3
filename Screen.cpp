@@ -102,17 +102,8 @@ void Screen::HitStopUpdate() {
 
 void Screen::ScrollUpdate(Player& player) {
 
-	if (!player.mIsStrikeActive)
-	{
-		mScroll.x += (( player.mPosition.x * mZoom) - mScroll.x) * 0.15f;
-		mScroll.y += ((-player.mPosition.y * mZoom) - mScroll.y) * 0.15f;
-	}
-	else 
-	{
-		mScroll.x += (( player.mPosition.x * mZoom) - mScroll.x) * 0.15f;
-		mScroll.y += ((-player.mPosition.y * mZoom) - mScroll.y) * 0.15f;
-	}
-
+	mScroll.x += (( player.mPosition.x * mZoom) - mScroll.x) * 0.15f;
+	mScroll.y += ((-player.mPosition.y * mZoom) - mScroll.y) * 0.15f;
 }
 
 void Screen::ZoomUpdate(bool isFever, bool isOldFever, float playerSize) {
@@ -138,7 +129,7 @@ void Screen::ZoomUpdate(bool isFever, bool isOldFever, float playerSize) {
 	if (mIsZoomEasing)
 	{
 		mZoomEasingt = EasingClamp(0.015f, mZoomEasingt);
-		mZoom = EasingMove(mZoomStartValue, mZoomEndValue, easeOutCirc(mZoomEasingt));
+		mZoom = EasingMove(mZoomStartValue, mZoomEndValue, easeOutSine(mZoomEasingt));
 
 		if (mZoomEasingt == 1.0f) {
 			mIsZoomEasing = false;

@@ -180,6 +180,7 @@ void Player::Strike(bool isFever, bool isOldFever) {
 
 	//フィーバー状態が始まった || 終わった
 	if ((isFever && !isOldFever) || (!isFever && isOldFever)) {
+		mIsMarkActive = false;
 		mIsStrikeActive = false;
 	}
 
@@ -203,7 +204,7 @@ void Player::Strike(bool isFever, bool isOldFever) {
 				float tmpValue = tmpDistance / 100;
 
 				// n / tmpValue のとき、nは距離が100のときのEasingtの増加量になる
-				mStrikeEasingtIncrementValue = 0.25f / tmpValue;
+				mStrikeEasingtIncrementValue = 0.2f / tmpValue;
 
 				if (!isFever) {
 					//イージング時の始点と終点の設定
@@ -241,7 +242,7 @@ void Player::Strike(bool isFever, bool isOldFever) {
 			mPosition = EasingMove(mStrikeStartPosition, mStrikeEndPosition, easeInSine(mStrikeEasingt));
 		}
 		else {
-			mStrikeTheta = EasingMove(mStrikeThetaStartValue, mStrikeThetaStartValue + Degree(360), easeLinear(mStrikeEasingt));
+			mStrikeTheta = EasingMove(mStrikeThetaStartValue, mStrikeThetaStartValue + Degree(720), easeLinear(mStrikeEasingt));
 			mStrikeRadius = EasingMove(mStrikeRadiusStartValue, 0.0f, easeLinear(mStrikeEasingt));
 
 			mPosition.x = mStrikeRadius * -cosf(mStrikeTheta) + mMarkPosition.x;
@@ -328,6 +329,13 @@ void Player::StrikeLine(Screen& screen) {
 			if (mStrikeLineAlphat[i] == 1.0f) {
 				mIsStrikeLineActive[i] = false;
 			}
+		}
+	}
+	if (!mIsStrikeActive) 
+	{
+		for (int i = 0; i < kStrikeLineMax; i++)
+		{
+			mIsStrikeLineActive[i] = false;
 		}
 	}
 
