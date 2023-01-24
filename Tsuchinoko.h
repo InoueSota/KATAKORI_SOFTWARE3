@@ -27,7 +27,7 @@ public:
 
 
 	int LockOnMoveTimer;
-	static constexpr int kMaxLockOnMoveTimer = 60;
+	static constexpr int kMaxLockOnMoveTimer = 300;
 
 
 	//’†SÀ•W

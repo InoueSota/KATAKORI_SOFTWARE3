@@ -77,6 +77,10 @@ void Snake::Move() {
 				mVelocity += mDirectionPoint * mSpeed;
 			}
 			LockOnMoveTimer--;
+			if (!LockOnMoveTimer) {
+				mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+				mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+			}
 		} else {
 			//™X‚ÉŒü‚«‚ğ•Ï‚¦‚é
 			mDirectionPoint += (mTargetPoint - mHeadPosition) * 0.00001f;

@@ -47,7 +47,7 @@ public:
 	void LockOn(Vec2 playerposition, float radius);
 
 	int LockOnMoveTimer;
-	static constexpr int kMaxLockOnMoveTimer = 60;
+	static constexpr int kMaxLockOnMoveTimer = 300;
 
 	static constexpr int kMaxSnake = 10;//“G‚ÌÅ‘å”
 

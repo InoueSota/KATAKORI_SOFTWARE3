@@ -89,6 +89,10 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 				mVelocity += mDirectionPoint * mCenterSpeed;
 			}
 			LockOnMoveTimer--;
+			if (!LockOnMoveTimer) {
+				mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+				mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+			}
 		} else {
 
 			//™X‚ÉŒü‚«‚ğ•Ï‚¦‚é
