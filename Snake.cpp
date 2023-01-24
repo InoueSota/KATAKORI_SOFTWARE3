@@ -96,8 +96,8 @@ void Snake::Move() {
 	}
 	//ƒvƒŒƒCƒ„[‚ğ’Ç‚¢‚©‚¯‚Ä"‚¢‚é"
 	else {
-		
-		mDirectionPoint = mTargetPoint - mHeadPosition;
+
+		mDirectionPoint += (mTargetPoint - mHeadPosition) * 0.001f;
 
 		mDirectionPoint = mDirectionPoint.Normalized();
 

@@ -109,8 +109,7 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 	}
 	//ƒvƒŒƒCƒ„[‚ğ’Ç‚¢‚©‚¯‚Ä"‚¢‚é"
 	else {
-
-		mDirectionPoint = mTargetPoint - mCenterPosition;
+		mDirectionPoint += (mTargetPoint - mCenterPosition) * 0.001f;
 		mDirectionPoint = mDirectionPoint.Normalized();
 		if (mIsSuper) {
 			mVelocity += mDirectionPoint * mSuperCenterSpeed;
