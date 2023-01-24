@@ -50,6 +50,7 @@ public:
 		Particle particle[kMaxParticle];
 	};
 	ParticleCreat particlecreat[kMaxEnemy];
+	ParticleCreat particleEnemySpawnCreat[kMaxEnemy];
 
 	typedef struct FeverGauge {
 		Vec2 StartPos;

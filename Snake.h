@@ -65,6 +65,26 @@ public:
 	int mBodyRadius;
 	void Follow();
 
+	//パーティクル
+	static constexpr int kMaxSpawnParticle = 30;
+
+	typedef struct Particle {
+		Vec2 Pos;
+		int IsUse = 0;
+		Vec2 StartPos;
+		Vec2 EndPos;
+		float T = 0;
+		int Timer = 120;
+		float velocity;
+		double R = 255;
+		double B = 255;
+		double G = 255;
+		double color = 0xFFFFFF00;
+		int alpha = 200;
+	};
+	Particle DefaultSpawnParticle;
+	Particle spawnParticle[kMaxSpawnParticle];
+
 	//画像関係
 	bool mIsLoadTexture = false;
 	int head;
