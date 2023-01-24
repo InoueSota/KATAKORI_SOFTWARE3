@@ -290,7 +290,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 			//フィーバー
-			fever.Update(screen);
+			fever.Update(screen, player.mPosition);
 
 
 			//残像アップデート
