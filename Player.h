@@ -46,6 +46,9 @@ public:
 
 	//ストライク = Strike
 	bool mIsStrikeActive;
+	static constexpr int kToHeadMinusValue = 4;
+	static constexpr int kToBodyMinusValue = 2;
+	static constexpr int kToBodyPlusValue = 6;
 	Vec2 mStrikeStartPosition;
 	Vec2 mStrikeEndPosition;
 	Vec2 mStrikePowerPosition;

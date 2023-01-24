@@ -160,7 +160,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				{
 					if (!fever.mIsFever) {
 						player.SetKnockbackPosition(snake[i].mHeadPosition, snake[i].mHeadRadius);
-						player.mSizeMax -= 4;
+						player.mSizeMax -= Player::kToHeadMinusValue;
 						ui.MissSnakeScore(player.mIsStrikeActive);
 						ui.mCombo = 0;
 						ui.mIsWarning = true;
@@ -181,10 +181,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					{
 						if (!player.mIsStrikeActive) {
 							player.mStrikePower++;
-							player.mSizeMax -= 2;
+							player.mSizeMax -= Player::kToBodyMinusValue;
 						}
 						else {
-							player.mSizeMax += 6;
+							player.mSizeMax += Player::kToBodyPlusValue;
 						}
 						ui.SnakeScore(player.mIsStrikeActive, player.mSizeMax);
 						ui.AddCombo();
@@ -217,7 +217,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						else {
 							player.SetKnockbackPosition(tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius);
 						}
-						player.mSizeMax -= 4;
+						player.mSizeMax -= Player::kToHeadMinusValue;
 						ui.MissTsuchinokoScore(player.mIsStrikeActive);
 						ui.mCombo = 0;
 						ui.mIsWarning = true;
@@ -238,10 +238,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					{
 						if (!player.mIsStrikeActive) {
 							player.mStrikePower++;
-							player.mSizeMax -= 2;
+							player.mSizeMax -= Player::kToBodyMinusValue;
 						}
 						else {
-							player.mSizeMax += 6;
+							player.mSizeMax += Player::kToBodyPlusValue;
 						}
 						ui.TsuchinokoScore(player.mIsStrikeActive, player.mSizeMax);
 						ui.AddCombo();
