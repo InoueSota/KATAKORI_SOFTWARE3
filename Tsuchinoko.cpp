@@ -53,14 +53,20 @@ void Tsuchinoko::Update(Vec2 playerposition, int mTimeLeft) {
 	}
 }
 
-void Tsuchinoko::Make(Vec2 playerPosition, int mTimeLeft) {
+void Tsuchinoko::Make(Vec2 PlayerPos, int mTimeLeft) {
 
 	int SuperRand = RAND(1, 100);
 
 	if (!mIsActive || mIsDeath)
 	{
-		mCenterPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
-		mCenterPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+		while ((mCenterPosition.x >= PlayerPos.x - 640) && (mCenterPosition.x <= PlayerPos.x + 640)) {
+			mCenterPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+		}
+		while ((mCenterPosition.y >= PlayerPos.y - 360) && (mCenterPosition.y <= PlayerPos.y + 360)) {
+			mCenterPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+		}
+
+
 		mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
 		mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 		mIsDeath = false;

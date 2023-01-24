@@ -14,13 +14,13 @@ void Snake::Init() {
 	mFollowFrame = 0;
 }
 
-void Snake::Update(int mTimeLeft) {
+void Snake::Update(int mTimeLeft, Vec2 PlayerPos) {
 
 	//‘¬“x‚Ì‰Šú‰»
 	mVelocity.setZero();
 
 	//¶¬ˆ—
-	Make(mTimeLeft);
+	Make(mTimeLeft, PlayerPos);
 
 	if (mIsActive && !mIsDeath)
 	{
@@ -37,14 +37,20 @@ void Snake::Update(int mTimeLeft) {
 	}
 }
 
-void Snake::Make(int mTimeLeft) {
+void Snake::Make(int mTimeLeft, Vec2 PlayerPos) {
 
 	int SuperRand = RAND(1, 100);
 
 	if (!mIsActive || mIsDeath)
 	{
-		mHeadPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
-		mHeadPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+		while ((mHeadPosition.x >= PlayerPos.x - 640) && (mHeadPosition.x <= PlayerPos.x + 640)) {
+			mHeadPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+		}
+		while ((mHeadPosition.y >= PlayerPos.y - 360) && (mHeadPosition.y <= PlayerPos.y + 360)) {
+			mHeadPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+		}
+		
+
 		mHeadPositionStart = mHeadPosition;
 		mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
 		mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
