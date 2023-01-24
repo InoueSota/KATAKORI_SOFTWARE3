@@ -123,7 +123,16 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 		LockOnMoveTimer = kMaxLockOnMoveTimer;
 	}
 
-
+	if (!(mCenterPosition.x >= Map::kMapLeft + kEnemyMapLimit && mCenterPosition.x <= Map::kMapRight - kEnemyMapLimit && mCenterPosition.y <= Map::kMapTop - kEnemyMapLimit && mCenterPosition.y >= Map::kMapBottom + kEnemyMapLimit)) {
+		if (!mMapLimitFlag && !IsPlayerLockon) {
+			LockOnMoveTimer = 0;
+			mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+			mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+			mMapLimitFlag = true;
+		} 
+	} else {
+		mMapLimitFlag = false;
+	}
 }
 
 

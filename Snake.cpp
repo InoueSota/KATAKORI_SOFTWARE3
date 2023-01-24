@@ -113,6 +113,17 @@ void Snake::Move() {
 
 		LockOnMoveTimer = kMaxLockOnMoveTimer;
 	}
+
+	if (!(mHeadPosition.x >= Map::kMapLeft + kEnemyMapLimit && mHeadPosition.x <= Map::kMapRight - kEnemyMapLimit && mHeadPosition.y <= Map::kMapTop - kEnemyMapLimit && mHeadPosition.y >= Map::kMapBottom + kEnemyMapLimit)) {
+		if (!mMapLimitFlag && !IsPlayerLockon) {
+			LockOnMoveTimer = 0;
+			mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+			mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+			mMapLimitFlag = true;
+		}
+	} else {
+		mMapLimitFlag = false;
+	}
 }
 
 void Snake::Angle() {

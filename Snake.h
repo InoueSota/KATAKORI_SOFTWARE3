@@ -49,6 +49,9 @@ public:
 	int LockOnMoveTimer;
 	static constexpr int kMaxLockOnMoveTimer = 300;
 
+	static constexpr int kEnemyMapLimit = 300;
+	bool mMapLimitFlag;
+
 	static constexpr int kMaxSnake = 10;//“G‚ÌÅ‘å”
 
 	//‘Ì•”•ª‹¤’Ê

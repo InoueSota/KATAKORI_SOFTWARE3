@@ -29,6 +29,9 @@ public:
 	int LockOnMoveTimer;
 	static constexpr int kMaxLockOnMoveTimer = 300;
 
+	static constexpr int kEnemyMapLimit = 300;
+	bool mMapLimitFlag;
+
 
 	//’†SÀ•W
 	Vec2 mCenterPosition;
