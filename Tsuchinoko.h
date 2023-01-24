@@ -26,6 +26,9 @@ public:
 	void LockOn(Vec2 playerposition, float radius);
 
 
+	int LockOnMoveTimer;
+	static constexpr int kMaxLockOnMoveTimer = 60;
+
 
 	//’†SÀ•W
 	Vec2 mCenterPosition;

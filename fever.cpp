@@ -98,10 +98,12 @@ void Fever::Draw(Screen& screen) {
 
 	for (int i = 0; i < kMaxEnemy; i++) {
 		for (int j = 0; j < kMaxParticle; j++) {
-			if (!(particlecreat[i].particle[j].IsUse == 4)) {
-				screen.DrawBox(particlecreat[i].particle[j].Pos, 10, 10, 0, WHITE, kFillModeSolid);
-			} else {
-				screen.DrawBox(particlecreat[i].particle[j].Pos, 10, 10, 0, WHITE, kFillModeSolid, false);
+			if (particlecreat[i].particle[j].IsUse) {
+				if (!(particlecreat[i].particle[j].IsUse == 4)) {
+					screen.DrawBox(particlecreat[i].particle[j].Pos, 10, 10, 0, WHITE, kFillModeSolid);
+				} else {
+					screen.DrawBox(particlecreat[i].particle[j].Pos, 10, 10, 0, WHITE, kFillModeSolid, false);
+				}
 			}
 		}
 	}

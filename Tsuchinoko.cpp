@@ -55,6 +55,8 @@ void Tsuchinoko::Update(Vec2 playerposition, int mTimeLeft) {
 
 void Tsuchinoko::Make(Vec2 playerPosition, int mTimeLeft) {
 
+	int SuperRand = RAND(1, 100);
+
 	if (!mIsActive || mIsDeath)
 	{
 		mCenterPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
@@ -63,7 +65,7 @@ void Tsuchinoko::Make(Vec2 playerPosition, int mTimeLeft) {
 		mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 		mIsDeath = false;
 		mIsActive = true;
-		if (mTimeLeft < 30) {
+		if (mTimeLeft < 30 && SuperRand <= 30) {
 			mIsSuper = 1;
 		}
 	}
@@ -74,17 +76,29 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 
 	//プレイヤーを追いかけて"ない"
 	if (!IsPlayerLockon) {
+		if (LockOnMoveTimer) {
+			if (mIsSuper) {
+				mVelocity += mDirectionPoint * mSuperCenterSpeed;
+			} else {
+				mVelocity += mDirectionPoint * mCenterSpeed;
+			}
+			LockOnMoveTimer--;
+		} else {
 
-		//徐々に向きを変える
-		mDirectionPoint += (mTargetPoint - mCenterPosition) * 0.00001f;
+			//徐々に向きを変える
+			mDirectionPoint += (mTargetPoint - mCenterPosition) * 0.00001f;
 
-		if (Collision(mCenterPosition, mRadius, mTargetPoint, 50.0f)) {
-			mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
-			mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
-		}
-		else {
-			mDirectionPoint = mDirectionPoint.Normalized();
-			mVelocity += mDirectionPoint * mCenterSpeed;
+			if (Collision(mCenterPosition, mRadius, mTargetPoint, 30.0f)) {
+				mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+				mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+			} else {
+				mDirectionPoint = mDirectionPoint.Normalized();
+				if (mIsSuper) {
+					mVelocity += mDirectionPoint * mSuperCenterSpeed;
+				} else {
+					mVelocity += mDirectionPoint * mCenterSpeed;
+				}
+			}
 		}
 	}
 	//プレイヤーを追いかけて"いる"
@@ -92,11 +106,17 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 
 		mDirectionPoint = mTargetPoint - mCenterPosition;
 		mDirectionPoint = mDirectionPoint.Normalized();
-		mVelocity += mDirectionPoint * mCenterSpeed;
+		if (mIsSuper) {
+			mVelocity += mDirectionPoint * mSuperCenterSpeed;
+		} else {
+			mVelocity += mDirectionPoint * mCenterSpeed;
+		}
+		LockOnMoveTimer = kMaxLockOnMoveTimer;
 	}
 
 
 }
+
 
 void Tsuchinoko::SetAngle() {
 
