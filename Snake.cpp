@@ -14,13 +14,13 @@ void Snake::Init() {
 	mFollowFrame = 0;
 }
 
-void Snake::Update(int mTimeLeft) {
+void Snake::Update(int mTimeLeft, Vec2 PlayerPos) {
 
 	//速度の初期化
 	mVelocity.setZero();
 
 	//生成処理
-	Make(mTimeLeft);
+	Make(mTimeLeft, PlayerPos);
 
 	if (mIsActive && !mIsDeath)
 	{
@@ -37,14 +37,20 @@ void Snake::Update(int mTimeLeft) {
 	}
 }
 
-void Snake::Make(int mTimeLeft) {
+void Snake::Make(int mTimeLeft, Vec2 PlayerPos) {
 
 	int SuperRand = RAND(1, 100);
 
 	if (!mIsActive || mIsDeath)
 	{
-		mHeadPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
-		mHeadPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+		while ((mHeadPosition.x >= PlayerPos.x - 640) && (mHeadPosition.x <= PlayerPos.x + 640)) {
+			mHeadPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+		}
+		while ((mHeadPosition.y >= PlayerPos.y - 360) && (mHeadPosition.y <= PlayerPos.y + 360)) {
+			mHeadPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+		}
+		
+
 		mHeadPositionStart = mHeadPosition;
 		mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
 		mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
@@ -53,7 +59,7 @@ void Snake::Make(int mTimeLeft) {
 		}
 		mIsDeath = false;
 		mIsActive = true;
-		if (mTimeLeft < 30 && SuperRand <= 30) {
+		if (mTimeLeft < 30 && mTimeLeft > 0 && SuperRand <= 30) {
 			mIsSuper = 1;
 		}
 	}
@@ -71,6 +77,10 @@ void Snake::Move() {
 				mVelocity += mDirectionPoint * mSpeed;
 			}
 			LockOnMoveTimer--;
+			if (!LockOnMoveTimer) {
+				mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+				mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+			}
 		} else {
 			//徐々に向きを変える
 			mDirectionPoint += (mTargetPoint - mHeadPosition) * 0.00001f;
@@ -90,8 +100,8 @@ void Snake::Move() {
 	}
 	//プレイヤーを追いかけて"いる"
 	else {
-		
-		mDirectionPoint = mTargetPoint - mHeadPosition;
+
+		mDirectionPoint += (mTargetPoint - mHeadPosition) * 0.001f;
 
 		mDirectionPoint = mDirectionPoint.Normalized();
 
@@ -102,6 +112,17 @@ void Snake::Move() {
 		}
 
 		LockOnMoveTimer = kMaxLockOnMoveTimer;
+	}
+
+	if (!(mHeadPosition.x >= Map::kMapLeft + kEnemyMapLimit && mHeadPosition.x <= Map::kMapRight - kEnemyMapLimit && mHeadPosition.y <= Map::kMapTop - kEnemyMapLimit && mHeadPosition.y >= Map::kMapBottom + kEnemyMapLimit)) {
+		if (!mMapLimitFlag && !IsPlayerLockon) {
+			LockOnMoveTimer = 0;
+			mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+			mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+			mMapLimitFlag = true;
+		}
+	} else {
+		mMapLimitFlag = false;
 	}
 }
 

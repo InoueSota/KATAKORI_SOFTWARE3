@@ -53,19 +53,25 @@ void Tsuchinoko::Update(Vec2 playerposition, int mTimeLeft) {
 	}
 }
 
-void Tsuchinoko::Make(Vec2 playerPosition, int mTimeLeft) {
+void Tsuchinoko::Make(Vec2 PlayerPos, int mTimeLeft) {
 
 	int SuperRand = RAND(1, 100);
 
 	if (!mIsActive || mIsDeath)
 	{
-		mCenterPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
-		mCenterPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+		while ((mCenterPosition.x >= PlayerPos.x - 640) && (mCenterPosition.x <= PlayerPos.x + 640)) {
+			mCenterPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+		}
+		while ((mCenterPosition.y >= PlayerPos.y - 360) && (mCenterPosition.y <= PlayerPos.y + 360)) {
+			mCenterPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+		}
+
+
 		mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
 		mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 		mIsDeath = false;
 		mIsActive = true;
-		if (mTimeLeft < 30 && SuperRand <= 30) {
+		if (mTimeLeft < 30 && mTimeLeft > 0 && SuperRand <= 30) {
 			mIsSuper = 1;
 		}
 	}
@@ -83,6 +89,10 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 				mVelocity += mDirectionPoint * mCenterSpeed;
 			}
 			LockOnMoveTimer--;
+			if (!LockOnMoveTimer) {
+				mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+				mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+			}
 		} else {
 
 			//徐々に向きを変える
@@ -103,8 +113,7 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 	}
 	//プレイヤーを追いかけて"いる"
 	else {
-
-		mDirectionPoint = mTargetPoint - mCenterPosition;
+		mDirectionPoint += (mTargetPoint - mCenterPosition) * 0.001f;
 		mDirectionPoint = mDirectionPoint.Normalized();
 		if (mIsSuper) {
 			mVelocity += mDirectionPoint * mSuperCenterSpeed;
@@ -114,7 +123,16 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 		LockOnMoveTimer = kMaxLockOnMoveTimer;
 	}
 
-
+	if (!(mCenterPosition.x >= Map::kMapLeft + kEnemyMapLimit && mCenterPosition.x <= Map::kMapRight - kEnemyMapLimit && mCenterPosition.y <= Map::kMapTop - kEnemyMapLimit && mCenterPosition.y >= Map::kMapBottom + kEnemyMapLimit)) {
+		if (!mMapLimitFlag && !IsPlayerLockon) {
+			LockOnMoveTimer = 0;
+			mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+			mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+			mMapLimitFlag = true;
+		} 
+	} else {
+		mMapLimitFlag = false;
+	}
 }
 
 

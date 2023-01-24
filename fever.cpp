@@ -88,7 +88,6 @@ void Fever::Update(Screen& screen) {
 			}
 		}
 	}
-
 }
 
 void Fever::Draw(Screen& screen) {

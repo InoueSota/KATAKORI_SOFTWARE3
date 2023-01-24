@@ -16,7 +16,7 @@ public:
 	}
 
 	void Init();
-	void Update(int mTimeLeft);
+	void Update(int mTimeLeft, Vec2 PlayerPos);
 	void Draw(Screen& screen);
 
 	static constexpr int kMaxLength = 10;
@@ -25,7 +25,7 @@ public:
 	bool mIsActive;
 	bool mIsDeath;
 	int mIsSuper = 0;
-	void Make(int mTimeLeft);
+	void Make(int mTimeLeft, Vec2 PlayerPos);
 	//“ª•”•ª
 	Vec2 mHeadPosition;
 	int mHeadRadius;
@@ -47,7 +47,10 @@ public:
 	void LockOn(Vec2 playerposition, float radius);
 
 	int LockOnMoveTimer;
-	static constexpr int kMaxLockOnMoveTimer = 60;
+	static constexpr int kMaxLockOnMoveTimer = 300;
+
+	static constexpr int kEnemyMapLimit = 300;
+	bool mMapLimitFlag;
 
 	static constexpr int kMaxSnake = 10;//“G‚ÌÅ‘å”
 
