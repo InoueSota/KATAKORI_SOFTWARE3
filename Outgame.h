@@ -17,9 +17,9 @@ public:
 
 
 	//"KATAKORI SOFTWARE"‚Ì•`‰æ
-	bool mIsKatakoriClear = false;
+	bool mIsKatakoriClear = true;
 	bool mIsKatakoriAlphaClear = true;
-	bool mIsKatakoriScaleStart = false;
+	bool mIsKatakoriScaleStart = true;
 	Vec2 mKatakoriPosition{ Screen::kWindowWidth / 2, Screen::kWindowHeight / 2 };
 	Vec2 mKatakoriScale{ 0.75f, 0.75f };
 	float mKatakoriAlphaT = 0.0f;
