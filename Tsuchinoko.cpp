@@ -71,7 +71,7 @@ void Tsuchinoko::Make(Vec2 PlayerPos, int mTimeLeft) {
 		mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 		mIsDeath = false;
 		mIsActive = true;
-		if (mTimeLeft < 30 && SuperRand <= 30) {
+		if (mTimeLeft < 30 && mTimeLeft > 0 && SuperRand <= 30) {
 			mIsSuper = 1;
 		}
 	}

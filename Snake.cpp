@@ -59,7 +59,7 @@ void Snake::Make(int mTimeLeft, Vec2 PlayerPos) {
 		}
 		mIsDeath = false;
 		mIsActive = true;
-		if (mTimeLeft < 30 && SuperRand <= 30) {
+		if (mTimeLeft < 30 && mTimeLeft > 0 && SuperRand <= 30) {
 			mIsSuper = 1;
 		}
 	}
