@@ -13,6 +13,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	int end = Novice::LoadTexture("./Resources/Outgame/End/end.png");
 	ui.LoadTexture();
 	title.LoadTexture();
+	player.LoadTexture();
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -292,6 +293,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//フィーバー
 			fever.Update(screen);
 
+			//マップアップデート（フィーバーカラーにする）
+			map.Update(fever.mIsFever, fever.mIsOldFever);
 
 			//残像アップデート
 			player.Shadow(screen.GetHitStop());
@@ -387,8 +390,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 			screen.DrawMiniMap(player.mPosition, 0xFFFF00FF, kFillModeSolid, 4.0f);
 
-			//ストライクパワー描画
-			player.DrawStrikePower(screen);
+			//ストライクUI描画
+			player.DrawStrikeUI(screen);
 
 			//フィーバー
 			fever.Draw(screen);

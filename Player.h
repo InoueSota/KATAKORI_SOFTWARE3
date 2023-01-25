@@ -45,24 +45,40 @@ public:
 
 
 	//ストライク = Strike
+	enum StrikeMode {
+		STRAIGHT,
+		SPIRAL
+	};
+	StrikeMode strikeMode = STRAIGHT;
 	bool mIsStrikeActive;
+	bool mIsStraightStrikeActive;
+	bool mIsStraightStrikeFinish;
 	static constexpr int kToHeadMinusValue = 4;
 	static constexpr int kToBodyMinusValue = 2;
 	static constexpr int kToBodyPlusValue = 6;
 	static constexpr int kStrikePowerMax = 10;
+	Vec2 mStrikeVelocity;
+	Vec2 mStrikeDirection;
+	Vec2 mStrikeClampMin;
+	Vec2 mStrikeClampMax;
 	Vec2 mStrikeStartPosition;
 	Vec2 mStrikeEndPosition;
+	float mStrikeSpeed;
+	float mStraightStrikeTheta;
+	float mStraightStrikeOldTheta;
 	Vec2 mStrikePowerPosition;
+	Vec2 mStrikeModePosition{ Screen::kWindowWidth - (Screen::kMiniMapSize * 3),620 };
+	int mStrikePower;
+	void DrawStrikeUI(Screen& screen);
+	//フィーバーストライク
 	float mStrikeEasingt;
 	float mStrikeEasingtIncrementValue;
-	int mStrikePower;
-	void DrawStrikePower(Screen& screen);
-	//フィーバーストライク
 	float mStrikeTheta;
 	float mStrikeThetaStartValue;
 	float mStrikeRadius;
 	float mStrikeRadiusStartValue;
 	void Strike(bool isFever, bool isOldFever);
+
 
 	//ストライク演出
 	static constexpr int kStrikeLineMax = 200;
@@ -101,6 +117,14 @@ public:
 	float mKnockBackT;
 	void Knockback();
 	void SetKnockbackPosition(Vec2 enemyPosition, float enemyRadius);
+
+
+	//画像
+	int straight;
+	int spiral;
+	int b;
+	bool mIsLoadTexture = false;
+	void LoadTexture();
 
 };
 

@@ -98,7 +98,7 @@ public:
 	}
 
 	void Init();
-	void Update(Player& player);
+	void Update(bool isFever, bool isOldFever);
 	void Draw(Screen& screen);
 
 	//マップ端定数
@@ -107,6 +107,13 @@ public:
 	static constexpr int kMapBottom = -kMapRadius;
 	static constexpr int kMapLeft = -kMapRadius;
 	static constexpr int kMapRight = kMapRadius;
+
+	//通常時とフィーバー時で背景色を変える
+	bool mIsBackGroundColorChange;
+	unsigned int mBackGroundStartColor;
+	unsigned int mBackGroundEndColor;
+	unsigned int mBackGroundColor;
+	float mBackGroundEasingt;
 
 	//デバッグ用
 	static constexpr int kAxisLength = 66;

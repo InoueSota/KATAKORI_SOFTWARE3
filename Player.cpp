@@ -27,7 +27,6 @@ void Player::Init() {
 
 	//ストライク
 	mIsStrikeActive = false;
-	mStrikeEasingt = 0.0f;
 	mStrikePower = 0;
 
 	//ストライク演出
@@ -184,6 +183,17 @@ void Player::Strike(bool isFever, bool isOldFever) {
 		mIsStrikeActive = false;
 	}
 
+	//モードチェンジ
+	if (Controller::IsTriggerButton(0, Controller::bB)) {
+
+		if (strikeMode == STRAIGHT) {
+			strikeMode = SPIRAL;
+		}
+		else {
+			strikeMode = STRAIGHT;
+		}
+	}
+
 	if (mIsMarkActive && !mIsStrikeActive) {
 
 		//LTボタン＆RTボタン同時押下時にフラグをtrueにする
@@ -200,31 +210,25 @@ void Player::Strike(bool isFever, bool isOldFever) {
 			}
 			//距離が0じゃないとき
 			else {
+
 				//増加量を距離に応じて変えるための計算
 				float tmpValue = tmpDistance / 100;
 
-				// n / tmpValue のとき、nは距離が100のときのEasingtの増加量になる
-				mStrikeEasingtIncrementValue = 0.2f / tmpValue;
+				float tmpTheta = BetweenTheta(mMarkPosition - mPosition);
 
-				if (!isFever) {
-					//イージング時の始点と終点の設定
-					mStrikeStartPosition = mPosition;
-					mStrikeEndPosition = mMarkPosition;
+				if (strikeMode == STRAIGHT)
+				{
+					mStrikeSpeed = 5.0f;
+					mStraightStrikeTheta = tmpTheta;
+					mIsStraightStrikeFinish = false;
+					mIsStraightStrikeActive = true;
 				}
-				else {
-					//基準線と向きベクトル
-					Vec2 base = { 1,0 };
-					Vec2 tmpDirection = mMarkPosition - mPosition;
-
-					//なす角を求める
-					float dp = tmpDirection.Dot(base);
-					float cp = tmpDirection.Cross(base);
-					float tmpTheta = atan2(cp, dp);
-					if (tmpTheta < 0) {
-						tmpTheta = Degree(360) + tmpTheta;
-					}
+				else
+				{
+					mStrikeEasingt = 0.0f;
 					mStrikeThetaStartValue = tmpTheta;
 					mStrikeRadiusStartValue = tmpDistance;
+					mIsStraightStrikeActive = false;
 				}
 
 				//フラグをtrueにする
@@ -235,109 +239,161 @@ void Player::Strike(bool isFever, bool isOldFever) {
 
 	if (mIsStrikeActive) {
 
-		//イージング値加算
-		mStrikeEasingt = EasingClamp(mStrikeEasingtIncrementValue, mStrikeEasingt);
+		if (mIsStraightStrikeActive)
+		{
+			mStraightStrikeOldTheta = mStraightStrikeTheta;
 
-		if (!isFever) {
-			mPosition = EasingMove(mStrikeStartPosition, mStrikeEndPosition, easeInSine(mStrikeEasingt));
+			mStrikeDirection = (mMarkPosition - mPosition).Normalized();
+
+			int tmpX, tmpY;
+			Controller::GetLeftStick(0, tmpX, tmpY);
+			Vec2 tmpVelocity = { (float)tmpX, (float)tmpY };
+			tmpVelocity = tmpVelocity.Normalized();
+			tmpVelocity *= mStrikeSpeed / 2;
+
+			mStrikeVelocity.setZero();
+			mStrikeVelocity = mStrikeDirection * mStrikeSpeed + tmpVelocity;
+			mStrikeSpeed += 1.0f;
+
+			mPosition += mStrikeVelocity;
+
+			mStraightStrikeTheta = BetweenTheta(mMarkPosition - mPosition);
+
+			if (Radian(mStraightStrikeTheta) < 10 && 350 < Radian(mStraightStrikeOldTheta)) {
+				mStraightStrikeOldTheta -= Degree(360);
+			}
+			else if (Radian(mStraightStrikeOldTheta) < 10 && 350 < Radian(mStraightStrikeTheta)) {
+				mStraightStrikeOldTheta += Degree(360);
+			}
+
+			if (90 > Radian(abs(mStraightStrikeTheta - mStraightStrikeOldTheta))) {
+				if (0 <= Radian(mStraightStrikeTheta) && Radian(mStraightStrikeTheta) <= 90) {
+					mStrikeClampMin.x = Map::kMapLeft;
+					mStrikeClampMin.y = mMarkPosition.y;
+					mStrikeClampMax.x = mMarkPosition.x;
+					mStrikeClampMax.y = Map::kMapTop;
+				}
+				else if (90 < Radian(mStraightStrikeTheta) && Radian(mStraightStrikeTheta) <= 180) {
+					mStrikeClampMin.x = mMarkPosition.x;
+					mStrikeClampMin.y = mMarkPosition.y;
+					mStrikeClampMax.x = Map::kMapRight;
+					mStrikeClampMax.y = Map::kMapTop;
+				}
+				else if (180 < Radian(mStraightStrikeTheta) && Radian(mStraightStrikeTheta) <= 270) {
+					mStrikeClampMin.x = mMarkPosition.x;
+					mStrikeClampMin.y = Map::kMapBottom;
+					mStrikeClampMax.x = Map::kMapRight;
+					mStrikeClampMax.y = mMarkPosition.y;
+				}
+				else if (270 < Radian(mStraightStrikeTheta)) {
+					mStrikeClampMin.x = Map::kMapLeft;
+					mStrikeClampMin.y = Map::kMapBottom;
+					mStrikeClampMax.x = mMarkPosition.x;
+					mStrikeClampMax.y = mMarkPosition.y;
+				}
+			}
+			else {
+				mIsStraightStrikeFinish = true;
+			}
+
+			mPosition.x = Clamp(mPosition.x, mStrikeClampMin.x, mStrikeClampMax.x);
+			mPosition.y = Clamp(mPosition.y, mStrikeClampMin.y, mStrikeClampMax.y);
+
+			//移動が終了したら
+			if ((mPosition.x == mMarkPosition.x && mPosition.y == mMarkPosition.y) || mIsStraightStrikeFinish == true) {
+				//ストライクパワーを消費する
+				mStrikePower = 0;
+				mIsMarkActive = false;
+				mIsStrikeActive = false;
+			}
 		}
 		else {
-			mStrikeTheta = EasingMove(mStrikeThetaStartValue, mStrikeThetaStartValue + Degree(720), easeLinear(mStrikeEasingt));
+			//イージング値加算
+			mStrikeEasingt = EasingClamp(0.015f, mStrikeEasingt);
+
+			mStrikeTheta = EasingMove(mStrikeThetaStartValue, mStrikeThetaStartValue + Degree(360), easeLinear(mStrikeEasingt));
 			mStrikeRadius = EasingMove(mStrikeRadiusStartValue, 0.0f, easeLinear(mStrikeEasingt));
 
 			mPosition.x = mStrikeRadius * -cosf(mStrikeTheta) + mMarkPosition.x;
 			mPosition.y = mStrikeRadius * sinf(mStrikeTheta) + mMarkPosition.y;
+
+			//移動が終了したら
+			if (mStrikeEasingt == 1.0f) {
+				//ストライクパワーを消費する
+				mStrikePower = 0;
+				mIsMarkActive = false;
+				mIsStrikeActive = false;
+			}
 		}
 
-		//移動が終了したら
-		if (mStrikeEasingt == 1.0f) {
-			//ストライクパワーを消費する
-			mStrikePower = 0;
-			mIsMarkActive = false;
-			mIsStrikeActive = false;
-		}
-
-
-	}
-
-	//初期化
-	if (!mIsStrikeActive) {
-		mStrikeEasingt = 0.0f;
-	}
-	if (mIsMarkActive && !mIsStrikeActive) {
-
-		//LTボタン＆RTボタン同時押下時にフラグをtrueにする
-		if (Controller::IsPressedButton(0, Controller::lTrigger) && Controller::IsPressedButton(0, Controller::rTrigger)) {
-
-		}
 	}
 
 
 }
 void Player::StrikeLine(Screen& screen) {
 
-	if (mIsStrikeActive && 0.2f <= mStrikeEasingt && mStrikeEasingt <= 0.85f)
-	{
-		//基準線とストライクの方向を取得
-		Vec2 base = { 1,0 };
-		Vec2 tmpDirection = mStrikeEndPosition - mStrikeStartPosition;
+	//if (mIsStrikeActive && 0.2f <= mStrikeEasingt && mStrikeEasingt <= 0.85f)
+	//{
+	//	//基準線とストライクの方向を取得
+	//	Vec2 base = { 1,0 };
+	//	Vec2 tmpDirection = mStrikeEndPosition - mStrikeStartPosition;
 
-		//方向を正規化してｎ倍する
-		tmpDirection = tmpDirection.Normalized();
-		tmpDirection = tmpDirection * (100 / screen.GetZoom());
+	//	//方向を正規化してｎ倍する
+	//	tmpDirection = tmpDirection.Normalized();
+	//	tmpDirection = tmpDirection * (100 / screen.GetZoom());
 
-		//なす角を求める
-		float dp = tmpDirection.Dot(base);
-		float cp = tmpDirection.Cross(base);
-		mStrikeLineAngle = atan2(cp, dp);
+	//	//なす角を求める
+	//	float dp = tmpDirection.Dot(base);
+	//	float cp = tmpDirection.Cross(base);
+	//	mStrikeLineAngle = atan2(cp, dp);
 
-		//生成位置の最少値と最大値
-		float randminX = mPosition.x - ((float)Screen::kWindowWidth  / screen.GetZoom());
-		float randmaxX = mPosition.x + ((float)Screen::kWindowWidth  / screen.GetZoom());
-		float randminY = mPosition.y - ((float)Screen::kWindowHeight / screen.GetZoom());
-		float randmaxY = mPosition.y + ((float)Screen::kWindowHeight / screen.GetZoom());
+	//	//生成位置の最少値と最大値
+	//	float randminX = mPosition.x - ((float)Screen::kWindowWidth  / screen.GetZoom());
+	//	float randmaxX = mPosition.x + ((float)Screen::kWindowWidth  / screen.GetZoom());
+	//	float randminY = mPosition.y - ((float)Screen::kWindowHeight / screen.GetZoom());
+	//	float randmaxY = mPosition.y + ((float)Screen::kWindowHeight / screen.GetZoom());
 
-		for (int i = 0; i < kStrikeLineMax; i++)
-		{
-			//生成
-			if (!mIsStrikeLineActive[i])
-			{
-				mStrikeLinePosition[i].x = RAND(randminX, randmaxX);
-				mStrikeLinePosition[i].y = RAND(randminY, randmaxY);
-				mStrikeLinePosition[i] += tmpDirection;
-				mStrikeLineWidth[i] = RAND(200, 400);
-				mStrikeLineHeight[i] = RAND(2.5f, 3.5f);
-				mStrikeLineAlphat[i] = 0.0f;
-				mStrikeLineColor[i] = 0x50505000;
-				mIsStrikeLineActive[i] = true;
-				break;
-			}
-		}
-	}
-	for (int i = 0; i < kStrikeLineMax; i++) 
-	{
-		if (mIsStrikeLineActive[i])
-		{
-			//透明度を変える
-			mStrikeLineAlphat[i] = EasingClamp(0.015f, mStrikeLineAlphat[i]);
-			if (mStrikeLineAlphat[i] < 0.5f) {
-				mStrikeLineColor[i] = ColorEasingMove(0x50505000, 0x505050BB, easeLinear(mStrikeLineAlphat[i] * 2));
-			}
-			else {
-				mStrikeLineColor[i] = ColorEasingMove(0x505050BB, 0x50505000, easeLinear(mStrikeLineAlphat[i] * 2 - 0.5f));
-			}
-			if (mStrikeLineAlphat[i] == 1.0f) {
-				mIsStrikeLineActive[i] = false;
-			}
-		}
-	}
-	if (!mIsStrikeActive) 
-	{
-		for (int i = 0; i < kStrikeLineMax; i++)
-		{
-			mIsStrikeLineActive[i] = false;
-		}
-	}
+	//	for (int i = 0; i < kStrikeLineMax; i++)
+	//	{
+	//		//生成
+	//		if (!mIsStrikeLineActive[i])
+	//		{
+	//			mStrikeLinePosition[i].x = RAND(randminX, randmaxX);
+	//			mStrikeLinePosition[i].y = RAND(randminY, randmaxY);
+	//			mStrikeLinePosition[i] += tmpDirection;
+	//			mStrikeLineWidth[i] = RAND(200, 400);
+	//			mStrikeLineHeight[i] = RAND(2.5f, 3.5f);
+	//			mStrikeLineAlphat[i] = 0.0f;
+	//			mStrikeLineColor[i] = 0x50505000;
+	//			mIsStrikeLineActive[i] = true;
+	//			break;
+	//		}
+	//	}
+	//}
+	//for (int i = 0; i < kStrikeLineMax; i++) 
+	//{
+	//	if (mIsStrikeLineActive[i])
+	//	{
+	//		//透明度を変える
+	//		mStrikeLineAlphat[i] = EasingClamp(0.015f, mStrikeLineAlphat[i]);
+	//		if (mStrikeLineAlphat[i] < 0.5f) {
+	//			mStrikeLineColor[i] = ColorEasingMove(0x50505000, 0x505050BB, easeLinear(mStrikeLineAlphat[i] * 2));
+	//		}
+	//		else {
+	//			mStrikeLineColor[i] = ColorEasingMove(0x505050BB, 0x50505000, easeLinear(mStrikeLineAlphat[i] * 2 - 0.5f));
+	//		}
+	//		if (mStrikeLineAlphat[i] == 1.0f) {
+	//			mIsStrikeLineActive[i] = false;
+	//		}
+	//	}
+	//}
+	//if (!mIsStrikeActive) 
+	//{
+	//	for (int i = 0; i < kStrikeLineMax; i++)
+	//	{
+	//		mIsStrikeLineActive[i] = false;
+	//	}
+	//}
 
 }
 void Player::Shadow(bool isHitStop) {
@@ -482,12 +538,27 @@ void Player::Draw(Screen& screen) {
 
 }
 
-void Player::DrawStrikePower(Screen& screen) {
+void Player::DrawStrikeUI(Screen& screen) {
 
-	screen.DrawBox({ Screen::kWindowWidth - (Screen::kMiniMapSize * 4),599 }, 10 * kStrikePowerMax, 22, 0.0f, BLACK, kFillModeWireFrame, false);
-	screen.DrawBox({ Screen::kWindowWidth - (Screen::kMiniMapSize * 4),600 }, 10 * mStrikePower, 20, 0.0f, WHITE, kFillModeSolid, false);
+	//screen.DrawBox({ Screen::kWindowWidth - (Screen::kMiniMapSize * 4),599 }, 10 * kStrikePowerMax, 22, 0.0f, BLACK, kFillModeWireFrame, false);
+	//screen.DrawBox({ Screen::kWindowWidth - (Screen::kMiniMapSize * 4),600 }, 10 * mStrikePower, 20, 0.0f, WHITE, kFillModeSolid, false);
 
-	Novice::ScreenPrintf(0, 40, "mSize : %f", mSize);
-	Novice::ScreenPrintf(0, 60, "mSizeValue : %f", mSizeValue);
+	if (strikeMode == STRAIGHT) {
+		screen.DrawUI(mStrikeModePosition, 200, 0, 500, 500, straight);
+	}
+	else {
+		screen.DrawUI(mStrikeModePosition, 200, 0, 500, 500, spiral);
+	}
+	screen.DrawUI(mStrikeModePosition, 200, 0, 500, 500, b);
 
+	Novice::ScreenPrintf(0, 0, "strikeMode : %d", strikeMode);
+}
+
+void Player::LoadTexture() {
+
+	if (!mIsLoadTexture) {
+		straight = Novice::LoadTexture("./Resources/Player/straight.png");
+		spiral = Novice::LoadTexture("./Resources/Player/spiral.png");
+		b = Novice::LoadTexture("./Resources/Player/b.png");
+	}
 }

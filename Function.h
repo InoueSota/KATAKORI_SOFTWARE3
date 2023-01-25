@@ -30,3 +30,6 @@ float Radian(float radian);
 int RAND(int min, int max);
 float RAND(float min, float max);
 void SRAND();
+
+//‚Qü‚Ì‚È‚·Šp‚ğ‹‚ß‚é
+float BetweenTheta(Vec2 direction);

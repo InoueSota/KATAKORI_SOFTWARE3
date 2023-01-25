@@ -261,22 +261,47 @@ void Map::Init() {
 		mYaxisEndPosition[i].y = -mYaxisStartPosition[i].y;
 	}
 
-}
-void Map::Update(Player& player) {
+	mIsBackGroundColorChange = false;
+	mBackGroundColor = 0x589E35FF;
 
-	for (int i = 0; i < kAxisLength; i++)
-	{
-		if (XaxisNearPlayer(mYaxisStartPosition[i], mYaxisEndPosition[i], player))
-		{
-			mYaxisStartPosition[i].y = player.mPosition.y + (Screen::kWindowHeight / 2);
-			mYaxisEndPosition[i].y   = player.mPosition.y - (Screen::kWindowHeight / 2);
-		}
-		if (YaxisNearPlayer(mXaxisStartPosition[i], mXaxisEndPosition[i], player))
-		{
-			mXaxisStartPosition[i].x = player.mPosition.x + (Screen::kWindowWidth / 2);
-			mXaxisEndPosition[i].x   = player.mPosition.x - (Screen::kWindowWidth / 2);
+}
+void Map::Update(bool isFever, bool isOldFever) {
+
+	if (isFever && !isOldFever) {
+		mBackGroundEasingt = 0.0f;
+		mBackGroundStartColor = 0x589E35FF;
+		mBackGroundEndColor = BLACK;
+		mIsBackGroundColorChange = true;
+	}
+	else if (!isFever && isOldFever) {
+		mBackGroundEasingt = 0.0f;
+		mBackGroundStartColor = BLACK;
+		mBackGroundEndColor = 0x589E35FF;
+		mIsBackGroundColorChange = true;
+	}
+
+	if (mIsBackGroundColorChange) {
+		mBackGroundEasingt = EasingClamp(0.01f, mBackGroundEasingt);
+		mBackGroundColor = ColorEasingMove(mBackGroundStartColor, mBackGroundEndColor, easeOutSine(mBackGroundEasingt));
+
+		if (mBackGroundEasingt == 1.0f) {
+			mIsBackGroundColorChange = false;
 		}
 	}
+
+	//for (int i = 0; i < kAxisLength; i++)
+	//{
+	//	if (XaxisNearPlayer(mYaxisStartPosition[i], mYaxisEndPosition[i], player))
+	//	{
+	//		mYaxisStartPosition[i].y = player.mPosition.y + (Screen::kWindowHeight / 2);
+	//		mYaxisEndPosition[i].y   = player.mPosition.y - (Screen::kWindowHeight / 2);
+	//	}
+	//	if (YaxisNearPlayer(mXaxisStartPosition[i], mXaxisEndPosition[i], player))
+	//	{
+	//		mXaxisStartPosition[i].x = player.mPosition.x + (Screen::kWindowWidth / 2);
+	//		mXaxisEndPosition[i].x   = player.mPosition.x - (Screen::kWindowWidth / 2);
+	//	}
+	//}
 
 }
 bool Map::XaxisNearPlayer(Vec2 startposition, Vec2 endposition, Player& player) {
@@ -299,7 +324,8 @@ bool Map::YaxisNearPlayer(Vec2 startposition, Vec2 endposition, Player& player) 
 }
 void Map::Draw(Screen& screen) {
 
-	Novice::DrawBox(0, 0, Screen::kWindowWidth, Screen::kWindowHeight, 0.0, 0x589E35FF, kFillModeSolid);
+	//”wŒi•`‰æ
+	Novice::DrawBox(0, 0, Screen::kWindowWidth, Screen::kWindowHeight, 0.0, mBackGroundColor, kFillModeSolid);
 
 	for (int i = 0; i < kAxisLength; i++)
 	{

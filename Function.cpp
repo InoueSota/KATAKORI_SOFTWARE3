@@ -50,3 +50,20 @@ float RAND(float min, float max) {
 void SRAND() {
 	srand((unsigned)time(NULL));
 }
+
+//‚Qü‚Ì‚È‚·Šp‚ğ‹‚ß‚é
+float BetweenTheta(Vec2 direction) {
+
+	//Šî€ü‚ÆŒü‚«ƒxƒNƒgƒ‹
+	Vec2 base = { 1,0 };
+	direction.Normalized();
+
+	//‚È‚·Šp‚ğ‹‚ß‚é
+	float dp = direction.Dot(base);
+	float cp = direction.Cross(base);
+	float tmpTheta = atan2(cp, dp);
+	if (tmpTheta < 0) {
+		return Degree(360) + tmpTheta;
+	}
+	return tmpTheta;
+}
