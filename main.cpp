@@ -178,14 +178,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						//フィーバーじゃないとき || ストライク使用時パワーが最大に達していなかったら
 						if (!fever.mIsFever && ((player.mStrikePower != Player::kStrikePowerMax && player.mIsStrikeActive) || !player.mIsStrikeActive)) {
 							player.SetKnockbackPosition(snake[i].mHeadPosition, snake[i].mHeadRadius);
-							player.mSizeValue -= Player::kToHeadMinusValue;
 							ui.MissSnakeScore(player.mIsStrikeActive);
 							ui.mCombo = 0;
 							ui.mIsWarning = true;
 						}
 						//フィーバーのとき || ストライク使用時パワーが最大に達していたら
 						else if (fever.mIsFever || (player.mStrikePower == Player::kStrikePowerMax && player.mIsStrikeActive)) {
-							ui.SnakeScore(player.mIsStrikeActive, player.mSize);
+							ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
 							ui.AddCombo();
 							screen.SetHitStop();
 							snake[i].mIsDeath = true;
@@ -206,7 +205,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							else {
 								player.mSizeValue += Player::kToBodyPlusValue;
 							}
-							ui.SnakeScore(player.mIsStrikeActive, player.mSize);
+							ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
 							ui.AddCombo();
 							screen.SetHitStop();
 							snake[i].mIsDeath = true;
@@ -238,14 +237,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							else {
 								player.SetKnockbackPosition(tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius);
 							}
-							player.mSizeValue -= Player::kToHeadMinusValue;
 							ui.MissTsuchinokoScore(player.mIsStrikeActive);
 							ui.mCombo = 0;
 							ui.mIsWarning = true;
 						}
 						//フィーバーのとき || ストライク使用時パワーが最大に達していたら
 						else if (fever.mIsFever || (player.mStrikePower == Player::kStrikePowerMax && player.mIsStrikeActive)) {
-							ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize);
+							ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
 							ui.AddCombo();
 							screen.SetHitStop();
 							tsuchinoko[i].mIsDeath = true;
@@ -266,7 +264,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							else {
 								player.mSizeValue += Player::kToBodyPlusValue;
 							}
-							ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize);
+							ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
 							ui.AddCombo();
 							screen.SetHitStop();
 							tsuchinoko[i].mIsDeath = true;

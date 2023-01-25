@@ -256,15 +256,20 @@ void Screen::DrawAnime(Vec2 Position, float size, int srcX, int srcW, int srcH, 
 }
 
 
-void Screen::DrawUI(Vec2 Position, float width, float height, int srcX, int srcW, int srcH, int textureHandle, unsigned int color, Vec2 scale) {
+void Screen::DrawUI(Vec2 Position, float width, float height, int srcX, int srcW, int srcH, int textureHandle, unsigned int color, Vec2 scale, bool isScroll) {
 	Quad OriginalPosition = RectAssign(width, height);
-	Quad Rect = Transform(OriginalPosition, MakeAffineMatrix(scale, 0.0f, Position));
+	Quad Rect;
+	if (isScroll) {
+		Rect = Transform(OriginalPosition, MakeAffineMatrix({ mZoom, mZoom }, 0.0f, ScreenTransform(Position)));
+	} else {
+		Rect = Transform(OriginalPosition, MakeAffineMatrix(scale, 0.0f, Position));
+	}
 	Novice::DrawQuad((int)Rect.LeftTop.x, (int)Rect.LeftTop.y, (int)Rect.RightTop.x, (int)Rect.RightTop.y, (int)Rect.LeftBottom.x, (int)Rect.LeftBottom.y, (int)Rect.RightBottom.x, (int)Rect.RightBottom.y, srcX, 0, srcW, srcH, textureHandle, color);
 }
 
 
-void Screen::DrawUI(Vec2 Position, float size, int srcX, int srcW, int srcH, int textureHandle, unsigned int color, Vec2 scale) {
-	DrawUI(Position, size, size, srcX, srcW, srcH, textureHandle, color, scale);
+void Screen::DrawUI(Vec2 Position, float size, int srcX, int srcW, int srcH, int textureHandle, unsigned int color, Vec2 scale, bool isScroll) {
+	DrawUI(Position, size, size, srcX, srcW, srcH, textureHandle, color, scale, isScroll);
 }
 
 

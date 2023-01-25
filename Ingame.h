@@ -61,9 +61,14 @@ public:
 	const int kTsuchinokoScore = 1500;
 	Vec2 mScorePosition[6];
 	float mScore;
-	void SnakeScore(bool isStrikeActive, float playerSizeMax);
+	static constexpr int kEnemyScoreMax = 20;
+	bool mIsEnemyScoreActive[kEnemyScoreMax];
+	Vec2 mEnemyScorePosition[kEnemyScoreMax];
+	int mEnemyScoreLife[kEnemyScoreMax];
+	float mEnemyScore[kEnemyScoreMax];
+	void SnakeScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition);
 	void MissSnakeScore(bool isStrikeActive);
-	void TsuchinokoScore(bool isStrikeActive, float playerSizeMax);
+	void TsuchinokoScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition);
 	void MissTsuchinokoScore(bool isStrikeActive);
 
 

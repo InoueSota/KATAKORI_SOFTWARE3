@@ -249,7 +249,7 @@ public:
 	/// <param name="textureHandle">テクスチャのハンドル</param>
 	/// <param name="color">描画するスプライトの色</param>
 	/// <param name="scale">大きさを変化させる</param>
-	void DrawUI(Vec2 position, float width, float height, int srcX, int srcW, int srcH, int textureHandle, unsigned int color, Vec2 scale = { 1.0f, 1.0f });
+	void DrawUI(Vec2 position, float width, float height, int srcX, int srcW, int srcH, int textureHandle, unsigned int color, Vec2 scale = { 1.0f, 1.0f }, bool isScroll = false);
 
 	/// <summary>
 	/// ＵＩ（スクロールしない）（正方形）
@@ -262,7 +262,7 @@ public:
 	/// <param name="textureHandle">テクスチャのハンドル</param>
 	/// <param name="color">描画するスプライトの色</param>
 	/// <param name="scale">大きさを変化させる</param>
-	void DrawUI(Vec2 position, float size, int srcX, int srcW, int srcH, int textureHandle, unsigned int color, Vec2 scale = { 1.0f, 1.0f });
+	void DrawUI(Vec2 position, float size, int srcX, int srcW, int srcH, int textureHandle, unsigned int color, Vec2 scale = { 1.0f, 1.0f }, bool isScroll = false);
 
 	/// <summary>
 	/// ミニマップの位置を円で描画する

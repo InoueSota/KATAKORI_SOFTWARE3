@@ -50,6 +50,9 @@ void UI::Init() {
 		mScorePosition[i].x = Screen::kWindowWidth - mTimeUISize * (i + 1);
 		mScorePosition[i].y = 100.0f;
 	}
+	for (int i = 0; i < kEnemyScoreMax; i++) {
+		mIsEnemyScoreActive[i] = false;
+	}
 
 	//頭か尾に当たってしまったとき
 	mIsWarning = false;
@@ -180,6 +183,17 @@ void UI::TimeLimit() {
 }
 void UI::Combo() {
 
+	//敵の位置に表示しているスコアを消す
+	for (int i = 0; i < kEnemyScoreMax; i++) {
+		if (mIsEnemyScoreActive[i]) {
+			mEnemyScoreLife[i]--;
+			mEnemyScoreLife[i] = Clamp(mEnemyScoreLife[i], 0, 180);
+			if (mEnemyScoreLife[i] == 0) {
+				mIsEnemyScoreActive[i] = false;
+			}
+		}
+	}
+
 	//拡縮アニメーション
 	if (mIsComboScaleAnime) {
 		mComboScale.x -= 0.1f;
@@ -200,12 +214,31 @@ void UI::AddCombo() {
 	mComboScale.y = 1.8f;
 	mIsComboScaleAnime = true;
 }
-void UI::SnakeScore(bool isStrikeActive, float playerSizeMax) {
+void UI::SnakeScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition) {
+
 	if (isStrikeActive) {
-		mScore += kSnakeScore / (playerSizeMax / 80.0f) * (1.0f + (float)mCombo / 10);
+		for (int i = 0; i < kEnemyScoreMax; i++) {
+			if (!mIsEnemyScoreActive[i]) {
+				mEnemyScore[i] = kSnakeScore / (playerSizeMax / 80.0f) * (1.0f + (float)mCombo / 10);
+				mScore += mEnemyScore[i];
+				mEnemyScorePosition[i] = enemyPosition;
+				mEnemyScoreLife[i] = 180;
+				mIsEnemyScoreActive[i] = true;
+				break;
+			}
+		}
 	}
 	else {
-		mScore += kSnakeScore * (1.0f + (float)mCombo / 10);
+		for (int i = 0; i < kEnemyScoreMax; i++) {
+			if (!mIsEnemyScoreActive[i]) {
+				mEnemyScore[i] = kSnakeScore * (1.0f + (float)mCombo / 10);;
+				mScore += mEnemyScore[i];
+				mEnemyScorePosition[i] = enemyPosition;
+				mEnemyScoreLife[i] = 180;
+				mIsEnemyScoreActive[i] = true;
+				break;
+			}
+		}
 	}
 }
 void UI::MissSnakeScore(bool isStrikeActive) {
@@ -216,12 +249,30 @@ void UI::MissSnakeScore(bool isStrikeActive) {
 		mScore -= kSnakeScore / 2.0;
 	}
 }
-void UI::TsuchinokoScore(bool isStrikeActive, float playerSizeMax) {
+void UI::TsuchinokoScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition) {
 	if (isStrikeActive) {
-		mScore += kTsuchinokoScore / (playerSizeMax / 80.0f) * (1.0f + (float)mCombo / 10);
+		for (int i = 0; i < kEnemyScoreMax; i++) {
+			if (!mIsEnemyScoreActive[i]) {
+				mEnemyScore[i] = kTsuchinokoScore / (playerSizeMax / 80.0f) * (1.0f + (float)mCombo / 10);
+				mScore += mEnemyScore[i];
+				mEnemyScorePosition[i] = enemyPosition;
+				mEnemyScoreLife[i] = 180;
+				mIsEnemyScoreActive[i] = true;
+				break;
+			}
+		}
 	}
 	else {
-		mScore += kTsuchinokoScore * (1.0f + (float)mCombo / 10);
+		for (int i = 0; i < kEnemyScoreMax; i++) {
+			if (!mIsEnemyScoreActive[i]) {
+				mEnemyScore[i] = kTsuchinokoScore * (1.0f + (float)mCombo / 10);;
+				mScore += mEnemyScore[i];
+				mEnemyScorePosition[i] = enemyPosition;
+				mEnemyScoreLife[i] = 180;
+				mIsEnemyScoreActive[i] = true;
+				break;
+			}
+		}
 	}
 }
 void UI::MissTsuchinokoScore(bool isStrikeActive) {
@@ -312,6 +363,24 @@ void UI::Draw(Screen& screen) {
 		screen.DrawUI(mComboPosition[0], mTimeUISize, 32 * (mCombo % 10), 32, 32, mTimeNumber, WHITE, mComboScale);
 	}
 	screen.DrawUI({ mScorePosition[0].x, mComboPosition[0].y + 50.0f }, 100, 50, 0, 200, 100, mComboLetter, WHITE);
+
+	//敵スコア
+	for (int j = 0; j < kEnemyScoreMax; j++) {
+
+		if (mIsEnemyScoreActive[j]) {
+			float Result[6];
+			float tmpScore = mEnemyScore[j];
+			for (int i = 5; i > -1; i--) {
+				Result[i] = tmpScore / powf(10, i);
+				tmpScore = (int)tmpScore % (int)powf(10, i);
+				if (powf(10, i) <= mEnemyScore[j]) {
+					screen.DrawUI({ mEnemyScorePosition[j].x - (i * 24) / screen.GetZoom(), mEnemyScorePosition[j].y }, 24 / screen.GetZoom(), 32 * (int)Result[i], 32, 32, mTimeNumber, WHITE, { 1.0f,1.0f }, true);
+				}
+			}
+		}
+
+	}
+
 
 	//スコア
 	mScore = Clamp(mScore, 0, 1000000);
