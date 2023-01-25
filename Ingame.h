@@ -28,9 +28,12 @@ public:
 
 
 	//êßå¿éûä‘
+	bool mIsExtendTime;
 	const int kTimeLimit = 60;
 	Vec2 mTimePosition[2];
+	Vec2 mTimeScale;
 	Vec2 mTimeLastScale;
+	float mExtendTimeEasingt;
 	int mTimeFrame;
 	int mTimeElapsed;
 	int mTimeLeft;
@@ -43,6 +46,7 @@ public:
 	bool mIsTimeUpFinish;
 	float mTimeUpAlphat;
 	unsigned int mTimeUpColor;
+	void ExtendTime(bool isFever, bool isOldFever);
 	void TimeLimit();
 	void DrawBackTimeLimit(Screen& screen);
 
@@ -57,9 +61,9 @@ public:
 
 
 	//ÉXÉRÉA
-	const int kSnakeScore = 1000;
-	const int kTsuchinokoScore = 1500;
-	Vec2 mScorePosition[6];
+	const int kSnakeScore = 1200;
+	const int kTsuchinokoScore = 1000;
+	Vec2 mScorePosition[7];
 	float mScore;
 	static constexpr int kEnemyScoreMax = 20;
 	bool mIsEnemyScoreActive[kEnemyScoreMax];

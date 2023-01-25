@@ -50,6 +50,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					tsuchinoko[i].Init();
 				}
 				ui.Init();
+				fever.Init();
+				map.Init();
 				scene = INGAME;
 			}
 			break;
@@ -81,6 +83,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					}
 					ui.Init();
 					title.Init();
+					fever.Init();
+					map.Init();
 					scene = TITLE;
 				}
 
@@ -111,6 +115,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					//制限時間の経過を止める
 					ui.TimeLimit();
 				}
+
+				//制限時間をフィーバーに入ったら延ばす
+				ui.ExtendTime(fever.mIsFever, fever.mIsOldFever);
 
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -200,12 +207,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						{
 							if (!player.mIsStrikeActive) {
 								player.mStrikePower++;
+							} else {
+								fever.mSnakeDefeat++;
 							}
 							ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
 							ui.AddCombo();
 							screen.SetHitStop();
 							snake[i].mIsDeath = true;
-							fever.mSnakeDefeat++;
 							for (int k = 0; k < Fever::kMaxEnemy; k++) {
 								if (!fever.particlecreat[k].IsUse) {
 									fever.particlecreat[k].IsUse = 1;
@@ -254,12 +262,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						{
 							if (!player.mIsStrikeActive) {
 								player.mStrikePower++;
+							} else {
+								fever.mTsuchinokoDefeat++;
 							}
 							ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
 							ui.AddCombo();
 							screen.SetHitStop();
 							tsuchinoko[i].mIsDeath = true;
-							fever.mTsuchinokoDefeat++;
 							for (int k = 0; k < Fever::kMaxEnemy; k++) {
 								if (!fever.particlecreat[k].IsUse) {
 									fever.particlecreat[k].IsUse = 1;

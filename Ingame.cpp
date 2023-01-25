@@ -19,6 +19,8 @@ void UI::Init() {
 	mCenterPosition.y = Screen::kWindowHeight / 2.0;
 
 	//制限時間
+	mIsExtendTime = false;
+	mTimeScale = { 1.0f, 1.0f };
 	mTimeUISize = 48;
 	mTimeLastUISize = 256;
 	mTimePosition[0].x = Screen::kWindowWidth / 2.0 + mTimeUISize / 2.0 + 5.0f;
@@ -46,7 +48,7 @@ void UI::Init() {
 
 	//スコア
 	mScore = 0;
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 7; i++) {
 		mScorePosition[i].x = Screen::kWindowWidth - mTimeUISize * (i + 1);
 		mScorePosition[i].y = 100.0f;
 	}
@@ -117,6 +119,25 @@ void UI::Update() {
 		}
 	}
 }
+void UI::ExtendTime(bool isFever, bool isOldFever) {
+
+	//フィーバーに入ったら時間を延ばす
+	if (isFever && !isOldFever) {
+		mExtendTimeEasingt = 0.0f;
+		mIsExtendTime = true;
+		mTimeElapsed -= 5;
+	}
+
+	//フィーバーで時間が延びたよイージング
+	if (mIsExtendTime) {
+		mExtendTimeEasingt = EasingClamp(0.01f, mExtendTimeEasingt);
+		mTimeScale = EasingMove({ 1.5f, 1.5f }, { 1.0f, 1.0f }, easeOutSine(mExtendTimeEasingt));
+
+		if (mExtendTimeEasingt == 1.0f) {
+			mIsExtendTime = false;
+		}
+	}
+}
 void UI::TimeLimit() {
 
 	//敵の発生をさせるため、１フレームでやらせる
@@ -148,6 +169,7 @@ void UI::TimeLimit() {
 
 	//残り時間の限界値の設定
 	mTimeLeft = Clamp(mTimeLeft, 0, kTimeLimit);
+	mTimeElapsed = Clamp(mTimeElapsed, 0, kTimeLimit);
 	mCountDownTime = Clamp(mCountDownTime, 0, kToStart);
 
 	//カウントダウンの透明度と大きさをイージング処理する
@@ -219,7 +241,7 @@ void UI::SnakeScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition
 	if (isStrikeActive) {
 		for (int i = 0; i < kEnemyScoreMax; i++) {
 			if (!mIsEnemyScoreActive[i]) {
-				mEnemyScore[i] = kSnakeScore / (playerSizeMax / 80.0f) * (1.0f + (float)mCombo / 10);
+				mEnemyScore[i] = (kSnakeScore * 2.5) * (1.0f + (float)mCombo / 10);
 				mScore += mEnemyScore[i];
 				mEnemyScorePosition[i] = enemyPosition;
 				mEnemyScoreLife[i] = 180;
@@ -253,7 +275,7 @@ void UI::TsuchinokoScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPos
 	if (isStrikeActive) {
 		for (int i = 0; i < kEnemyScoreMax; i++) {
 			if (!mIsEnemyScoreActive[i]) {
-				mEnemyScore[i] = kTsuchinokoScore / (playerSizeMax / 80.0f) * (1.0f + (float)mCombo / 10);
+				mEnemyScore[i] = (kTsuchinokoScore * 2.5) * (1.0f + (float)mCombo / 10);
 				mScore += mEnemyScore[i];
 				mEnemyScorePosition[i] = enemyPosition;
 				mEnemyScoreLife[i] = 180;
@@ -347,8 +369,8 @@ void UI::Draw(Screen& screen) {
 
 	//制限時間
 	if (10 <= mTimeLeft) {
-		screen.DrawUI(mTimePosition[1], mTimeUISize, 288 * (mTimeLeft / 10), 288, 288, mTimeLimitNumber, WHITE);
-		screen.DrawUI(mTimePosition[0], mTimeUISize, 288 * (mTimeLeft % 10), 288, 288, mTimeLimitNumber, WHITE);
+		screen.DrawUI(mTimePosition[1], mTimeUISize, 288 * (mTimeLeft / 10), 288, 288, mTimeLimitNumber, WHITE, mTimeScale);
+		screen.DrawUI(mTimePosition[0], mTimeUISize, 288 * (mTimeLeft % 10), 288, 288, mTimeLimitNumber, WHITE, mTimeScale);
 	}
 	//タイムアップ
 	if (mTimeLeft == 0) {
@@ -368,9 +390,9 @@ void UI::Draw(Screen& screen) {
 	for (int j = 0; j < kEnemyScoreMax; j++) {
 
 		if (mIsEnemyScoreActive[j]) {
-			float Result[6];
+			float Result[7];
 			float tmpScore = mEnemyScore[j];
-			for (int i = 5; i > -1; i--) {
+			for (int i = 6; i > -1; i--) {
 				Result[i] = tmpScore / powf(10, i);
 				tmpScore = (int)tmpScore % (int)powf(10, i);
 				if (powf(10, i) <= mEnemyScore[j]) {
@@ -383,10 +405,10 @@ void UI::Draw(Screen& screen) {
 
 
 	//スコア
-	mScore = Clamp(mScore, 0, 1000000);
-	float Result[6];
+	mScore = Clamp(mScore, 0, 10000000);
+	float Result[7];
 	float tmpScore = mScore;
-	for (int i = 5; i > -1; i--) {
+	for (int i = 6; i > -1; i--) {
 		Result[i] = tmpScore / powf(10, i);
 		tmpScore = (int)tmpScore % (int)powf(10, i);
 		screen.DrawUI(mScorePosition[i], mTimeUISize, 32 * (int)Result[i], 32, 32, mTimeNumber, WHITE, mComboScale);

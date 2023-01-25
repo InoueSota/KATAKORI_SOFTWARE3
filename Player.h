@@ -132,6 +132,7 @@ public:
 	int b;
 	int lb;
 	int rb;
+	int nopower;
 	bool mIsLoadTexture = false;
 	void LoadTexture();
 

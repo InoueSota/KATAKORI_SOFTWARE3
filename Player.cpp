@@ -31,6 +31,7 @@ void Player::Init() {
 	mStrikeModeScale = { 1.0f, 1.0f };
 	mStrikeModeBScale = { 1.0f, 1.0f };
 	mStrikeModeScaleActive = false;
+	strikeMode = STRAIGHT;
 
 	//ストライク演出
 	for (int i = 0; i < kStrikeLineMax; i++) {
@@ -186,6 +187,11 @@ void Player::Strike(bool isFever, bool isOldFever) {
 		mIsStrikeActive = false;
 	}
 
+	//フィーバー中はパワーマックス
+	if (isFever) {
+		mStrikePower = kStrikePowerMax;
+	}
+
 	//モードチェンジ
 	if (Controller::IsTriggerButton(0, Controller::bB) && !mIsStrikeActive) {
 
@@ -228,6 +234,9 @@ void Player::Strike(bool isFever, bool isOldFever) {
 			//距離が0じゃないとき
 			else {
 
+				//ストライクパワーを消費する
+				mStrikePower--;
+
 				//増加量を距離に応じて変えるための計算
 				float tmpValue = tmpDistance / 100;
 
@@ -263,7 +272,7 @@ void Player::Strike(bool isFever, bool isOldFever) {
 			mStrikeDirection = (mMarkPosition - mPosition).Normalized();
 
 			mStrikeVelocity.setZero();
-			mStrikeVelocity = mStrikeDirection * mStrikeSpeed + LeftStickVelocity(10.0f);
+			mStrikeVelocity = mStrikeDirection * mStrikeSpeed + LeftStickVelocity(15.0f);
 			mStrikeSpeed += 0.5f;
 
 			mPosition += mStrikeVelocity;
@@ -312,8 +321,6 @@ void Player::Strike(bool isFever, bool isOldFever) {
 
 			//移動が終了したら
 			if ((mPosition.x == mMarkPosition.x && mPosition.y == mMarkPosition.y) || mIsStraightStrikeFinish == true) {
-				//ストライクパワーを消費する
-				mStrikePower--;
 				mIsMarkActive = false;
 				mIsStrikeActive = false;
 			}
@@ -330,8 +337,6 @@ void Player::Strike(bool isFever, bool isOldFever) {
 
 			//移動が終了したら
 			if (mStrikeEasingt == 1.0f) {
-				//ストライクパワーを消費する
-				mStrikePower--;
 				mIsMarkActive = false;
 				mIsStrikeActive = false;
 			}
@@ -483,6 +488,10 @@ void Player::SetKnockbackPosition(Vec2 enemyPosition, float enemyRadius) {
 void Player::Knockback() {
 
 	if (mKnockbackSet) {
+
+		//パワーペナルティ
+		mStrikePower--;
+
 		int A = mPosition.x - mKnockbackEnemyPos.x;
 		int B = mPosition.y - mKnockbackEnemyPos.y;
 
@@ -543,8 +552,12 @@ void Player::Draw(Screen& screen) {
 
 	//ストライクしろ(圧)描画
 	if (mIsMarkActive && !mIsStrikeActive) {
-		screen.DrawAnime({ mPosition.x - (30 / screen.GetZoom()), mPosition.y + (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0, 200, 100, 2, 10, mMarkFrame, lb, 0xFFFFFFE5);
-		screen.DrawAnime({ mPosition.x + (30 / screen.GetZoom()), mPosition.y + (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0, 200, 100, 2, 10, mMarkFrame, rb, 0xFFFFFFE5);
+		if (0 < mStrikePower) {
+			screen.DrawAnime({ mPosition.x - (30 / screen.GetZoom()), mPosition.y + (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0, 200, 100, 2, 10, mMarkFrame, lb, 0xFFFFFFE5);
+			screen.DrawAnime({ mPosition.x + (30 / screen.GetZoom()), mPosition.y + (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0, 200, 100, 2, 10, mMarkFrame, rb, 0xFFFFFFE5);
+		} else {
+			screen.DrawPicture({ mPosition.x, mPosition.y + (40 / screen.GetZoom()) }, 360, 120, 0.0f, 300, 100, nopower, WHITE);
+		}
 	}
 
 	//ストライク中の線描画
@@ -568,8 +581,7 @@ void Player::DrawStrikeUI(Screen& screen) {
 	screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, circle, WHITE);
 	if (strikeMode == STRAIGHT) {
 		screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, straight, WHITE, mStrikeModeScale);
-	}
-	else {
+	} else {
 		screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, spiral, WHITE, mStrikeModeScale);
 	}
 	screen.DrawUI({ mStrikeModePosition.x + 50, mStrikeModePosition.y - 50 }, 60, 0, 160, 160, b, WHITE, mStrikeModeBScale);
@@ -587,5 +599,6 @@ void Player::LoadTexture() {
 		b = Novice::LoadTexture("./Resources/Player/b.png");
 		lb = Novice::LoadTexture("./Resources/Player/lb.png");
 		rb = Novice::LoadTexture("./Resources/Player/rb.png");
+		nopower = Novice::LoadTexture("./Resources/Player/nopower.png");
 	}
 }
