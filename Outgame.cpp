@@ -16,8 +16,8 @@ void Title::Update() {
 		Katakori();
 	}
 	else {
-		mTitleAlphaT = EasingClamp(0.01f, mTitleAlphaT);
-		mTitleColor = ColorEasingMove(0xFFFFFF00, WHITE, easeInSine(mTitleAlphaT));
+		mTitleAlphaT = EasingClamp(0.02f, mTitleAlphaT);
+		mTitleColor = ColorEasingMove(0xFFFFFF00, WHITE, easeOutSine(mTitleAlphaT));
 	}
 }
 void Title::Katakori() {

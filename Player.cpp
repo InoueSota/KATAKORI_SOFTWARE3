@@ -213,8 +213,8 @@ void Player::Strike(bool isFever, bool isOldFever) {
 
 	if (mIsMarkActive && !mIsStrikeActive) {
 
-		//LTボタン＆RTボタン同時押下時にフラグをtrueにする
-		if (Controller::IsPressedButton(0, Controller::lSHOULDER) && Controller::IsPressedButton(0, Controller::rSHOULDER)) {
+		//LBボタン＆RBボタン同時押下時でパワーがある時にフラグをtrueにする
+		if ((Controller::IsPressedButton(0, Controller::lSHOULDER) && Controller::IsPressedButton(0, Controller::rSHOULDER)) && 0 < mStrikePower) {
 
 			//距離に応じてイージングの増加量を変化させる
 			//マークとの距離を求める
@@ -235,7 +235,7 @@ void Player::Strike(bool isFever, bool isOldFever) {
 
 				if (strikeMode == STRAIGHT)
 				{
-					mStrikeSpeed = 5.0f;
+					mStrikeSpeed = 10.0f;
 					mStraightStrikeTheta = tmpTheta;
 					mIsStraightStrikeFinish = false;
 					mIsStraightStrikeActive = true;
@@ -313,7 +313,7 @@ void Player::Strike(bool isFever, bool isOldFever) {
 			//移動が終了したら
 			if ((mPosition.x == mMarkPosition.x && mPosition.y == mMarkPosition.y) || mIsStraightStrikeFinish == true) {
 				//ストライクパワーを消費する
-				mStrikePower = 0;
+				mStrikePower--;
 				mIsMarkActive = false;
 				mIsStrikeActive = false;
 			}
@@ -331,7 +331,7 @@ void Player::Strike(bool isFever, bool isOldFever) {
 			//移動が終了したら
 			if (mStrikeEasingt == 1.0f) {
 				//ストライクパワーを消費する
-				mStrikePower = 0;
+				mStrikePower--;
 				mIsMarkActive = false;
 				mIsStrikeActive = false;
 			}
@@ -542,7 +542,7 @@ void Player::Draw(Screen& screen) {
 	screen.DrawSquare(mPosition, mSize, 0x606060FF);
 
 	//ストライクしろ(圧)描画
-	if (mIsMarkActive) {
+	if (mIsMarkActive && !mIsStrikeActive) {
 		screen.DrawAnime({ mPosition.x - (30 / screen.GetZoom()), mPosition.y + (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0, 200, 100, 2, 10, mMarkFrame, lb, 0xFFFFFFE5);
 		screen.DrawAnime({ mPosition.x + (30 / screen.GetZoom()), mPosition.y + (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0, 200, 100, 2, 10, mMarkFrame, rb, 0xFFFFFFE5);
 	}
@@ -556,8 +556,14 @@ void Player::Draw(Screen& screen) {
 }
 void Player::DrawStrikeUI(Screen& screen) {
 
-	//screen.DrawBox({ Screen::kWindowWidth - (Screen::kMiniMapSize * 4),599 }, 10 * kStrikePowerMax, 22, 0.0f, BLACK, kFillModeWireFrame, false);
-	//screen.DrawBox({ Screen::kWindowWidth - (Screen::kMiniMapSize * 4),600 }, 10 * mStrikePower, 20, 0.0f, WHITE, kFillModeSolid, false);
+	screen.DrawBox({ 35.0f, 62.5f }, 50 * mStrikePower, 25, 0.0f, WHITE, kFillModeSolid, false);
+	for (int i = 0; i < kStrikePowerMax; i++) {
+		if (i == kStrikePowerMax - 1) {
+			screen.DrawUI({ 10.0f + (i + 1) * 50, 75.0f }, 50, 25, 0, 200, 100, lastflame, WHITE);
+		} else {
+			screen.DrawUI({ 10.0f + (i + 1) * 50, 75.0f }, 50, 25, 0, 200, 100, flame, WHITE);
+		}
+	}
 
 	screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, circle, WHITE);
 	if (strikeMode == STRAIGHT) {
@@ -573,6 +579,8 @@ void Player::DrawStrikeUI(Screen& screen) {
 void Player::LoadTexture() {
 
 	if (!mIsLoadTexture) {
+		flame = Novice::LoadTexture("./Resources/Player/flame.png");
+		lastflame = Novice::LoadTexture("./Resources/Player/lastflame.png");
 		circle = Novice::LoadTexture("./Resources/Player/circle.png");
 		straight = Novice::LoadTexture("./Resources/Player/straight.png");
 		spiral = Novice::LoadTexture("./Resources/Player/spiral.png");

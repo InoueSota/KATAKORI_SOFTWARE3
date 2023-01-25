@@ -56,7 +56,7 @@ public:
 	static constexpr int kToHeadMinusValue = 4;
 	static constexpr int kToBodyMinusValue = 2;
 	static constexpr int kToBodyPlusValue = 6;
-	static constexpr int kStrikePowerMax = 10;
+	static constexpr int kStrikePowerMax = 5;
 	Vec2 mStrikeVelocity;
 	Vec2 mStrikeDirection;
 	Vec2 mStrikeClampMin;
@@ -66,7 +66,7 @@ public:
 	float mStrikeSpeed;
 	float mStraightStrikeTheta;
 	float mStraightStrikeOldTheta;
-	Vec2 mStrikePowerPosition;
+	Vec2 mStrikePowerPosition[kStrikePowerMax];
 	Vec2 mStrikeModePosition{ 100,630 };
 	Vec2 mStrikeModeScale;
 	Vec2 mStrikeModeBScale;
@@ -124,6 +124,8 @@ public:
 
 
 	//‰æ‘œ
+	int flame;
+	int lastflame;
 	int circle;
 	int straight;
 	int spiral;
