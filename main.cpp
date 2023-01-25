@@ -87,25 +87,29 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				//ヒットストップしてないとき
 				if (!screen.GetHitStop())
 				{
-
-					//プレイヤーアップデート
-					player.Update(screen, fever.mIsFever, fever.mIsOldFever);
-
-
-					//ストライクしてないとき
-					if (!player.mIsStrikeActive)
+					//ゲームを始めているとき
+					if (ui.mIsStart)
 					{
-						//制限時間の経過を止める
-						ui.TimeLimit();
-
-						//敵アップデート
-						for (int i = 0; i < Snake::kMaxSnake; i++) {
-							snake[i].Update(ui.mTimeLeft, player.mPosition);
-						}
-						for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
-							tsuchinoko[i].Update(player.mPosition, ui.mTimeLeft);
+						//プレイヤーアップデート
+						player.Update(screen, fever.mIsFever, fever.mIsOldFever);
+					}
+					if (ui.mIsStart || (ui.mIsOldStart && !ui.mIsStart))
+					{
+						//ストライクしてないとき
+						if (!player.mIsStrikeActive)
+						{
+							//敵アップデート
+							for (int i = 0; i < Snake::kMaxSnake; i++) {
+								snake[i].Update(ui.mTimeLeft, player.mPosition);
+							}
+							for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
+								tsuchinoko[i].Update(player.mPosition, ui.mTimeLeft);
+							}
 						}
 					}
+
+					//制限時間の経過を止める
+					ui.TimeLimit();
 				}
 
 

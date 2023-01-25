@@ -15,6 +15,13 @@ public:
 	void Update();
 	void Draw(Screen& screen);
 
+	//始めるかフラグ
+	const int kToStart = 3;
+	bool mIsStart;
+	bool mIsOldStart;
+	int mCountDownTime;
+	Vec2 mStartPosition;
+
 
 	//画面の中心
 	Vec2 mCenterPosition;
@@ -89,6 +96,7 @@ public:
 	bool mIsLoadTexture = false;
 	int mTimeNumber;
 	int mTimeLimitNumber;
+	int mStart;
 	int mTimeUp;
 	int mComboLetter;
 	int mScoreLetter;

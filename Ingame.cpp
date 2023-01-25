@@ -9,6 +9,11 @@
 //ゲーム中のＵＩ
 void UI::Init() {
 
+	//始めるかフラグ
+	mIsStart = false;
+	mIsOldStart = true;
+	mStartPosition = { -Screen::kWindowWidth / 2.0 + 200,Screen::kWindowHeight / 2.0 };
+
 	//画面の中心
 	mCenterPosition.x = Screen::kWindowWidth / 2.0;
 	mCenterPosition.y = Screen::kWindowHeight / 2.0;
@@ -111,6 +116,9 @@ void UI::Update() {
 }
 void UI::TimeLimit() {
 
+	//敵の発生をさせるため、１フレームでやらせる
+	mIsOldStart = mIsStart;
+
 	//フレームが60になったら一秒経過
 	if (mTimeFrame == 60 && mTimeLeft != 0)
 	{
@@ -118,7 +126,7 @@ void UI::TimeLimit() {
 		mTimeFrame = 0;
 
 		//カウントダウンの初期化
-		if (mTimeLeft < 10) {
+		if (mTimeLeft < 10 || !mIsStart) {
 			mTimeEasingt = 0.0f;
 			mTimeLastColor = 0xFFFFFF70;
 			mTimeLastScale = { 1.0f, 1.0f };
@@ -129,20 +137,36 @@ void UI::TimeLimit() {
 	mTimeFrame++;
 
 	//残り時間 = 制限時間 - 経過時間
-	mTimeLeft = kTimeLimit - mTimeElapsed;
+	if (!mIsStart) {
+		mCountDownTime = kToStart - mTimeElapsed;
+	} else {
+		mTimeLeft = kTimeLimit - mTimeElapsed;
+	}
 
 	//残り時間の限界値の設定
 	mTimeLeft = Clamp(mTimeLeft, 0, kTimeLimit);
+	mCountDownTime = Clamp(mCountDownTime, 0, kToStart);
 
 	//カウントダウンの透明度と大きさをイージング処理する
-	if (mTimeLeft < 10) {
+	if (mTimeLeft < 10 || !mIsStart) {
 		mTimeEasingt = EasingClamp(1.0f / 60.0f, mTimeEasingt);
 		mTimeLastColor = ColorEasingMove(0xFFFFFF70, 0xFFFFFF00, easeOutSine(mTimeEasingt));
 		mTimeLastScale = EasingMove({ 1.0f, 1.0f }, { 2.0f,2.0f }, easeOutSine(mTimeEasingt));
 	}
 
+	//始めるフラグをtrueにする
+	if (!mIsStart && mCountDownTime == 0) {
+		mTimeElapsed = 0;
+		mIsStart = true;
+	}
+
+	//スタート処理
+	if (mIsStart) {
+		mStartPosition.x += 30.0f;
+	}
+
 	//タイムアップ処理
-	if (mTimeLeft == 0) {
+	if(mTimeLeft == 0) {
 
 		//タイムアップの文字を透明度イージングさせる
 		mTimeUpAlphat = EasingClamp(0.1f, mTimeUpAlphat);
@@ -233,18 +257,11 @@ void UI::Warning() {
 		mWarningColor = 0xFFFFFF00;
 	}
 }
-void UI::DrawBackTimeLimit(Screen& screen) {
-
-	//カウントダウンの描画
-	if (0 < mTimeLeft && mTimeLeft < 10) {
-		screen.DrawUI(mCenterPosition, mTimeLastUISize, 288 * (mTimeLeft % 10), 288, 288, mTimeLimitNumber, 0xFFFFFF70);
-		screen.DrawUI(mCenterPosition, mTimeLastUISize, 288 * (mTimeLeft % 10), 288, 288, mTimeLimitNumber, mTimeLastColor, mTimeLastScale);
-	}
-}
 void UI::LoadTexture() {
 	if (!mIsLoadTexture) {
 		mTimeNumber = Novice::LoadTexture("./Resources/UI/Time/number.png");
 		mTimeLimitNumber = Novice::LoadTexture("./Resources/UI/Time/timelimit.png");
+		mStart = Novice::LoadTexture("./Resources/UI/Time/start.png");
 		mTimeUp = Novice::LoadTexture("./Resources/UI/Time/timeup.png");
 		mComboLetter = Novice::LoadTexture("./Resources/UI/Combo/combo.png");
 		mScoreLetter = Novice::LoadTexture("./Resources/UI/Score/score.png");
@@ -255,6 +272,21 @@ void UI::LoadTexture() {
 		mX = Novice::LoadTexture("./Resources/UI/Explanation/x.png");
 		mA = Novice::LoadTexture("./Resources/UI/Explanation/a.png");
 		mIsLoadTexture = true;
+	}
+}
+void UI::DrawBackTimeLimit(Screen& screen) {
+
+	//カウントダウンの描画
+	//開始
+	if (!mIsStart) {
+		screen.DrawUI(mCenterPosition, mTimeLastUISize, 288 * (mCountDownTime % 10), 288, 288, mTimeLimitNumber, 0xFFFFFF70);
+		screen.DrawUI(mCenterPosition, mTimeLastUISize, 288 * (mCountDownTime % 10), 288, 288, mTimeLimitNumber, mTimeLastColor, mTimeLastScale);
+	} else if (mStartPosition.x < (Screen::kWindowWidth + Screen::kWindowWidth / 2.0)) {
+		screen.DrawUI(mStartPosition, Screen::kWindowWidth, Screen::kWindowHeight, 0, Screen::kWindowWidth, Screen::kWindowHeight, mStart, 0xFFFFFFB0);
+	}
+	if (0 < mTimeLeft && mTimeLeft < 10) {
+		screen.DrawUI(mCenterPosition, mTimeLastUISize, 288 * (mTimeLeft % 10), 288, 288, mTimeLimitNumber, 0xFFFFFF70);
+		screen.DrawUI(mCenterPosition, mTimeLastUISize, 288 * (mTimeLeft % 10), 288, 288, mTimeLimitNumber, mTimeLastColor, mTimeLastScale);
 	}
 }
 void UI::Draw(Screen& screen) {
