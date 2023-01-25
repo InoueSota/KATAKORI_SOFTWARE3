@@ -184,7 +184,7 @@ void Player::Strike(bool isFever, bool isOldFever) {
 	}
 
 	//モードチェンジ
-	if (Controller::IsTriggerButton(0, Controller::bB)) {
+	if (Controller::IsTriggerButton(0, Controller::bB) && !mIsStrikeActive) {
 
 		if (strikeMode == STRAIGHT) {
 			strikeMode = SPIRAL;
@@ -537,7 +537,6 @@ void Player::Draw(Screen& screen) {
 	}
 
 }
-
 void Player::DrawStrikeUI(Screen& screen) {
 
 	//screen.DrawBox({ Screen::kWindowWidth - (Screen::kMiniMapSize * 4),599 }, 10 * kStrikePowerMax, 22, 0.0f, BLACK, kFillModeWireFrame, false);
@@ -551,7 +550,6 @@ void Player::DrawStrikeUI(Screen& screen) {
 	}
 	screen.DrawUI(mStrikeModePosition, 200, 0, 500, 500, b);
 
-	Novice::ScreenPrintf(0, 0, "strikeMode : %d", strikeMode);
 }
 
 void Player::LoadTexture() {
