@@ -181,6 +181,19 @@ public:
 	void DrawRectAngle(Vec2 position, float width, float height, unsigned int color = WHITE, FillMode fillMode = kFillModeSolid, bool isScroll = true);
 
 	/// <summary>
+	/// 静止画（長方形）を描画する
+	/// </summary>
+	/// <param name="position">中心座標</param>
+	/// <param name="width">横幅</param>
+	/// <param name="height">縦幅</param>
+	/// <param name="angle">傾き</param>
+	/// <param name="srcW">画像上の描画したい範囲横幅</param>
+	/// <param name="srcH">画像上の描画したい範囲縦幅</param>
+	/// <param name="textureHandle">テクスチャのハンドル</param>
+	/// <param name="color">描画するスプライトの色</param>
+	void DrawPicture(Vec2 position, float width, float height, float angle, float srcW, float srcH, int textureHandle, unsigned int color);
+
+	/// <summary>
 	/// 静止画（正方形）を描画する
 	/// </summary>
 	/// <param name="position">中心座標</param>
@@ -190,14 +203,15 @@ public:
 	/// <param name="srcH">画像上の描画したい範囲縦幅</param>
 	/// <param name="textureHandle">テクスチャのハンドル</param>
 	/// <param name="color">描画するスプライトの色</param>
-	void DrawPicture(Vec2 position, float size, float angle, float srcW, float srcH, int textureHandle, unsigned int color = WHITE);
+	void DrawPicture(Vec2 position, float size, float angle, float srcW, float srcH, int textureHandle, unsigned int color);
 
 	/// <summary>
-	/// 連番画像（正方形）を描画する
+	/// 連番画像（長方形）を描画する
 	/// </summary>
 	/// <param name="position">中心座標</param>
-	/// <param name="size">大きさ(= 直径)</param>
-	/// <param name="srcX">画像上の描画したい範囲左上座標 X（変数）</param>
+	/// <param name="width">横幅</param>
+	/// <param name="height">縦幅</param>
+	/// <param name="srcX">画像上の描画したい範囲左上座標 X</param>
 	/// <param name="srcW">画像上の描画したい範囲横幅</param>
 	/// <param name="srcH">画像上の描画したい範囲縦幅</param>
 	/// <param name="sheets">画像枚数</param>
@@ -205,7 +219,22 @@ public:
 	/// <param name="frameVariable">加算しているフレームの変数</param>
 	/// <param name="textureHandle">テクスチャのハンドル</param>
 	/// <param name="color">描画するスプライトの色</param>
-	void DrawAnime(Vec2 position, float size, int srcX, int srcW, int srcH, int sheets, int frame, int& frameVariable, int textureHandle, unsigned int color = WHITE);
+	void DrawAnime(Vec2 position, float width, float height, int srcX, int srcW, int srcH, int sheets, int frame, int& frameVariable, int textureHandle, unsigned int color);
+
+	/// <summary>
+	/// 連番画像（正方形）を描画する
+	/// </summary>
+	/// <param name="position">中心座標</param>
+	/// <param name="size">大きさ(= 直径)</param>
+	/// <param name="srcX">画像上の描画したい範囲左上座標 X</param>
+	/// <param name="srcW">画像上の描画したい範囲横幅</param>
+	/// <param name="srcH">画像上の描画したい範囲縦幅</param>
+	/// <param name="sheets">画像枚数</param>
+	/// <param name="frame">何フレームで切り替えるか</param>
+	/// <param name="frameVariable">加算しているフレームの変数</param>
+	/// <param name="textureHandle">テクスチャのハンドル</param>
+	/// <param name="color">描画するスプライトの色</param>
+	void DrawAnime(Vec2 position, float size, int srcX, int srcW, int srcH, int sheets, int frame, int& frameVariable, int textureHandle, unsigned int color);
 
 	/// <summary>
 	/// ＵＩ（スクロールしない）（長方形）

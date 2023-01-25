@@ -39,7 +39,7 @@ public:
 	//マーキング = Mark
 	bool mIsMarkActive;
 	Vec2 mMarkPosition;
-	static constexpr int kMarkTimeLimit = 300;
+	static constexpr int kMarkTimeLimit = 240;
 	int mMarkFrame;
 	void Mark();
 
@@ -128,6 +128,8 @@ public:
 	int straight;
 	int spiral;
 	int b;
+	int lb;
+	int rb;
 	bool mIsLoadTexture = false;
 	void LoadTexture();
 

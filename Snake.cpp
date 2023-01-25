@@ -254,17 +254,17 @@ void Snake::Draw(Screen& screen) {
 		//‘Ì•`‰æ
 		for (int i = 0; i < kBodyMax; i++){
 			if (mIsSuper) {
-				screen.DrawPicture(mBodyPosition[i], mBodyRadius, mBodyAngle[i], 100, 100, superbody);
+				screen.DrawPicture(mBodyPosition[i], mBodyRadius, mBodyAngle[i], 100, 100, superbody, WHITE);
 			} else{
-				screen.DrawPicture(mBodyPosition[i], mBodyRadius, mBodyAngle[i], 100, 100, body);
+				screen.DrawPicture(mBodyPosition[i], mBodyRadius, mBodyAngle[i], 100, 100, body, WHITE);
 			}
 		}
 
 		//“ª•`‰æ
 		if (mIsSuper) {
-			screen.DrawPicture(mHeadPosition, mHeadRadius, mHeadAngle, 100, 100, superhead);
+			screen.DrawPicture(mHeadPosition, mHeadRadius, mHeadAngle, 100, 100, superhead, WHITE);
 		} else {
-			screen.DrawPicture(mHeadPosition, mHeadRadius, mHeadAngle, 100, 100, head);
+			screen.DrawPicture(mHeadPosition, mHeadRadius, mHeadAngle, 100, 100, head, WHITE);
 		}
 
 		//Ž‹ŠE•`‰æ

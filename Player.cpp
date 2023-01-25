@@ -214,7 +214,7 @@ void Player::Strike(bool isFever, bool isOldFever) {
 	if (mIsMarkActive && !mIsStrikeActive) {
 
 		//LTボタン＆RTボタン同時押下時にフラグをtrueにする
-		if (Controller::IsPressedButton(0, Controller::lTrigger) && Controller::IsPressedButton(0, Controller::rTrigger)) {
+		if (Controller::IsPressedButton(0, Controller::lSHOULDER) && Controller::IsPressedButton(0, Controller::rSHOULDER)) {
 
 			//距離に応じてイージングの増加量を変化させる
 			//マークとの距離を求める
@@ -263,8 +263,8 @@ void Player::Strike(bool isFever, bool isOldFever) {
 			mStrikeDirection = (mMarkPosition - mPosition).Normalized();
 
 			mStrikeVelocity.setZero();
-			mStrikeVelocity = mStrikeDirection * mStrikeSpeed + LeftStickVelocity(mStrikeSpeed / 2.0f);
-			mStrikeSpeed += 1.0f;
+			mStrikeVelocity = mStrikeDirection * mStrikeSpeed + LeftStickVelocity(10.0f);
+			mStrikeSpeed += 0.5f;
 
 			mPosition += mStrikeVelocity;
 
@@ -541,6 +541,12 @@ void Player::Draw(Screen& screen) {
 	//プレイヤー本体描画
 	screen.DrawSquare(mPosition, mSize, 0x606060FF);
 
+	//ストライクしろ(圧)描画
+	if (mIsMarkActive) {
+		screen.DrawAnime({ mPosition.x - (30 / screen.GetZoom()), mPosition.y + (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0, 200, 100, 2, 10, mMarkFrame, lb, 0xFFFFFFE5);
+		screen.DrawAnime({ mPosition.x + (30 / screen.GetZoom()), mPosition.y + (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0, 200, 100, 2, 10, mMarkFrame, rb, 0xFFFFFFE5);
+	}
+
 	//ストライク中の線描画
 	for (int i = 0; i < kStrikeLineMax; i++)
 	{
@@ -571,5 +577,7 @@ void Player::LoadTexture() {
 		straight = Novice::LoadTexture("./Resources/Player/straight.png");
 		spiral = Novice::LoadTexture("./Resources/Player/spiral.png");
 		b = Novice::LoadTexture("./Resources/Player/b.png");
+		lb = Novice::LoadTexture("./Resources/Player/lb.png");
+		rb = Novice::LoadTexture("./Resources/Player/rb.png");
 	}
 }

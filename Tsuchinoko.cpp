@@ -227,11 +227,11 @@ void Tsuchinoko::Draw(Screen& screen) {
 	{
 		//“ª‚Æ”ö‚Ì•`‰æ
 		if (mIsSuper) {
-			screen.DrawPicture(mHeadPosition, mSize, mCenterAngle, 100, 100, supertsuchinoko);
-			screen.DrawPicture(mTailPosition, mSize, mCenterAngle, 100, 100, supertsuchinoko);
+			screen.DrawPicture(mHeadPosition, mSize, mCenterAngle, 100, 100, supertsuchinoko, WHITE);
+			screen.DrawPicture(mTailPosition, mSize, mCenterAngle, 100, 100, supertsuchinoko, WHITE);
 		} else {
-			screen.DrawPicture(mHeadPosition, mSize, mCenterAngle, 100, 100, tsuchinoko);
-			screen.DrawPicture(mTailPosition, mSize, mCenterAngle, 100, 100, tsuchinoko);
+			screen.DrawPicture(mHeadPosition, mSize, mCenterAngle, 100, 100, tsuchinoko, WHITE);
+			screen.DrawPicture(mTailPosition, mSize, mCenterAngle, 100, 100, tsuchinoko, WHITE);
 		}
 		
 
@@ -239,9 +239,9 @@ void Tsuchinoko::Draw(Screen& screen) {
 		for (int i = 0; i < kBodyMax; i++)
 		{
 			if (mIsSuper) {
-				screen.DrawPicture(mBodyPosition[i], mBodySize, mCenterAngle, 100, 100, supertsuchinokobody);
+				screen.DrawPicture(mBodyPosition[i], mBodySize, mCenterAngle, 100, 100, supertsuchinokobody, WHITE);
 			} else {
-				screen.DrawPicture(mBodyPosition[i], mBodySize, mCenterAngle, 100, 100, tsuchinokobody);
+				screen.DrawPicture(mBodyPosition[i], mBodySize, mCenterAngle, 100, 100, tsuchinokobody, WHITE);
 			}
 		}
 

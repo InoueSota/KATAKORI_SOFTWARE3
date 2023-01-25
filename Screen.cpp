@@ -227,15 +227,20 @@ void Screen::DrawSquare(Vec2 Position, float size, unsigned int color, FillMode 
 }
 
 
-void Screen::DrawPicture(Vec2 Position, float size, float angle, float srcW, float srcH, int textureHandle, unsigned int color) {
-	Quad OriginalPosition = RectAssign(size, size);
+void Screen::DrawPicture(Vec2 Position, float width, float height, float angle, float srcW, float srcH, int textureHandle, unsigned int color) {
+	Quad OriginalPosition = RectAssign(width, height);
 	Quad Rect = Transform(OriginalPosition, MakeAffineMatrix({ mZoom, mZoom }, angle, ScreenTransform(Position)));
 	Novice::DrawQuad((int)Rect.LeftTop.x, (int)Rect.LeftTop.y, (int)Rect.RightTop.x, (int)Rect.RightTop.y, (int)Rect.LeftBottom.x, (int)Rect.LeftBottom.y, (int)Rect.RightBottom.x, (int)Rect.RightBottom.y, 0, 0, srcW, srcH, textureHandle, color);
 }
 
 
-void Screen::DrawAnime(Vec2 Position, float size, int srcX, int srcW, int srcH, int sheets, int frame, int& frameVariable, int textureHandle, unsigned int color) {
-	Quad OriginalPosition = RectAssign(size, size);
+void Screen::DrawPicture(Vec2 Position, float size, float angle, float srcW, float srcH, int textureHandle, unsigned int color) {
+	DrawPicture(Position, size, size, angle, srcW, srcH, textureHandle, color);
+}
+
+
+void Screen::DrawAnime(Vec2 Position, float width, float height, int srcX, int srcW, int srcH, int sheets, int frame, int& frameVariable, int textureHandle, unsigned int color) {
+	Quad OriginalPosition = RectAssign(width, height);
 	Quad Rect = Transform(OriginalPosition, MakeAffineMatrix({ mZoom,mZoom }, 0.0f, ScreenTransform(Position)));
 	srcX = srcW * (frameVariable / frame);
 	if (srcX >= srcW * sheets) {
@@ -243,6 +248,11 @@ void Screen::DrawAnime(Vec2 Position, float size, int srcX, int srcW, int srcH, 
 		srcX = 0;
 	}
 	Novice::DrawQuad((int)Rect.LeftTop.x, (int)Rect.LeftTop.y, (int)Rect.RightTop.x, (int)Rect.RightTop.y, (int)Rect.LeftBottom.x, (int)Rect.LeftBottom.y, (int)Rect.RightBottom.x, (int)Rect.RightBottom.y, srcX, 0, srcW, srcH, textureHandle, color);
+}
+
+
+void Screen::DrawAnime(Vec2 Position, float size, int srcX, int srcW, int srcH, int sheets, int frame, int& frameVariable, int textureHandle, unsigned int color) {
+	DrawAnime(Position, size, size, srcX, srcW, srcH, sheets, frame, frameVariable, textureHandle, color);
 }
 
 

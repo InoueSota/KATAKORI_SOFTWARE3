@@ -328,12 +328,12 @@ void Map::Update(bool isFever, bool isOldFever) {
 	if (isFever && !isOldFever) {
 		mBackGroundEasingt = 0.0f;
 		mBackGroundStartColor = 0x589E35FF;
-		mBackGroundEndColor = BLACK;
+		mBackGroundEndColor = 0x202020FF;
 		mIsBackGroundColorChange = true;
 	}
 	else if (!isFever && isOldFever) {
 		mBackGroundEasingt = 0.0f;
-		mBackGroundStartColor = BLACK;
+		mBackGroundStartColor = 0x202020FF;
 		mBackGroundEndColor = 0x589E35FF;
 		mIsBackGroundColorChange = true;
 	}
