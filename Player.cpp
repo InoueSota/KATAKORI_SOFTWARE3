@@ -71,7 +71,7 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 		if (!mKnockbackActive) {
 			NormalMove();
 		}
-
+		
 		//ƒ_ƒbƒVƒ…
 		Dush();
 

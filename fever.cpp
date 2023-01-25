@@ -10,27 +10,137 @@ void Fever::Init() {
 	mIsOldFever = false;
 }
 
-void Fever::Update(Screen& screen) {
+void Fever::Update(Screen& screen, Vec2 PlayerPos) {
 
 	//前回のフィーバーフラグを取得
 	mIsOldFever = mIsFever;
 
 	//フィーバーシステム
 	if (mIsFever) {
-		mFeverGauge -= 1;
+		mFeverGauge--;
 		if (mFeverGauge < 0) {
 			mIsFever = false;
 			mFeverGauge = 0;
 		}
 	} else {
-		mFeverGauge += mSnakeDefeat * 1000;
-		mFeverGauge += mTsuchinokoDefeat * 1000;
+		mFeverGauge += mSnakeDefeat * 50;
+		mFeverGauge += mTsuchinokoDefeat * 50;
+		mFeverGauge += mSnakeDefeat * 50;
+		mFeverGauge += mTsuchinokoDefeat * 50;
+		if ((mSnakeDefeat) || (mTsuchinokoDefeat)) {
+			feverGauge.Flag = 1;
+			feverGauge.Timer = kfeverGaugeDelayTime;
+		}
 	}
 
 	if (mFeverGauge >= 1000) {
 		mFeverGauge = 1000;
 		mIsFever = true;
 	}
+
+	if (feverGauge.Flag == 1) {
+		feverGauge.StartPos = feverGauge.Pos;
+		feverGauge.EndPos.x = 50 + 1.18 * mFeverGauge;
+		feverGauge.Flag = 2;
+	} else if (feverGauge.Flag == 2) {
+		feverGauge.Timer--;
+		if (!feverGauge.Timer) {
+			feverGauge.Flag = 3;
+		}
+	}else if (feverGauge.Flag == 3) {
+		if (feverGauge.T < 1) {
+			feverGauge.T += 0.033;
+			if (feverGauge.T > 1) {
+				feverGauge.T = 1;
+			}
+			float easedT = easeOutSine(feverGauge.T);
+
+			feverGauge.Pos.x = ((1 - easedT) * feverGauge.StartPos.x) + (easedT * feverGauge.EndPos.x);
+			
+		} else {
+			feverGauge.Flag = 0;
+			feverGauge.T = 0;
+			feverGauge.Timer = kfeverGaugeDelayTime;
+		}
+	}
+	if (mIsFever) {
+		feverGauge.Pos.x = 50 + 1.18 * mFeverGauge;
+
+		feverGauge.R += feverGauge.Rnum;
+		feverGauge.G += feverGauge.Gnum;
+		feverGauge.B += feverGauge.Bnum;
+
+		if (feverGauge.R > 255) {
+			feverGauge.R = 255;
+		}
+		if (feverGauge.R < 0) {
+			feverGauge.R = 0;
+		}
+		if (feverGauge.G > 255) {
+			feverGauge.G = 255;
+		}
+		if (feverGauge.G < 0) {
+			feverGauge.G = 0;
+		}
+		if (feverGauge.B > 255) {
+			feverGauge.B = 255;
+		}
+		if (feverGauge.B < 0) {
+			feverGauge.B = 0;
+		}
+
+		if (feverGauge.R <= 0 || feverGauge.R >= 255) {
+			feverGauge.Rnum *= -1;
+		}
+		if (feverGauge.G <= 0 || feverGauge.G >= 255) {
+			feverGauge.Gnum *= -1;
+		}
+		if (feverGauge.B <= 0 || feverGauge.B >= 255) {
+			feverGauge.Bnum *= -1;
+		}
+		feverGauge.color = (feverGauge.R * pow(16, 6)) + (feverGauge.G * pow(16, 4)) + (feverGauge.B * pow(16, 2)) + feverGauge.alpha;
+
+	}
+
+	if (mIsFever) {
+		for (int i = 0; i < kMaxPlayerFeverParticle; i++) {
+			if (!playerFeverParticle[i].IsUse) {
+				playerFeverParticle[i].Pos = PlayerPos;
+				playerFeverParticle[i].IsUse = 1;
+				playerFeverParticle[i].Timer = kPlayerFeverParticleTime;
+				break;
+			}
+		}
+		for (int i = 0; i < kMaxPlayerFeverParticle; i++) {
+			if (playerFeverParticle[i].IsUse) {
+				playerFeverParticle[i].velocity += 0.2;
+				playerFeverParticle[i].Pos.y += playerFeverParticle[i].velocity;
+				playerFeverParticle[i].Pos.x += RAND(-5, 5);
+				playerFeverParticle[i].alpha -= 2;
+				if (playerFeverParticle[i].alpha <= 0) {
+					playerFeverParticle[i].alpha = 0;
+				}
+				playerFeverParticle[i].R -= 16;
+				playerFeverParticle[i].G -= 4;
+				playerFeverParticle[i].B -= 8;
+				if (playerFeverParticle[i].R <= 20) {
+					playerFeverParticle[i].R = 20;
+				}
+				if (playerFeverParticle[i].G <= 30) {
+					playerFeverParticle[i].G = 15;
+				}
+				if (playerFeverParticle[i].B <= 15) {
+					playerFeverParticle[i].B = 15;
+				}
+				playerFeverParticle[i].Timer--;
+				playerFeverParticle[i].color = (playerFeverParticle[i].R * pow(16, 6)) + (playerFeverParticle[i].G * pow(16, 4)) + (playerFeverParticle[i].B * pow(16, 2)) + (playerFeverParticle[i].alpha / 10);
+				if (!playerFeverParticle[i].Timer) {
+					playerFeverParticle[i] = DefaultParticle;
+				}
+			}
+		}
+	}
+
 
 	//フィーバーパーティクル
 	for (int i = 0; i < kMaxEnemy; i++) {
@@ -91,9 +201,31 @@ void Fever::Update(Screen& screen) {
 }
 
 void Fever::Draw(Screen& screen) {
+
+	if (!mIsLoadTexture) {
+		PlayerFeverParticleTexture = Novice::LoadTexture("./Resources/Player/playerfeverparticle.png");
+		mIsLoadTexture = true;
+	}
 	
 	screen.DrawBox({ 49,19 }, 1.18 * 1000, 22, 0.0f, BLACK, kFillModeWireFrame, false);
 	screen.DrawBox({ 50,20 }, 1.18 * mFeverGauge, 20, 0.0f, WHITE, kFillModeSolid, false);
+	if (!(feverGauge.Pos.x <= 50)) {
+		if (mIsFever) {
+			screen.DrawBox({ 50,20 }, feverGauge.Pos.x - 50, 20, 0, feverGauge.color, kFillModeSolid, false);
+		} else {
+			screen.DrawBox({ 50,20 }, feverGauge.Pos.x - 50, 20, 0, 0xFF000080, kFillModeSolid, false);
+		}
+	}
+
+	if (mIsFever) {
+		for (int i = 0; i < kMaxPlayerFeverParticle; i++) {
+			if (playerFeverParticle[i].IsUse) {
+				Novice::SetBlendMode(kBlendModeAdd);
+				screen.DrawPicture(playerFeverParticle[i].Pos, 400, 0, 100, 100, PlayerFeverParticleTexture, playerFeverParticle[i].color);
+				Novice::SetBlendMode(kBlendModeNormal);
+			}
+		}
+	}
 
 	for (int i = 0; i < kMaxEnemy; i++) {
 		for (int j = 0; j < kMaxParticle; j++) {

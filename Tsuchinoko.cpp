@@ -4,6 +4,7 @@
 #include "Ingame.h"
 #include "Function.h"
 #include "Collision.h"
+#include <Easing.h>
 
 
 
@@ -37,6 +38,23 @@ void Tsuchinoko::Update(Vec2 playerposition, int mTimeLeft) {
 	//生成処理
 	Make(playerposition, mTimeLeft);
 
+	for (int i = 0; i < kMaxSpawnParticle; i++) {
+		if (spawnParticle[i].IsUse) {
+			if (spawnParticle[i].T < 1) {
+				spawnParticle[i].T += 0.033;
+				if (spawnParticle[i].T > 1) {
+					spawnParticle[i].T = 1;
+				}
+				float easedT = easeOutSine(spawnParticle[i].T);
+
+				spawnParticle[i].Pos.x = ((1 - easedT) * spawnParticle[i].StartPos.x) + (easedT * spawnParticle[i].EndPos.x);
+				spawnParticle[i].Pos.y = ((1 - easedT) * spawnParticle[i].StartPos.y) + (easedT * spawnParticle[i].EndPos.y);
+			} else {
+				spawnParticle[i] = DefaultSpawnParticle;
+			}
+		}
+	}
+
 	if (mIsActive && !mIsDeath)
 	{
 		//移動処理
@@ -64,6 +82,14 @@ void Tsuchinoko::Make(Vec2 PlayerPos, int mTimeLeft) {
 		}
 		while ((mCenterPosition.y >= PlayerPos.y - 360) && (mCenterPosition.y <= PlayerPos.y + 360)) {
 			mCenterPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+		}
+		for (int i = 0; i < kMaxSpawnParticle; i++) {
+			spawnParticle[i].Pos = mCenterPosition;
+			spawnParticle[i].EndPos = mCenterPosition;
+			float angle = Degree(RAND(1, 360));
+			spawnParticle[i].StartPos.x = spawnParticle[i].Pos.x + cosf(angle) * 200;
+			spawnParticle[i].StartPos.y = spawnParticle[i].Pos.y + sinf(angle) * 200;
+			spawnParticle[i].IsUse = 1;
 		}
 
 
@@ -222,6 +248,13 @@ void Tsuchinoko::Draw(Screen& screen) {
 		//視界描画
 		screen.DrawPicture({ mCenterPosition.x + mLockonRadius / 2 * cosf(mCenterAngle), mCenterPosition.y + mLockonRadius / 2 * -sinf(mCenterAngle) }, mLockonRadius, mCenterAngle, 500, 500, fov, 0x0000FF80);
 		
+	}
+
+	//スポーンパーティクル
+	for (int i = 0; i < kMaxSpawnParticle; i++) {
+		if (spawnParticle[i].IsUse) {
+			screen.DrawBox(spawnParticle[i].Pos, 50, 50, 0, WHITE, kFillModeSolid);
+		}
 	}
 
 
