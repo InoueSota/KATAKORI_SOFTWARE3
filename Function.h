@@ -33,3 +33,6 @@ void SRAND();
 
 //２線のなす角を求める
 float BetweenTheta(Vec2 direction);
+
+//コントローラーの左スティックで移動するとき等の関数
+Vec2 LeftStickVelocity(float speed);

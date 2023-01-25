@@ -67,7 +67,11 @@ public:
 	float mStraightStrikeTheta;
 	float mStraightStrikeOldTheta;
 	Vec2 mStrikePowerPosition;
-	Vec2 mStrikeModePosition{ Screen::kWindowWidth - (Screen::kMiniMapSize * 3),620 };
+	Vec2 mStrikeModePosition{ 100,630 };
+	Vec2 mStrikeModeScale;
+	Vec2 mStrikeModeBScale;
+	bool mStrikeModeScaleActive;
+	float mStrikeModeScaleEasingt;
 	int mStrikePower;
 	void DrawStrikeUI(Screen& screen);
 	//フィーバーストライク
@@ -120,6 +124,7 @@ public:
 
 
 	//画像
+	int circle;
 	int straight;
 	int spiral;
 	int b;

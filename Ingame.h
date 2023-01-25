@@ -73,6 +73,18 @@ public:
 	Vec2 mRadarPosition{ mMiniMapPosition.x ,mMiniMapPosition.y - Screen::kMiniMapSize - 10.0f };
 
 
+	//ëÄçÏê‡ñæ
+	Vec2 mStickPosition{ 210, 685 };
+	unsigned int mXColor;
+	bool mXScaleActive;
+	Vec2 mXScale;
+	float mXEasingt;
+	unsigned int mAColor;
+	bool mAScaleActive;
+	Vec2 mAScale;
+	float mAEasingt;
+
+
 	//âÊëú
 	bool mIsLoadTexture = false;
 	int mTimeNumber;
@@ -82,6 +94,10 @@ public:
 	int mScoreLetter;
 	int mWarningRed;
 	int mRadar;
+	int mStick;
+	int mLStick;
+	int mX;
+	int mA;
 	void LoadTexture();
 
 };

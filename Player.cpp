@@ -28,6 +28,9 @@ void Player::Init() {
 	//ストライク
 	mIsStrikeActive = false;
 	mStrikePower = 0;
+	mStrikeModeScale = { 1.0f, 1.0f };
+	mStrikeModeBScale = { 1.0f, 1.0f };
+	mStrikeModeScaleActive = false;
 
 	//ストライク演出
 	for (int i = 0; i < kStrikeLineMax; i++) {
@@ -192,6 +195,20 @@ void Player::Strike(bool isFever, bool isOldFever) {
 		else {
 			strikeMode = STRAIGHT;
 		}
+		mStrikeModeScaleEasingt = 0.0f;
+		mStrikeModeScaleActive = true;
+	}
+
+	//モードチェンジのスケールイージング
+	if (mStrikeModeScaleActive) {
+
+		mStrikeModeScaleEasingt = EasingClamp(0.1f, mStrikeModeScaleEasingt);
+		mStrikeModeScale = EasingMove({ 1.5f, 1.5f }, { 1.0f, 1.0f }, easeOutSine(mStrikeModeScaleEasingt));
+		mStrikeModeBScale = EasingMove({ 0.7f, 0.7f }, { 1.0f, 1.0f }, easeOutSine(mStrikeModeScaleEasingt));
+
+		if (mStrikeModeScaleEasingt == 1.0f) {
+			mStrikeModeScaleActive = false;
+		}
 	}
 
 	if (mIsMarkActive && !mIsStrikeActive) {
@@ -245,14 +262,8 @@ void Player::Strike(bool isFever, bool isOldFever) {
 
 			mStrikeDirection = (mMarkPosition - mPosition).Normalized();
 
-			int tmpX, tmpY;
-			Controller::GetLeftStick(0, tmpX, tmpY);
-			Vec2 tmpVelocity = { (float)tmpX, (float)tmpY };
-			tmpVelocity = tmpVelocity.Normalized();
-			tmpVelocity *= mStrikeSpeed / 2;
-
 			mStrikeVelocity.setZero();
-			mStrikeVelocity = mStrikeDirection * mStrikeSpeed + tmpVelocity;
+			mStrikeVelocity = mStrikeDirection * mStrikeSpeed + LeftStickVelocity(mStrikeSpeed / 2.0f);
 			mStrikeSpeed += 1.0f;
 
 			mPosition += mStrikeVelocity;
@@ -542,19 +553,21 @@ void Player::DrawStrikeUI(Screen& screen) {
 	//screen.DrawBox({ Screen::kWindowWidth - (Screen::kMiniMapSize * 4),599 }, 10 * kStrikePowerMax, 22, 0.0f, BLACK, kFillModeWireFrame, false);
 	//screen.DrawBox({ Screen::kWindowWidth - (Screen::kMiniMapSize * 4),600 }, 10 * mStrikePower, 20, 0.0f, WHITE, kFillModeSolid, false);
 
+	screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, circle, WHITE);
 	if (strikeMode == STRAIGHT) {
-		screen.DrawUI(mStrikeModePosition, 200, 0, 500, 500, straight);
+		screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, straight, WHITE, mStrikeModeScale);
 	}
 	else {
-		screen.DrawUI(mStrikeModePosition, 200, 0, 500, 500, spiral);
+		screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, spiral, WHITE, mStrikeModeScale);
 	}
-	screen.DrawUI(mStrikeModePosition, 200, 0, 500, 500, b);
+	screen.DrawUI({ mStrikeModePosition.x + 50, mStrikeModePosition.y - 50 }, 60, 0, 160, 160, b, WHITE, mStrikeModeBScale);
 
 }
 
 void Player::LoadTexture() {
 
 	if (!mIsLoadTexture) {
+		circle = Novice::LoadTexture("./Resources/Player/circle.png");
 		straight = Novice::LoadTexture("./Resources/Player/straight.png");
 		spiral = Novice::LoadTexture("./Resources/Player/spiral.png");
 		b = Novice::LoadTexture("./Resources/Player/b.png");

@@ -1,4 +1,7 @@
 #include "Function.h"
+#include "ControllerInput.h"
+
+
 
 /*　比較　*/
 void Comparison(int& num, int num1) {
@@ -66,4 +69,16 @@ float BetweenTheta(Vec2 direction) {
 		return Degree(360) + tmpTheta;
 	}
 	return tmpTheta;
+}
+
+
+//コントローラーの左スティックで移動するとき等の関数
+Vec2 LeftStickVelocity(float speed) {
+
+	int tmpX, tmpY;
+	Controller::GetLeftStick(0, tmpX, tmpY);
+	Vec2 tmpVelocity = { (float)tmpX, (float)tmpY };
+	tmpVelocity = tmpVelocity.Normalized();
+	tmpVelocity *= speed;
+	return tmpVelocity;
 }

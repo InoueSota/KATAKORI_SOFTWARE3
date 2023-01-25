@@ -207,13 +207,13 @@ void Fever::Draw(Screen& screen) {
 		mIsLoadTexture = true;
 	}
 	
-	screen.DrawBox({ 49,19 }, 1.18 * 1000, 22, 0.0f, BLACK, kFillModeWireFrame, false);
-	screen.DrawBox({ 50,20 }, 1.18 * mFeverGauge, 20, 0.0f, WHITE, kFillModeSolid, false);
+	screen.DrawBox({ 49,14 }, 1.18 * 1000, 22, 0.0f, BLACK, kFillModeWireFrame, false);
+	screen.DrawBox({ 50,15 }, 1.18 * mFeverGauge, 20, 0.0f, WHITE, kFillModeSolid, false);
 	if (!(feverGauge.Pos.x <= 50)) {
 		if (mIsFever) {
-			screen.DrawBox({ 50,20 }, feverGauge.Pos.x - 50, 20, 0, feverGauge.color, kFillModeSolid, false);
+			screen.DrawBox({ 50,15 }, feverGauge.Pos.x - 50, 20, 0, feverGauge.color, kFillModeSolid, false);
 		} else {
-			screen.DrawBox({ 50,20 }, feverGauge.Pos.x - 50, 20, 0, 0xFF000080, kFillModeSolid, false);
+			screen.DrawBox({ 50,15 }, feverGauge.Pos.x - 50, 20, 0, 0xFF000080, kFillModeSolid, false);
 		}
 	}
 

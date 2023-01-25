@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Function.h"
 #include "Easing.h"
+#include "ControllerInput.h"
 
 
 
@@ -16,7 +17,7 @@ void UI::Init() {
 	mTimeUISize = 48;
 	mTimeLastUISize = 256;
 	mTimePosition[0].x = Screen::kWindowWidth / 2.0 + mTimeUISize / 2.0 + 5.0f;
-	mTimePosition[0].y = mTimeUISize / 2.0 + 5.0f;
+	mTimePosition[0].y = mTimeUISize / 2.0 + 45.0f;
 	mTimePosition[1].x = Screen::kWindowWidth / 2.0 - mTimeUISize / 2.0 - 5.0f;
 	mTimePosition[1].y = mTimePosition[0].y;
 	mTimeLeft = kTimeLimit;
@@ -51,6 +52,11 @@ void UI::Init() {
 	mWarningAlphat = 0.0f;
 	mWarningColor = 0xFFFFFF00;
 
+	//操作説明
+	mXScale = { 1.0f, 1.0f };
+	mXScaleActive = false;
+	mAScale = { 1.0f, 1.0f };
+	mAScaleActive = false;
 }
 void UI::Update() {
 
@@ -59,6 +65,49 @@ void UI::Update() {
 
 	//頭か尾に当たってしまったとき
 	Warning();
+
+	//操作説明の色を押してるときは光らせる
+	if (Controller::IsPressedButton(0, Controller::bX)) {
+		mXColor = WHITE;
+
+		if (Controller::IsTriggerButton(0, Controller::bX)) {
+			mXEasingt = 0.0f;
+			mXScaleActive = true;
+		}
+	} else {
+		mXColor = 0xFFFFFF50;
+	}
+	if (Controller::IsPressedButton(0, Controller::bA)) {
+		mAColor = WHITE;
+
+		if (Controller::IsTriggerButton(0, Controller::bA)) {
+			mAEasingt = 0.0f;
+			mAScaleActive = true;
+		}
+	}
+	else {
+		mAColor = 0xFFFFFF50;
+	}
+
+	//スケールイージング
+	if (mXScaleActive) {
+
+		mXEasingt = EasingClamp(0.2f, mXEasingt);
+		mXScale = EasingMove({ 1.5f, 1.5f }, { 1.0f, 1.0f }, easeOutSine(mXEasingt));
+
+		if (mXEasingt == 1.0f) {
+			mXScaleActive = false;
+		}
+	}
+	if (mAScaleActive) {
+
+		mAEasingt = EasingClamp(0.2f, mAEasingt);
+		mAScale = EasingMove({ 1.5f, 1.5f }, { 1.0f, 1.0f }, easeOutSine(mAEasingt));
+
+		if (mAEasingt == 1.0f) {
+			mAScaleActive = false;
+		}
+	}
 }
 void UI::TimeLimit() {
 
@@ -201,6 +250,10 @@ void UI::LoadTexture() {
 		mScoreLetter = Novice::LoadTexture("./Resources/UI/Score/score.png");
 		mWarningRed = Novice::LoadTexture("./Resources/Player/warningred.png");
 		mRadar = Novice::LoadTexture("./Resources/UI/Minimap/radar.png");
+		mStick = Novice::LoadTexture("./Resources/UI/Explanation/stick.png");
+		mLStick = Novice::LoadTexture("./Resources/UI/Explanation/lstick.png");
+		mX = Novice::LoadTexture("./Resources/UI/Explanation/x.png");
+		mA = Novice::LoadTexture("./Resources/UI/Explanation/a.png");
 		mIsLoadTexture = true;
 	}
 }
@@ -243,8 +296,13 @@ void UI::Draw(Screen& screen) {
 	screen.DrawSquare(mMiniMapPosition, Screen::kMiniMapSize * 2, 0x00000080, kFillModeSolid, false);
 	screen.DrawSquare(mMiniMapPosition, Screen::kMiniMapSize * 2, 0xFFFF00FF, kFillModeWireFrame, false);
 	screen.DrawUI(mRadarPosition, 150, 75, 0, 200, 100, mRadar, WHITE);
-}
 
+	//操作説明
+	screen.DrawUI(mStickPosition, 50, 0, 100, 100, mStick, 0x606060FF);
+	screen.DrawUI({ mStickPosition.x + LeftStickVelocity(15.0f).x, mStickPosition.y - LeftStickVelocity(15.0f).y}, 50, 0, 160, 160, mLStick, WHITE);
+	screen.DrawUI({ mStickPosition.x, mStickPosition.y - 55 }, 50, 0, 160, 160, mX, mXColor, mXScale);
+	screen.DrawUI({ mStickPosition.x, mStickPosition.y - 110 }, 50, 0, 160, 160, mA, mAColor, mAScale);
+}
 
 //マップ
 void Map::Init() {
