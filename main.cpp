@@ -205,6 +205,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 									ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
 									ui.AddCombo();
 									fever.mSnakeDefeat++;
+									fever.mSnakeDefeatStrike++;
 								}
 								screen.SetHitStop();
 								snake[i].mIsDeath = true;
@@ -223,6 +224,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 									if (ui.mIsReady)
 									{
 										fever.mSnakeDefeat++;
+										fever.mSnakeDefeatStrike++;
 										for (int k = 0; k < Fever::kMaxEnemy; k++) {
 											if (!fever.particlecreat[k].IsUse) {
 												fever.particlecreat[k].IsUse = 1;

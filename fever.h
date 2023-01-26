@@ -14,6 +14,8 @@ public:
 
 	int mSnakeDefeat = 0;			//ヘビを倒した数
 	int mTsuchinokoDefeat = 0;		//ツチノコを倒した数
+	int mSnakeDefeatStrike = 0;		//ストライク中にヘビを倒した数
+	int mTsuchinokoDefeatStrike = 0;//ストライク中にツチノコを倒した数
 	int mFeverGauge = 0;			//フィーバーゲージ
 	bool mIsFever = 0;				//フィーバーしているかどうか
 	bool mIsOldFever = 0;			//フィーバーしていたかどうか
