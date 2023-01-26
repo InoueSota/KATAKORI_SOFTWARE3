@@ -279,13 +279,8 @@ void UI::SnakeScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition
 		}
 	}
 }
-void UI::MissSnakeScore(bool isStrikeActive) {
-	if (isStrikeActive) {
-		mScore -= kSnakeScore;
-	}
-	else {
-		mScore -= kSnakeScore / 2.0;
-	}
+void UI::MissSnakeScore() {
+		mScore -= 100;
 }
 void UI::TsuchinokoScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition) {
 	if (isStrikeActive) {
@@ -313,13 +308,8 @@ void UI::TsuchinokoScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPos
 		}
 	}
 }
-void UI::MissTsuchinokoScore(bool isStrikeActive) {
-	if (isStrikeActive) {
-		mScore -= kTsuchinokoScore;
-	}
-	else {
-		mScore -= kTsuchinokoScore / 2.0;
-	}
+void UI::MissTsuchinokoScore() {
+	mScore -= 100;
 }
 void UI::Warning() {
 

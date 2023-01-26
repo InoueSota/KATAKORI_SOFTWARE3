@@ -194,7 +194,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						//フィーバーじゃないとき || ストライク使用時パワーがなかったら
 						if (!fever.mIsFever && ((player.mStrikePower == 0 && player.mIsStrikeActive) || !player.mIsStrikeActive)) {
 							player.SetKnockbackPosition(snake[i].mHeadPosition, snake[i].mHeadRadius);
-							ui.MissSnakeScore(player.mIsStrikeActive);
 							ui.mCombo = 0;
 							ui.mIsWarning = true;
 						}
@@ -258,7 +257,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							} else {
 								player.SetKnockbackPosition(tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius);
 							}
-							ui.MissTsuchinokoScore(player.mIsStrikeActive);
 							ui.mCombo = 0;
 							ui.mIsWarning = true;
 						}

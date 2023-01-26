@@ -73,9 +73,9 @@ public:
 	int mEnemyScoreLife[kEnemyScoreMax];
 	float mEnemyScore[kEnemyScoreMax];
 	void SnakeScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition);
-	void MissSnakeScore(bool isStrikeActive);
+	void MissSnakeScore();
 	void TsuchinokoScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition);
-	void MissTsuchinokoScore(bool isStrikeActive);
+	void MissTsuchinokoScore();
 
 
 	//“ª‚©”ö‚É“–‚½‚Á‚Ä‚µ‚Ü‚Á‚½‚Æ‚«
