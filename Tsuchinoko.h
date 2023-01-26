@@ -18,7 +18,7 @@ public:
 	Vec2 mCenterPositionStart;//スタート地点
 	Vec2 mTargetPoint;//目標地点
 	Vec2 mDirectionPoint;
-	int mIsSuper = 0;
+	int mIsSuper;
 
 	//追尾
 	bool IsPlayerLockon = false;//プレイヤーを補足しているかどうか
@@ -60,12 +60,15 @@ public:
 	//頭と尾
 	Vec2 mHeadPosition;
 	Vec2 mTailPosition;
+	Vec2 mHeadDeadPosition;
+	Vec2 mTailDeadPosition;
 	float mSize;
 	float mRadius;
 
 	//体
 	static constexpr int kBodyMax = 3;
 	Vec2 mBodyPosition[kBodyMax];
+	Vec2 mBodyDeadPosition[kBodyMax];
 	float mBodySize;
 	float mBodyRadius;
 	void Follow();
@@ -99,5 +102,9 @@ public:
 	int supertsuchinoko;
 	int supertsuchinokobody;
 	int fov;
+	int hiteffect;
+
+	bool mIsAnimation;
+	int mDeadFrame;
 };
 

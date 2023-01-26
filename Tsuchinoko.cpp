@@ -17,6 +17,7 @@ void Tsuchinoko::Init() {
 	//生成
 	mIsActive = false;
 	mIsDeath = false;
+	mIsSuper = 0;
 
 	//頭と尾の半径
 	mSize = 75.0f;
@@ -25,6 +26,10 @@ void Tsuchinoko::Init() {
 	//体の半径
 	mBodySize = 50.0f;
 	mBodyRadius = mBodySize / 2.0f;
+
+	//ヒットエフェクト
+	mDeadFrame = 0;
+	mIsAnimation = false;
 
 }
 
@@ -219,6 +224,7 @@ void Tsuchinoko::Draw(Screen& screen) {
 		supertsuchinoko = Novice::LoadTexture("./Resources/Debugs/supertsuchinoko.png");
 		supertsuchinokobody = Novice::LoadTexture("./Resources/Debugs/supertsuchinokobody.png");
 		fov = Novice::LoadTexture("./Resources/Enemy/fov.png");
+		hiteffect = Novice::LoadTexture("./Resources/Enemy/hiteffect.png");
 		mIsLoadTexture = true;
 	}
 
@@ -261,5 +267,26 @@ void Tsuchinoko::Draw(Screen& screen) {
 		}
 	}
 
+	if (mIsDeath) {
+		for (int i = 0; i < kBodyMax; i++) {
+			mBodyDeadPosition[i] = mBodyPosition[i];
+			mHeadDeadPosition = mHeadPosition;
+			mTailDeadPosition = mTailPosition;
+		}
+		mIsAnimation = true;
+	}
+	//描画
+	if (mIsAnimation) {
+		mDeadFrame++;
+		for (int i = 0; i < kBodyMax; i++) {
+			screen.DrawAnime(mBodyDeadPosition[i], mBodySize * 3, 0, 100, 100, 11, 3, mDeadFrame, hiteffect, WHITE);
+			screen.DrawAnime(mHeadDeadPosition, mSize * 3, 0, 100, 100, 11, 3, mDeadFrame, hiteffect, WHITE);
+			screen.DrawAnime(mTailDeadPosition, mSize * 3, 0, 100, 100, 11, 3, mDeadFrame, hiteffect, WHITE);
+		}
+
+	}
+	if (mDeadFrame == 0) {
+		mIsAnimation = false;
+	}
 
 }

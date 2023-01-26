@@ -13,6 +13,8 @@ void Snake::Init() {
 	mHeadRadius = 80;
 	mBodyRadius = 60;
 	mFollowFrame = 0;
+	mDeadFlame = 0;
+	mIsSuper = 0;
 }
 
 void Snake::Update(int mTimeLeft, Vec2 PlayerPos) {
@@ -296,12 +298,11 @@ void Snake::Draw(Screen& screen) {
 	if (mIsAnimation) {
 		mDeadFlame++;
 		for (int i = 0; i < kBodyMax; i++) {
-			screen.DrawAnime(mBodyDeadPosition[i], mBodyRadius * 2, mBodyRadius * 2, 100, 100, 11, 3, mDeadFlame, hiteffect, WHITE);
-			screen.DrawAnime(mHeadDeadPosition, mHeadRadius * 2, mHeadRadius * 2, 100, 100, 11, 3, mDeadFlame, hiteffect, WHITE);
+			screen.DrawAnime(mBodyDeadPosition[i], mBodyRadius * 3, 0, 100, 100, 11, 3, mDeadFlame, hiteffect, WHITE);
+			screen.DrawAnime(mHeadDeadPosition, mHeadRadius * 3, 0, 100, 100, 11, 3, mDeadFlame, hiteffect, WHITE);
 		}
-
+		
 	}
-	Novice::ScreenPrintf(0, 0, "%d", mDeadFlame);
 	if (mDeadFlame == 0) {
 		mIsAnimation = false;
 	}

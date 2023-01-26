@@ -25,8 +25,8 @@ public:
 	bool mIsActive;
 	bool mIsDeath;
 	bool mIsAnimation;
-	int mIsSuper = 0;
-	int mDeadFlame = 0;
+	int mIsSuper;
+	int mDeadFlame;
 	void Make(int mTimeLeft, Vec2 PlayerPos);
 	//“ª•”•ª
 	Vec2 mHeadPosition;

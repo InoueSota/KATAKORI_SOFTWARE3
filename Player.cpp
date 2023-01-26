@@ -494,9 +494,6 @@ void Player::Knockback() {
 
 	if (mKnockbackSet && !mKnockbackActive) {
 
-		//パワーペナルティ
-		mStrikePower--;
-
 		int A = mPosition.x - mKnockbackEnemyPos.x;
 		int B = mPosition.y - mKnockbackEnemyPos.y;
 
