@@ -429,6 +429,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
 				screen.DrawMiniMap(tsuchinoko[i].mCenterPosition, WHITE);
 			}
+			if (player.mIsMarkActive) {
+				screen.DrawLine(screen.MiniMapTransform(player.mMarkPosition), screen.MiniMapTransform(player.mPosition), RED, false);
+				screen.DrawMiniMap(player.mMarkPosition, RED, kFillModeSolid, 4.0f);
+			}
 			screen.DrawMiniMap(player.mPosition, 0xFFFF00FF, kFillModeSolid, 4.0f);
 
 			//ストライクUI描画

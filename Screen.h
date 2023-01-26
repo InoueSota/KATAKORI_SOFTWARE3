@@ -114,7 +114,7 @@ public:
 	/// <param name="startposition">描画する線の始点座標</param>
 	/// <param name="endposition">描画する線の終点座標</param>
 	/// <param name="color">描画する四角形の色</param>
-	void DrawLine(Vec2 startposition, Vec2 endposition, unsigned int color = WHITE);
+	void DrawLine(Vec2 startposition, Vec2 endposition, unsigned int color = WHITE, bool isScroll = true);
 
 	/// <summary>
 	/// 四角形を描画する

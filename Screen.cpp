@@ -148,9 +148,11 @@ void Screen::ZoomUpdate(bool isFever, bool isOldFever, float playerSize) {
 //--------------------------------------------------------------------------------------------//
 
 
-void Screen::DrawLine(Vec2 startposition, Vec2 endposition, unsigned int color) {
-	startposition = ScreenTransform(startposition);
-	endposition = ScreenTransform(endposition);
+void Screen::DrawLine(Vec2 startposition, Vec2 endposition, unsigned int color, bool isScroll) {
+	if (isScroll) {
+		startposition = ScreenTransform(startposition);
+		endposition = ScreenTransform(endposition);
+	}
 	Novice::DrawLine((int)startposition.x, (int)startposition.y, (int)endposition.x, (int)endposition.y, color);
 }
 

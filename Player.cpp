@@ -542,16 +542,15 @@ void Player::Draw(Screen& screen, bool isReady) {
 	//マーク描画
 	if (mIsMarkActive){
 
-		screen.DrawLine(mPosition, mMarkPosition, WHITE);
-		screen.DrawSquare(mMarkPosition, mSize, WHITE);
+		screen.DrawLine(mPosition, mMarkPosition, RED);
+		screen.DrawSquare(mMarkPosition, mSize, RED);
 
 	}
 
 	//プレイヤー本体描画
 	screen.DrawPicture(mPosition, mSize, 0, 100, 100, toge, WHITE);
 
-	if (!isReady)
-	{
+	if (!isReady) {
 		screen.DrawUI({ Screen::kWindowWidth / 2.0, 100 }, 400, 100, 0.0f, 400, 100, areyouready, WHITE);
 	}
 
@@ -574,7 +573,9 @@ void Player::Draw(Screen& screen, bool isReady) {
 }
 void Player::DrawStrikeUI(Screen& screen) {
 
-	screen.DrawBox({ 35.0f, 62.5f }, 50 * mStrikePower, 25, 0.0f, WHITE, kFillModeSolid, false);
+	if (0 < mStrikePower) {
+		screen.DrawBox({ 35.0f, 62.5f }, 50 * mStrikePower, 25, 0.0f, WHITE, kFillModeSolid, false);
+	}
 	for (int i = 0; i < kStrikePowerMax; i++) {
 		if (i == kStrikePowerMax - 1) {
 			screen.DrawUI({ 10.0f + (i + 1) * 50, 75.0f }, 50, 25, 0, 200, 100, lastflame, WHITE);
