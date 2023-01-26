@@ -265,8 +265,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							}
 							//フィーバーのとき
 							else if (fever.mIsFever) {
-								if (ui.mIsReady)
-								{
+								if (ui.mIsReady) {
 									ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
 									ui.AddCombo();
 									fever.mTsuchinokoDefeat++;
