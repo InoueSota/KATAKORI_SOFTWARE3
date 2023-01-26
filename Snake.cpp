@@ -131,9 +131,9 @@ void Snake::Move() {
 		mDirectionPoint = mDirectionPoint.Normalized();
 
 		if (mIsSuper) {
-			mVelocity += mDirectionPoint * mSuperSpeed;
+			mVelocity += mDirectionPoint * mLockonSuperSpeed;
 		} else {
-			mVelocity += mDirectionPoint * mSpeed;
+			mVelocity += mDirectionPoint * mLockonSpeed;
 		}
 
 		LockOnMoveTimer = kMaxLockOnMoveTimer;
@@ -269,7 +269,12 @@ void Snake::Draw(Screen& screen) {
 		}
 
 		//Ž‹ŠE•`‰æ
-		screen.DrawPicture({ mHeadPosition.x + mLockonRadius / 2 * cosf(mHeadAngle), mHeadPosition.y + mLockonRadius / 2 * -sinf(mHeadAngle) }, mLockonRadius, mHeadAngle, 500, 500, fov, 0x0000FF80);
+		if (IsPlayerLockon) {
+			screen.DrawPicture({ mHeadPosition.x + mLockonRadius / 2 * cosf(mHeadAngle), mHeadPosition.y + mLockonRadius / 2 * -sinf(mHeadAngle) }, mLockonRadius, mHeadAngle, 500, 500, fov, 0xFF000080);
+		} else {
+			screen.DrawPicture({ mHeadPosition.x + mLockonRadius / 2 * cosf(mHeadAngle), mHeadPosition.y + mLockonRadius / 2 * -sinf(mHeadAngle) }, mLockonRadius, mHeadAngle, 500, 500, fov, 0x0000FF80);
+		}
+		
 		
 	}
 
