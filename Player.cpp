@@ -512,13 +512,10 @@ void Player::Knockback() {
 
 		mKnockbackStart.x = mPosition.x;
 		mKnockbackStart.y = mPosition.y;
-<<<<<<< HEAD
 		mKnockbackEnd.x = mPosition.x + newA * 500;
 		mKnockbackEnd.y = mPosition.y + newB * 500;
-=======
 		mKnockbackEnd.x = mPosition.x + newA * 600;
 		mKnockbackEnd.y = mPosition.y + newB * 600;
->>>>>>> スピ�Eド等調整
 		mKnockbackActive = true;
 		mKnockbackSet = false;
 		mIsStrikeActive = false;
