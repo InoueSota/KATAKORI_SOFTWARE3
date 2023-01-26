@@ -43,6 +43,9 @@ void Player::Init() {
 	for (int i = 0; i < kShadowMax; i++) {
 		mIsShadowActive[i] = false;
 	}
+
+	//ノックバック
+	mKnockbackSet = false;
 }
 
 
@@ -91,9 +94,6 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 	if (!isFever) {
 		StrikeLine(screen);
 	}
-
-	//ノックバック
-	Knockback();
 
 	//マップ内に収める
 	mPosition.x = Clamp(mPosition.x, Map::kMapLeft + (mSize / 2), Map::kMapRight - (mSize / 2));
@@ -164,10 +164,10 @@ void Player::Mark() {
 		//フレームの加算
 		mMarkFrame++;
 
-		//制限時間を超えたらフラグをfalseにする
-		if (kMarkTimeLimit <= mMarkFrame){
-			mIsMarkActive = false;
-		}
+		////制限時間を超えたらフラグをfalseにする
+		//if (kMarkTimeLimit <= mMarkFrame){
+		//	mIsMarkActive = false;
+		//}
 	}
 
 	//初期化
@@ -478,7 +478,7 @@ void Player::Shadow(bool isHitStop) {
 
 void Player::SetKnockbackPosition(Vec2 enemyPosition, float enemyRadius) {
 
-	if (!mKnockbackActive) {
+	if (!mKnockbackActive && !mKnockbackSet) {
 		Vec2 tmpDirection = (mOldPosition - enemyPosition).Normalized();
 		mPosition = enemyPosition + tmpDirection * enemyRadius;
 		mKnockbackEnemyPos = enemyPosition;
@@ -487,7 +487,7 @@ void Player::SetKnockbackPosition(Vec2 enemyPosition, float enemyRadius) {
 }
 void Player::Knockback() {
 
-	if (mKnockbackSet) {
+	if (mKnockbackSet && !mKnockbackActive) {
 
 		//パワーペナルティ
 		mStrikePower--;
@@ -507,8 +507,8 @@ void Player::Knockback() {
 
 		mKnockbackStart.x = mPosition.x;
 		mKnockbackStart.y = mPosition.y;
-		mKnockbackEnd.x = mPosition.x + newA * 300;
-		mKnockbackEnd.y = mPosition.y + newB * 300;
+		mKnockbackEnd.x = mPosition.x + newA * 500;
+		mKnockbackEnd.y = mPosition.y + newB * 500;
 		mKnockbackActive = true;
 		mKnockbackSet = false;
 		mIsStrikeActive = false;
@@ -517,13 +517,10 @@ void Player::Knockback() {
 	if (mKnockbackActive) {
 		mKnockBackT = EasingClamp(0.033f, mKnockBackT);
 		mPosition = EasingMove(mKnockbackStart, mKnockbackEnd, easeOutSine(mKnockBackT));
-		if (mKnockBackT == 1.0f) {
+		if (mKnockBackT >= 0.7f) {
+			mKnockBackT = 0.0f;
 			mKnockbackActive = false;
 		}
-	}
-	else {
-		mKnockBackT = 0.0f;
-		mKnockbackSet = false;
 	}
 }
 
@@ -591,6 +588,7 @@ void Player::DrawStrikeUI(Screen& screen) {
 		screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, spiral, WHITE, mStrikeModeScale);
 	}
 	screen.DrawUI({ mStrikeModePosition.x + 50, mStrikeModePosition.y - 50 }, 60, 0, 160, 160, b, WHITE, mStrikeModeBScale);
+
 
 }
 

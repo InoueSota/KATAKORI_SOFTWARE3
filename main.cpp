@@ -195,7 +195,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							//フィーバーじゃないとき || ストライク使用時パワーがなかったら
 							if (!fever.mIsFever && ((player.mStrikePower == 0 && player.mIsStrikeActive) || !player.mIsStrikeActive)) {
 								player.SetKnockbackPosition(snake[i].mHeadPosition, snake[i].mHeadRadius);
-								ui.mCombo = 0;
+								ui.mCombo--;
 								ui.mIsWarning = true;
 							}
 							//フィーバーのとき || ストライク使用時パワーがあったら
@@ -308,6 +308,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 					}
 				}
+
+				//プレイヤーのノックバック
+				player.Knockback();
 
 				//敵の数に応じてスピードを変える
 				player.LockonCount = 0;
