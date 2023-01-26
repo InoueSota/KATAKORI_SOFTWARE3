@@ -18,6 +18,7 @@ public:
 	//Žn‚ß‚é‚©ƒtƒ‰ƒO
 	const int kToStart = 3;
 	bool mIsReady;
+	bool mIsOldReady;
 	bool mIsStart;
 	bool mIsOldStart;
 	int mCountDownTime;

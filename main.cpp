@@ -72,21 +72,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 				//初期化
-				//if (Key::IsTrigger(DIK_R) || Controller::IsTriggerButton(0, Controller::bY)) {
-				//	screen.Init();
-				//	player.Init();
-				//	for (int i = 0; i < Snake::kMaxSnake; i++) {
-				//		snake[i].Init();
-				//	}
-				//	for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
-				//		tsuchinoko[i].Init();
-				//	}
-				//	ui.Init();
-				//	title.Init();
-				//	fever.Init();
-				//	map.Init();
-				//	scene = TITLE;
-				//}
+				if (Key::IsTrigger(DIK_R)) {
+					screen.Init();
+					player.Init();
+					for (int i = 0; i < Snake::kMaxSnake; i++) {
+						snake[i].Init();
+					}
+					for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
+						tsuchinoko[i].Init();
+					}
+					ui.Init();
+					title.Init();
+					fever.Init();
+					map.Init();
+					scene = TITLE;
+				}
 
 				//ヒットストップしてないとき
 				if (!screen.GetHitStop())
@@ -110,12 +110,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						}
 					}
 
-					//制限時間の経過を止める
+					//制限時間の経過
 					ui.TimeLimit();
 				}
 
 				//制限時間をフィーバーに入ったら延ばす
 				ui.ExtendTime(fever.mIsFever, fever.mIsOldFever);
+
+				//ゲーム開始時に初期化する
+				if (!ui.mIsOldReady && ui.mIsReady) {
+					player.Init();
+					for (int i = 0; i < Snake::kMaxSnake; i++) {
+						snake[i].Init();
+					}
+					for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
+						tsuchinoko[i].Init();
+					}
+				}
 
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

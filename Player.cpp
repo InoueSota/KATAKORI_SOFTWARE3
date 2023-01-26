@@ -548,12 +548,11 @@ void Player::Draw(Screen& screen, bool isReady) {
 	}
 
 	//プレイヤー本体描画
-	//screen.DrawSquare(mPosition, mSize, 0x606060FF);
 	screen.DrawPicture(mPosition, mSize, 0, 100, 100, toge, WHITE);
 
 	if (!isReady)
 	{
-		screen.DrawPicture({ mPosition.x, mPosition.y + 100 }, 600, 150, 0.0f, 400, 100, areyouready, WHITE);
+		screen.DrawPicture({ mPosition.x, mPosition.y + 200 }, 600, 150, 0.0f, 400, 100, areyouready, WHITE);
 	}
 
 	//ストライクしろ(圧)描画

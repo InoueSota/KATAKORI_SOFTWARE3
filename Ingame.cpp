@@ -71,6 +71,9 @@ void UI::Init() {
 }
 void UI::Update() {
 
+	//前回準備完了フラグの保存
+	mIsOldReady = mIsReady;
+
 	//コンボ
 	Combo();
 
