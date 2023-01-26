@@ -192,14 +192,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						//頭
 						if (!snake[i].mIsDeath && (CircleCapsuleCollsion(player, snake[i].mHeadPosition, snake[i].mHeadRadius)))
 						{
-							//フィーバーじゃないとき || ストライク使用時パワーがなかったら
-							if (!fever.mIsFever && !player.mIsStrikeActive) {
+							//フィーバーじゃないとき
+							if (!fever.mIsFever) {
 								player.SetKnockbackPosition(snake[i].mHeadPosition, snake[i].mHeadRadius);
 								ui.mCombo--;
 								ui.mIsWarning = true;
 							}
-							//フィーバーのとき || ストライク使用時パワーがあったら
-							else if (fever.mIsFever || (0 < player.mStrikePower && player.mIsStrikeActive)) {
+							//フィーバーのとき
+							else if (fever.mIsFever) {
 								if (ui.mIsReady)
 								{
 									ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
@@ -251,8 +251,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						//頭と尾
 						if (!tsuchinoko[i].mIsDeath && (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius) || CircleCapsuleCollsion(player, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius)))
 						{
-							//フィーバーじゃないとき || ストライク使用時パワーなかったら
-							if (!fever.mIsFever && !player.mIsStrikeActive) {
+							//フィーバーじゃないとき
+							if (!fever.mIsFever) {
 								if (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius)) {
 									player.SetKnockbackPosition(tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius);
 								} else {
@@ -261,8 +261,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 								ui.mCombo = 0;
 								ui.mIsWarning = true;
 							}
-							//フィーバーのとき || ストライク使用時パワーあったら
-							else if (fever.mIsFever || (0 < player.mStrikePower && player.mIsStrikeActive)) {
+							//フィーバーのとき
+							else if (fever.mIsFever) {
 								if (ui.mIsReady)
 								{
 									ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);

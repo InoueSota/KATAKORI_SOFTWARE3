@@ -30,7 +30,8 @@ void Tsuchinoko::Init() {
 	//ヒットエフェクト
 	mDeadFrame = 0;
 	mIsAnimation = false;
-
+	mIsClearAnimation = false;
+	
 }
 
 
@@ -82,6 +83,8 @@ void Tsuchinoko::Make(Vec2 PlayerPos, int mTimeLeft) {
 
 	if (!mIsActive || mIsDeath)
 	{
+		mIsClearAnimation = false;
+
 		while ((mCenterPosition.x >= PlayerPos.x - 640) && (mCenterPosition.x <= PlayerPos.x + 640)) {
 			mCenterPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
 		}
@@ -267,7 +270,7 @@ void Tsuchinoko::Draw(Screen& screen) {
 		}
 	}
 
-	if (mIsDeath) {
+	if (mIsDeath && !mIsClearAnimation) {
 		for (int i = 0; i < kBodyMax; i++) {
 			mBodyDeadPosition[i] = mBodyPosition[i];
 			mHeadDeadPosition = mHeadPosition;
@@ -285,7 +288,8 @@ void Tsuchinoko::Draw(Screen& screen) {
 		}
 
 	}
-	if (mDeadFrame == 0) {
+	if (mDeadFrame == 0 && mIsAnimation) {
+		mIsClearAnimation = true;
 		mIsAnimation = false;
 	}
 

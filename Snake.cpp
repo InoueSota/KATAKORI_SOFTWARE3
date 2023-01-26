@@ -10,6 +10,7 @@ void Snake::Init() {
 	//¶¬
 	mIsActive = false;
 	mIsDeath = false;
+	mIsClearAnimation = false;
 	mHeadRadius = 80;
 	mBodyRadius = 60;
 	mFollowFrame = 0;
@@ -63,6 +64,8 @@ void Snake::Make(int mTimeLeft, Vec2 PlayerPos) {
 
 	if (!mIsActive || mIsDeath)
 	{
+		mIsClearAnimation = false;
+
 		while ((mHeadPosition.x >= PlayerPos.x - 640) && (mHeadPosition.x <= PlayerPos.x + 640)) {
 			mHeadPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
 		}
@@ -287,7 +290,7 @@ void Snake::Draw(Screen& screen) {
 		}
 	}
 
-	if (mIsDeath) {
+	if (mIsDeath && !mIsClearAnimation) {
 		for (int i = 0; i < kBodyMax; i++) {
 			mBodyDeadPosition[i] = mBodyPosition[i];
 			mHeadDeadPosition = mHeadPosition;
@@ -303,8 +306,9 @@ void Snake::Draw(Screen& screen) {
 		}
 		
 	}
-	if (mDeadFlame == 0) {
+	if (mDeadFlame == 0 && mIsAnimation) {
 		mIsAnimation = false;
+		mIsClearAnimation = true;
 	}
 }
 

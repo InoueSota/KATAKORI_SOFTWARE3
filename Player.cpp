@@ -183,9 +183,6 @@ void Player::Mark() {
 }
 void Player::Strike(bool isFever, bool isOldFever) {
 
-	//ストライクパワーを収める
-	mStrikePower = Clamp(mStrikePower, 0, kStrikePowerMax);
-
 	//フィーバー状態が始まった || 終わった
 	if ((isFever && !isOldFever) || (!isFever && isOldFever)) {
 		mIsMarkActive = false;
@@ -249,7 +246,7 @@ void Player::Strike(bool isFever, bool isOldFever) {
 
 				if (strikeMode == STRAIGHT)
 				{
-					mStrikeSpeed = 10.0f;
+					mStrikeSpeed = 15.0f;
 					mStraightStrikeTheta = tmpTheta;
 					mIsStraightStrikeFinish = false;
 					mIsStraightStrikeActive = true;
@@ -277,8 +274,8 @@ void Player::Strike(bool isFever, bool isOldFever) {
 			mStrikeDirection = (mMarkPosition - mPosition).Normalized();
 
 			mStrikeVelocity.setZero();
-			mStrikeVelocity = mStrikeDirection * mStrikeSpeed + LeftStickVelocity(15.0f);
-			mStrikeSpeed += 0.5f;
+			mStrikeVelocity = mStrikeDirection * mStrikeSpeed + LeftStickVelocity(30.0f);
+			mStrikeSpeed += 1.0f;
 
 			mPosition += mStrikeVelocity;
 
@@ -574,9 +571,10 @@ void Player::Draw(Screen& screen, bool isReady) {
 }
 void Player::DrawStrikeUI(Screen& screen) {
 
-	if (0 < mStrikePower && mStrikePower <= 5) {
-		screen.DrawBox({ 35.0f, 62.5f }, 50 * mStrikePower, 25, 0.0f, WHITE, kFillModeSolid, false);
-	}
+	//ストライクパワーを収める
+	mStrikePower = Clamp(mStrikePower, 0, kStrikePowerMax);
+	screen.DrawBox({ 35.0f, 62.5f }, 50 * mStrikePower, 25, 0.0f, WHITE, kFillModeSolid, false);
+
 	for (int i = 0; i < kStrikePowerMax; i++) {
 		if (i == kStrikePowerMax - 1) {
 			screen.DrawUI({ 10.0f + (i + 1) * 50, 75.0f }, 50, 25, 0, 200, 100, lastflame, WHITE);

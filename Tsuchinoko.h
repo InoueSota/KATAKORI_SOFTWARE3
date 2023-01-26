@@ -105,6 +105,7 @@ public:
 	int hiteffect;
 
 	bool mIsAnimation;
+	bool mIsClearAnimation;
 	int mDeadFrame;
 };
 
