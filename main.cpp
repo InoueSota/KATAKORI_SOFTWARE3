@@ -92,12 +92,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				if (!screen.GetHitStop())
 				{
 					//ゲームを始めているとき
-					if (ui.mIsStart || !ui.mIsReady)
+					if ((ui.mIsStart || !ui.mIsReady) && 0 < ui.mTimeLeft)
 					{
 						//プレイヤーアップデート
 						player.Update(screen, fever.mIsFever, fever.mIsOldFever);
 					}
-					if (ui.mIsStart || (ui.mIsOldStart && !ui.mIsStart))
+					if ((ui.mIsStart || (ui.mIsOldStart && !ui.mIsStart)) && 0 < ui.mTimeLeft)
 					{
 						//ストライクしてないとき
 						if (!player.mIsStrikeActive)
