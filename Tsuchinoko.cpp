@@ -142,9 +142,9 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 		mDirectionPoint += (mTargetPoint - mCenterPosition) * 0.001f;
 		mDirectionPoint = mDirectionPoint.Normalized();
 		if (mIsSuper) {
-			mVelocity += mDirectionPoint * mSuperCenterSpeed;
+			mVelocity += mDirectionPoint * mLockonSuperCenterSpeed;
 		} else {
-			mVelocity += mDirectionPoint * mCenterSpeed;
+			mVelocity += mDirectionPoint * mLockonCenterSpeed;
 		}
 		LockOnMoveTimer = kMaxLockOnMoveTimer;
 	}
@@ -246,7 +246,11 @@ void Tsuchinoko::Draw(Screen& screen) {
 		}
 
 		//Ž‹ŠE•`‰æ
-		screen.DrawPicture({ mCenterPosition.x + mLockonRadius / 2 * cosf(mCenterAngle), mCenterPosition.y + mLockonRadius / 2 * -sinf(mCenterAngle) }, mLockonRadius, mCenterAngle, 500, 500, fov, 0x0000FF80);
+		if (IsPlayerLockon) {
+			screen.DrawPicture({ mCenterPosition.x + mLockonRadius / 2 * cosf(mCenterAngle), mCenterPosition.y + mLockonRadius / 2 * -sinf(mCenterAngle) }, mLockonRadius, mCenterAngle, 500, 500, fov, 0xFF000080);
+		} else {
+			screen.DrawPicture({ mCenterPosition.x + mLockonRadius / 2 * cosf(mCenterAngle), mCenterPosition.y + mLockonRadius / 2 * -sinf(mCenterAngle) }, mLockonRadius, mCenterAngle, 500, 500, fov, 0x0000FF80);
+		}
 		
 	}
 

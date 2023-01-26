@@ -38,6 +38,8 @@ public:
 	Vec2 mVelocity;
 	float mCenterSpeed;
 	float mSuperCenterSpeed;
+	float mLockonCenterSpeed = 10;
+	float mLockonSuperCenterSpeed = 12;
 
 
 	//¶¬ˆ—

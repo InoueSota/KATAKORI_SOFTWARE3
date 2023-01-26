@@ -187,128 +187,129 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				//プレイヤーとの当たり判定
 				//ヘビ
 				fever.mSnakeDefeat = 0;
-				for (int i = 0; i < Snake::kMaxSnake; i++) {
-					//頭と尾
-					if (!snake[i].mIsDeath && (CircleCapsuleCollsion(player, snake[i].mHeadPosition, snake[i].mHeadRadius)))
-					{
-						//フィーバーじゃないとき || ストライク使用時パワーがなかったら
-						if (!fever.mIsFever && ((player.mStrikePower == 0 && player.mIsStrikeActive) || !player.mIsStrikeActive)) {
-							player.SetKnockbackPosition(snake[i].mHeadPosition, snake[i].mHeadRadius);
-							ui.MissSnakeScore(player.mIsStrikeActive);
-							ui.mCombo = 0;
-							ui.mIsWarning = true;
-						}
-						//フィーバーのとき || ストライク使用時パワーがあったら
-						else if (fever.mIsFever || (0 < player.mStrikePower && player.mIsStrikeActive)) {
-							if (ui.mIsReady)
-							{
-								ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
-								ui.AddCombo();
-								fever.mSnakeDefeat++;
-							}
-							screen.SetHitStop();
-							snake[i].mIsDeath = true;
-						}
-
-					}
-
-					//体
-					for (int j = 0; j < Snake::kBodyMax; j++)
-					{
-						if (!snake[i].mIsDeath && CircleCapsuleCollsion(player, snake[i].mBodyPosition[j], snake[i].mBodyRadius) && !player.mKnockbackActive)
+				if (!player.mKnockbackActive) {
+					for (int i = 0; i < Snake::kMaxSnake; i++) {
+						//頭
+						if (!snake[i].mIsDeath && (CircleCapsuleCollsion(player, snake[i].mHeadPosition, snake[i].mHeadRadius)))
 						{
-							if (!player.mIsStrikeActive) {
-								player.mStrikePower++;
-							} else {
+							//フィーバーじゃないとき || ストライク使用時パワーがなかったら
+							if (!fever.mIsFever && ((player.mStrikePower == 0 && player.mIsStrikeActive) || !player.mIsStrikeActive)) {
+								player.SetKnockbackPosition(snake[i].mHeadPosition, snake[i].mHeadRadius);
+								ui.MissSnakeScore(player.mIsStrikeActive);
+								ui.mCombo = 0;
+								ui.mIsWarning = true;
+							}
+							//フィーバーのとき || ストライク使用時パワーがあったら
+							else if (fever.mIsFever || (0 < player.mStrikePower && player.mIsStrikeActive)) {
 								if (ui.mIsReady)
 								{
+									ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
+									ui.AddCombo();
 									fever.mSnakeDefeat++;
-									for (int k = 0; k < Fever::kMaxEnemy; k++) {
-										if (!fever.particlecreat[k].IsUse) {
-											fever.particlecreat[k].IsUse = 1;
-											fever.particlecreat[k].Pos = snake[i].mHeadPosition;
-											break;
+								}
+								screen.SetHitStop();
+								snake[i].mIsDeath = true;
+							}
+
+						}
+
+						//体
+						for (int j = 0; j < Snake::kBodyMax; j++)
+						{
+							if (!snake[i].mIsDeath && CircleCapsuleCollsion(player, snake[i].mBodyPosition[j], snake[i].mBodyRadius) && !player.mKnockbackActive)
+							{
+								if (!player.mIsStrikeActive) {
+									player.mStrikePower++;
+								} else {
+									if (ui.mIsReady)
+									{
+										fever.mSnakeDefeat++;
+										for (int k = 0; k < Fever::kMaxEnemy; k++) {
+											if (!fever.particlecreat[k].IsUse) {
+												fever.particlecreat[k].IsUse = 1;
+												fever.particlecreat[k].Pos = snake[i].mHeadPosition;
+												break;
+											}
 										}
 									}
 								}
+								if (ui.mIsReady)
+								{
+									ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
+									ui.AddCombo();
+								}
+								screen.SetHitStop();
+								snake[i].mIsDeath = true;
 							}
-							if (ui.mIsReady)
-							{
-								ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
-								ui.AddCombo();
-							}
-							screen.SetHitStop();
-							snake[i].mIsDeath = true;
 						}
 					}
 				}
-
 
 				//ツチノコ
 				fever.mTsuchinokoDefeat = 0;
-				for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
-
-					//頭と尾
-					if (!tsuchinoko[i].mIsDeath && (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius) || CircleCapsuleCollsion(player, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius)))
-					{
-						//フィーバーじゃないとき || ストライク使用時パワーなかったら
-						if (!fever.mIsFever && ((0 == player.mStrikePower && player.mIsStrikeActive) || !player.mIsStrikeActive)) {
-							if (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius)) {
-								player.SetKnockbackPosition(tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius);
-							} else {
-								player.SetKnockbackPosition(tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius);
-							}
-							ui.MissTsuchinokoScore(player.mIsStrikeActive);
-							ui.mCombo = 0;
-							ui.mIsWarning = true;
-						}
-						//フィーバーのとき || ストライク使用時パワーあったら
-						else if (fever.mIsFever || (0 < player.mStrikePower && player.mIsStrikeActive)) {
-							if (ui.mIsReady)
-							{
-								ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
-								ui.AddCombo();
-								fever.mTsuchinokoDefeat++;
-							}
-							screen.SetHitStop();
-							tsuchinoko[i].mIsDeath = true;
-						}
-
-					}
-
-					//体
-					for (int j = 0; j < Tsuchinoko::kBodyMax; j++)
-					{
-						if (!tsuchinoko[i].mIsDeath && CircleCapsuleCollsion(player, tsuchinoko[i].mBodyPosition[j], tsuchinoko[i].mBodyRadius) && !player.mKnockbackActive)
+				if (!player.mKnockbackActive) {
+					for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
+						//頭と尾
+						if (!tsuchinoko[i].mIsDeath && (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius) || CircleCapsuleCollsion(player, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius)))
 						{
-							if (!player.mIsStrikeActive) {
-								player.mStrikePower++;
-							} else {
+							//フィーバーじゃないとき || ストライク使用時パワーなかったら
+							if (!fever.mIsFever && ((0 == player.mStrikePower && player.mIsStrikeActive) || !player.mIsStrikeActive)) {
+								if (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius)) {
+									player.SetKnockbackPosition(tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius);
+								} else {
+									player.SetKnockbackPosition(tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius);
+								}
+								ui.MissTsuchinokoScore(player.mIsStrikeActive);
+								ui.mCombo = 0;
+								ui.mIsWarning = true;
+							}
+							//フィーバーのとき || ストライク使用時パワーあったら
+							else if (fever.mIsFever || (0 < player.mStrikePower && player.mIsStrikeActive)) {
 								if (ui.mIsReady)
 								{
+									ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
+									ui.AddCombo();
 									fever.mTsuchinokoDefeat++;
-									for (int k = 0; k < Fever::kMaxEnemy; k++) {
-										if (!fever.particlecreat[k].IsUse) {
-											fever.particlecreat[k].IsUse = 1;
-											fever.particlecreat[k].Pos = tsuchinoko[i].mCenterPosition;
-											break;
+								}
+								screen.SetHitStop();
+								tsuchinoko[i].mIsDeath = true;
+							}
+
+						}
+
+						//体
+						for (int j = 0; j < Tsuchinoko::kBodyMax; j++)
+						{
+							if (!tsuchinoko[i].mIsDeath && CircleCapsuleCollsion(player, tsuchinoko[i].mBodyPosition[j], tsuchinoko[i].mBodyRadius) && !player.mKnockbackActive)
+							{
+								if (!player.mIsStrikeActive) {
+									player.mStrikePower++;
+								} else {
+									if (ui.mIsReady)
+									{
+										fever.mTsuchinokoDefeat++;
+										for (int k = 0; k < Fever::kMaxEnemy; k++) {
+											if (!fever.particlecreat[k].IsUse) {
+												fever.particlecreat[k].IsUse = 1;
+												fever.particlecreat[k].Pos = tsuchinoko[i].mCenterPosition;
+												break;
+											}
 										}
 									}
 								}
+								if (ui.mIsReady)
+								{
+									ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
+									ui.AddCombo();
+								}
+								screen.SetHitStop();
+								tsuchinoko[i].mIsDeath = true;
 							}
-							if (ui.mIsReady)
-							{
-								ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
-								ui.AddCombo();
-							}
-							screen.SetHitStop();
-							tsuchinoko[i].mIsDeath = true;
+
 						}
 
 					}
-
 				}
-
 
 				//敵の数に応じてスピードを変える
 				player.LockonCount = 0;
