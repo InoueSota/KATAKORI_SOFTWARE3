@@ -574,7 +574,7 @@ void Player::Draw(Screen& screen, bool isReady) {
 }
 void Player::DrawStrikeUI(Screen& screen) {
 
-	if (0 < mStrikePower) {
+	if (0 < mStrikePower && mStrikePower <= 5) {
 		screen.DrawBox({ 35.0f, 62.5f }, 50 * mStrikePower, 25, 0.0f, WHITE, kFillModeSolid, false);
 	}
 	for (int i = 0; i < kStrikePowerMax; i++) {
