@@ -552,14 +552,14 @@ void Player::Draw(Screen& screen, bool isReady) {
 
 	if (!isReady)
 	{
-		screen.DrawPicture({ mPosition.x, mPosition.y + 200 }, 600, 150, 0.0f, 400, 100, areyouready, WHITE);
+		screen.DrawUI({ Screen::kWindowWidth / 2.0, 100 }, 400, 100, 0.0f, 400, 100, areyouready, WHITE);
 	}
 
 	//ストライクしろ(圧)描画
 	if (mIsMarkActive && !mIsStrikeActive) {
 		if (0 < mStrikePower) {
-			screen.DrawAnime({ mPosition.x - (30 / screen.GetZoom()), mPosition.y + (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0, 200, 100, 2, 10, mMarkFrame, lb, 0xFFFFFFE5);
-			screen.DrawAnime({ mPosition.x + (30 / screen.GetZoom()), mPosition.y + (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0, 200, 100, 2, 10, mMarkFrame, rb, 0xFFFFFFE5);
+			screen.DrawAnime({ mPosition.x - (30 / screen.GetZoom()), mPosition.y + (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0, 200, 100, 2, 20, mMarkFrame, lb, 0xFFFFFFE5);
+			screen.DrawAnime({ mPosition.x + (30 / screen.GetZoom()), mPosition.y + (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0, 200, 100, 2, 20, mMarkFrame, rb, 0xFFFFFFE5);
 		} else {
 			screen.DrawPicture({ mPosition.x, mPosition.y + (40 / screen.GetZoom()) }, 360, 120, 0.0f, 300, 100, nopower, WHITE);
 		}

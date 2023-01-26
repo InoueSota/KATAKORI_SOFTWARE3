@@ -384,7 +384,7 @@ void UI::Draw(Screen& screen) {
 	screen.DrawUI(mCenterPosition, Screen::kWindowWidth, Screen::kWindowHeight, 0, Screen::kWindowWidth, Screen::kWindowHeight, mWarningRed, mWarningColor);
 
 	//êßå¿éûä‘
-	if (10 <= mTimeLeft) {
+	if (10 <= mTimeLeft && mIsStart) {
 		screen.DrawUI(mTimePosition[1], mTimeUISize, 288 * (mTimeLeft / 10), 288, 288, mTimeLimitNumber, WHITE, mTimeScale);
 		screen.DrawUI(mTimePosition[0], mTimeUISize, 288 * (mTimeLeft % 10), 288, 288, mTimeLimitNumber, WHITE, mTimeScale);
 	}
