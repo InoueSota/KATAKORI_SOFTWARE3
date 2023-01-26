@@ -193,7 +193,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						if (!snake[i].mIsDeath && (CircleCapsuleCollsion(player, snake[i].mHeadPosition, snake[i].mHeadRadius)))
 						{
 							//フィーバーじゃないとき || ストライク使用時パワーがなかったら
-							if (!fever.mIsFever && ((player.mStrikePower == 0 && player.mIsStrikeActive) || !player.mIsStrikeActive)) {
+							if (!fever.mIsFever && !player.mIsStrikeActive) {
 								player.SetKnockbackPosition(snake[i].mHeadPosition, snake[i].mHeadRadius);
 								ui.mCombo--;
 								ui.mIsWarning = true;
@@ -252,7 +252,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						if (!tsuchinoko[i].mIsDeath && (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius) || CircleCapsuleCollsion(player, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius)))
 						{
 							//フィーバーじゃないとき || ストライク使用時パワーなかったら
-							if (!fever.mIsFever && ((0 == player.mStrikePower && player.mIsStrikeActive) || !player.mIsStrikeActive)) {
+							if (!fever.mIsFever && !player.mIsStrikeActive) {
 								if (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius)) {
 									player.SetKnockbackPosition(tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius);
 								} else {
