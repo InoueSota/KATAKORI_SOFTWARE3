@@ -28,7 +28,7 @@ public:
 	Vec2 mNormalVelocity;
 	float mNormalMag;
 	float mNormalMagLockon;
-	void NormalMove();
+	void NormalMove(Screen& screen);
 
 
 	//ƒ_ƒbƒVƒ… = Dush

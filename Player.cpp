@@ -77,7 +77,7 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 
 		//通常移動
 		if (!mKnockbackActive) {
-			NormalMove();
+			NormalMove(screen);
 		}
 		
 		//ダッシュ
@@ -87,7 +87,7 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 		Mark();
 
 		//速度を代入する
-		mPosition += mVelocity;
+		mPosition += (mVelocity / screen.GetZoom() * 0.4f);
 	}
 
 	//ストライク
@@ -101,7 +101,7 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 	mPosition.y = Clamp(mPosition.y, Map::kMapBottom + (mSize / 2), Map::kMapTop - (mSize / 2));
 		
 }
-void Player::NormalMove() {
+void Player::NormalMove(Screen& screen) {
 
 	//スティックの方向を取得する
 	int tmpX, tmpY;

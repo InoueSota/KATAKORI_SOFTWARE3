@@ -113,14 +113,14 @@ void Screen::ZoomUpdate(bool isFever, bool isOldFever, float playerSize) {
 	{
 		mZoomEasingt = 0.0f;
 		mZoomStartValue = 0.4f;
-		mZoomEndValue = 0.15f;
+		mZoomEndValue = 0.18f;
 		mIsZoomEasing = true;
 	}
 	//í èÌéûÉYÅ[ÉÄÇ…Ç∑ÇÈ
 	if (!isFever && isOldFever)
 	{
 		mZoomEasingt = 0.0f;
-		mZoomStartValue = 0.15f;
+		mZoomStartValue = 0.18f;
 		mZoomEndValue = 0.4f;
 		mIsZoomEasing = true;
 	}
