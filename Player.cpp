@@ -17,6 +17,7 @@ void Player::Init() {
 
 	//通常移動
 	mNormalMag = 6.0f;
+	mNormalMagLockon = 12.0f;
 
 	//ダッシュ
 	mDushMag = 300.0f;
@@ -114,7 +115,11 @@ void Player::NormalMove() {
 	mNormalVelocity = mNormalVelocity.Normalized();
 
 	//ｎ倍する
-	mNormalVelocity *= mNormalMag;
+	if (LockonCount) {
+		mNormalVelocity *= mNormalMagLockon;
+	} else {
+		mNormalVelocity *= mNormalMag;
+	}
 
 	//速度を代入する
 	mVelocity += mNormalVelocity;
@@ -507,8 +512,13 @@ void Player::Knockback() {
 
 		mKnockbackStart.x = mPosition.x;
 		mKnockbackStart.y = mPosition.y;
+<<<<<<< HEAD
 		mKnockbackEnd.x = mPosition.x + newA * 500;
 		mKnockbackEnd.y = mPosition.y + newB * 500;
+=======
+		mKnockbackEnd.x = mPosition.x + newA * 600;
+		mKnockbackEnd.y = mPosition.y + newB * 600;
+>>>>>>> 繧ｹ繝斐・繝臥ｭ芽ｪｿ謨ｴ
 		mKnockbackActive = true;
 		mKnockbackSet = false;
 		mIsStrikeActive = false;

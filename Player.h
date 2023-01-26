@@ -27,6 +27,7 @@ public:
 	//’ÊíˆÚ“® = NormalMove
 	Vec2 mNormalVelocity;
 	float mNormalMag;
+	float mNormalMagLockon;
 	void NormalMove();
 
 

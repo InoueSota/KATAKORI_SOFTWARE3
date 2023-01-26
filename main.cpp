@@ -443,6 +443,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//フィーバー
 			fever.Draw(screen);
 
+			//Novice::ScreenPrintf(0, 0, "f", fever.feverGauge.Pos.x);
+
 			break;
 		case OUTGAME:
 			Novice::DrawSprite(0, 0, end, 1, 1, 0.0f, WHITE);
