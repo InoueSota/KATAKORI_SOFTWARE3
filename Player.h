@@ -131,7 +131,6 @@ public:
 	int straight;
 	int spiral;
 	int b;
-	int lb;
 	int rb;
 	int nopower;
 	int toge;

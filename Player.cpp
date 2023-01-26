@@ -72,6 +72,12 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 	}
 	mRadius = mSize / 2.0f;
 
+	//ストライク
+	Strike(isFever, isOldFever);
+	if (!isFever) {
+		StrikeLine(screen);
+	}
+
 	//ストライクをしていない時に可能
 	if (!mIsStrikeActive) {
 
@@ -89,16 +95,6 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 		//速度を代入する
 		mPosition += (mVelocity / screen.GetZoom() * 0.4f);
 	}
-
-	//ストライク
-	Strike(isFever, isOldFever);
-	if (!isFever) {
-		StrikeLine(screen);
-	}
-
-	//マップ内に収める
-	mPosition.x = Clamp(mPosition.x, Map::kMapLeft + (mSize / 2), Map::kMapRight - (mSize / 2));
-	mPosition.y = Clamp(mPosition.y, Map::kMapBottom + (mSize / 2), Map::kMapTop - (mSize / 2));
 		
 }
 void Player::NormalMove(Screen& screen) {
@@ -194,6 +190,7 @@ void Player::Strike(bool isFever, bool isOldFever) {
 		mStrikePower = kStrikePowerMax;
 	}
 
+	/*
 	//モードチェンジ
 	if (Controller::IsTriggerButton(0, Controller::bB) && !mIsStrikeActive) {
 
@@ -206,7 +203,6 @@ void Player::Strike(bool isFever, bool isOldFever) {
 		mStrikeModeScaleEasingt = 0.0f;
 		mStrikeModeScaleActive = true;
 	}
-
 	//モードチェンジのスケールイージング
 	if (mStrikeModeScaleActive) {
 
@@ -218,11 +214,12 @@ void Player::Strike(bool isFever, bool isOldFever) {
 			mStrikeModeScaleActive = false;
 		}
 	}
+	*/
 
 	if (mIsMarkActive && !mIsStrikeActive) {
 
-		//LBボタン＆RBボタン同時押下時でパワーがある時にフラグをtrueにする
-		if ((Controller::IsPressedButton(0, Controller::lSHOULDER) && Controller::IsPressedButton(0, Controller::rSHOULDER)) && 0 < mStrikePower) {
+		//マークをつけたあとパワーがある時にフラグをtrueにする
+		if (Controller::IsTriggerButton(0, Controller::rSHOULDER) && 0 < mStrikePower) {
 
 			//距離に応じてイージングの増加量を変化させる
 			//マークとの距離を求める
@@ -416,6 +413,10 @@ void Player::StrikeLine(Screen& screen) {
 }
 void Player::Shadow(bool isHitStop) {
 
+	//マップ内に収める
+	mPosition.x = Clamp(mPosition.x, Map::kMapLeft + (mSize / 2), Map::kMapRight - (mSize / 2));
+	mPosition.y = Clamp(mPosition.y, Map::kMapBottom + (mSize / 2), Map::kMapTop - (mSize / 2));
+
 	mShadowFrame++;
 
 	for (int i = 0; i < kShadowMax; i++)
@@ -555,8 +556,7 @@ void Player::Draw(Screen& screen, bool isReady) {
 	//ストライクしろ(圧)描画
 	if (mIsMarkActive && !mIsStrikeActive) {
 		if (0 < mStrikePower) {
-			screen.DrawAnime({ mPosition.x - (30 / screen.GetZoom()), mPosition.y + (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0, 200, 100, 2, 20, mMarkFrame, lb, 0xFFFFFFE5);
-			screen.DrawAnime({ mPosition.x + (30 / screen.GetZoom()), mPosition.y + (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0, 200, 100, 2, 20, mMarkFrame, rb, 0xFFFFFFE5);
+			screen.DrawAnime({ mPosition.x, mPosition.y + (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0, 200, 100, 2, 20, mMarkFrame, rb, 0xFFFFFFE5);
 		} else {
 			screen.DrawPicture({ mPosition.x, mPosition.y + (40 / screen.GetZoom()) }, 360, 120, 0.0f, 300, 100, nopower, WHITE);
 		}
@@ -583,13 +583,13 @@ void Player::DrawStrikeUI(Screen& screen) {
 		}
 	}
 
-	screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, circle, WHITE);
-	if (strikeMode == STRAIGHT) {
-		screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, straight, WHITE, mStrikeModeScale);
-	} else {
-		screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, spiral, WHITE, mStrikeModeScale);
-	}
-	screen.DrawUI({ mStrikeModePosition.x + 50, mStrikeModePosition.y - 50 }, 60, 0, 160, 160, b, WHITE, mStrikeModeBScale);
+	//screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, circle, WHITE);
+	//if (strikeMode == STRAIGHT) {
+	//	screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, straight, WHITE, mStrikeModeScale);
+	//} else {
+	//	screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, spiral, WHITE, mStrikeModeScale);
+	//}
+	//screen.DrawUI({ mStrikeModePosition.x + 50, mStrikeModePosition.y - 50 }, 60, 0, 160, 160, b, WHITE, mStrikeModeBScale);
 
 
 }
@@ -603,7 +603,6 @@ void Player::LoadTexture() {
 		straight = Novice::LoadTexture("./Resources/Player/straight.png");
 		spiral = Novice::LoadTexture("./Resources/Player/spiral.png");
 		b = Novice::LoadTexture("./Resources/Player/b.png");
-		lb = Novice::LoadTexture("./Resources/Player/lb.png");
 		rb = Novice::LoadTexture("./Resources/Player/rb.png");
 		nopower = Novice::LoadTexture("./Resources/Player/nopower.png");
 		toge = Novice::LoadTexture("./Resources/Player/toge.png");

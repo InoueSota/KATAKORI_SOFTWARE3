@@ -92,7 +92,7 @@ public:
 
 
 	//ëÄçÏê‡ñæ
-	Vec2 mStickPosition{ 210, 685 };
+	Vec2 mStickPosition{ 60, 685 };
 	unsigned int mXColor;
 	bool mXScaleActive;
 	Vec2 mXScale;
