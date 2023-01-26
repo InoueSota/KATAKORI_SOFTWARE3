@@ -225,11 +225,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 									{
 										fever.mSnakeDefeat++;
 										fever.mSnakeDefeatStrike++;
-										for (int k = 0; k < Fever::kMaxEnemy; k++) {
-											if (!fever.particlecreat[k].IsUse) {
-												fever.particlecreat[k].IsUse = 1;
-												fever.particlecreat[k].Pos = snake[i].mHeadPosition;
-												break;
+										if (!fever.mIsFever) {
+											for (int k = 0; k < Fever::kMaxEnemy; k++) {
+												if (!fever.particlecreat[k].IsUse) {
+													fever.particlecreat[k].IsUse = 1;
+													fever.particlecreat[k].Pos = snake[i].mHeadPosition;
+													break;
+												}
 											}
 										}
 									}
@@ -269,6 +271,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 									ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
 									ui.AddCombo();
 									fever.mTsuchinokoDefeat++;
+									fever.mTsuchinokoDefeatStrike++;
 								}
 								screen.SetHitStop();
 								tsuchinoko[i].mIsDeath = true;
@@ -287,11 +290,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 									if (ui.mIsReady)
 									{
 										fever.mTsuchinokoDefeat++;
-										for (int k = 0; k < Fever::kMaxEnemy; k++) {
-											if (!fever.particlecreat[k].IsUse) {
-												fever.particlecreat[k].IsUse = 1;
-												fever.particlecreat[k].Pos = tsuchinoko[i].mCenterPosition;
-												break;
+										fever.mTsuchinokoDefeatStrike++;
+										if (!fever.mIsFever) {
+											for (int k = 0; k < Fever::kMaxEnemy; k++) {
+												if (!fever.particlecreat[k].IsUse) {
+													fever.particlecreat[k].IsUse = 1;
+													fever.particlecreat[k].Pos = tsuchinoko[i].mCenterPosition;
+													break;
+												}
 											}
 										}
 									}
@@ -309,6 +315,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 					}
 				}
+
+				if (fever.mIsFever) {
+					fever.mFeverGaugeStrikeEndFlag = 0;
+					fever.mSnakeDefeatStrike = 0;
+					fever.mTsuchinokoDefeatStrike = 0;
+				} else {
+					if (player.mIsStrikeActive && fever.mFeverGaugeStrikeEndFlag == 0) {
+						fever.mFeverGaugeStrikeEndFlag = 1;
+					}if (!player.mIsStrikeActive && fever.mFeverGaugeStrikeEndFlag == 1) {
+						fever.mFeverGaugeStrikeEndFlag = 2;
+					}
+				}
+				
 
 				//プレイヤーのノックバック
 				player.Knockback();
