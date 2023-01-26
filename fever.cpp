@@ -12,6 +12,7 @@ void Fever::Init() {
 	mSnakeDefeat = 0;
 	mSnakeDefeatStrike = 0;
 	mTsuchinokoDefeatStrike = 0;
+	mFeverGaugeStrikeEndFlag = 0;
 }
 
 void Fever::Update(Screen& screen, Vec2 PlayerPos) {
@@ -27,13 +28,19 @@ void Fever::Update(Screen& screen, Vec2 PlayerPos) {
 			mFeverGauge = 0;
 		}
 	} else {
-		mFeverGauge += mSnakeDefeat * 100;
-		mFeverGauge += mTsuchinokoDefeat * 100;
-		mFeverGauge += mSnakeDefeat * 100;
-		mFeverGauge += mTsuchinokoDefeat * 100;
-		if ((mSnakeDefeat) || (mTsuchinokoDefeat)) {
+		if (mSnakeDefeat || mTsuchinokoDefeat) {
+			mFeverGauge += mSnakeDefeat * 50;
+			mFeverGauge += mTsuchinokoDefeat * 50;
 			feverGauge.Flag = 1;
 			feverGauge.Timer = kfeverGaugeDelayTime;
+		}
+		if (mFeverGaugeStrikeEndFlag == 2) {
+			int DefeatStrike = mTsuchinokoDefeatStrike + mSnakeDefeatStrike;
+			mFeverGauge += DefeatStrike * 50 * (1 + (DefeatStrike * 0.2));
+			mSnakeDefeatStrike = 0;
+			mTsuchinokoDefeatStrike = 0;
+			mFeverGaugeStrikeEndFlag = 0;
+			feverGauge.Flag = 1;
 		}
 	}
 
