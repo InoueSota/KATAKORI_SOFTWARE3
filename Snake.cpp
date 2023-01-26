@@ -10,8 +10,8 @@ void Snake::Init() {
 	//ê∂ê¨
 	mIsActive = false;
 	mIsDeath = false;
-	mHeadRadius = 50;
-	mBodyRadius = 30;
+	mHeadRadius = 80;
+	mBodyRadius = 60;
 	mFollowFrame = 0;
 }
 
@@ -245,6 +245,7 @@ void Snake::Draw(Screen& screen) {
 		superhead = Novice::LoadTexture("./Resources/Debugs/superhead.png");
 		superbody = Novice::LoadTexture("./Resources/Debugs/superbody.png");
 		fov = Novice::LoadTexture("./Resources/Enemy/fov.png");
+		hiteffect = Novice::LoadTexture("./Resources/Enemy/hiteffect.png");
 		mIsLoadTexture = true;
 	}
 
@@ -279,4 +280,25 @@ void Snake::Draw(Screen& screen) {
 		}
 	}
 
+	if (mIsDeath) {
+		for (int i = 0; i < kBodyMax; i++) {
+			mBodyDeadPosition[i] = mBodyPosition[i];
+			mHeadDeadPosition = mHeadPosition;
+		}
+		mIsAnimation = true;
+	}
+	//ï`âÊ
+	if (mIsAnimation) {
+		mDeadFlame++;
+		for (int i = 0; i < kBodyMax; i++) {
+			screen.DrawAnime(mBodyDeadPosition[i], mBodyRadius * 2, mBodyRadius * 2, 100, 100, 11, 3, mDeadFlame, hiteffect, WHITE);
+			screen.DrawAnime(mHeadDeadPosition, mHeadRadius * 2, mHeadRadius * 2, 100, 100, 11, 3, mDeadFlame, hiteffect, WHITE);
+		}
+
+	}
+	Novice::ScreenPrintf(0, 0, "%d", mDeadFlame);
+	if (mDeadFlame == 0) {
+		mIsAnimation = false;
+	}
 }
+

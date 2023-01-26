@@ -24,10 +24,13 @@ public:
 	//パラメータ
 	bool mIsActive;
 	bool mIsDeath;
+	bool mIsAnimation;
 	int mIsSuper = 0;
+	int mDeadFlame = 0;
 	void Make(int mTimeLeft, Vec2 PlayerPos);
 	//頭部分
 	Vec2 mHeadPosition;
+	Vec2 mHeadDeadPosition;
 	int mHeadRadius;
 	float mHeadAngle;
 	Vec2 mHeadPositionStart;//スタート地点
@@ -58,6 +61,7 @@ public:
 	static constexpr int kMaxFrame = 120;
 	static constexpr int kBodyMax = 4;
 	Vec2 mBodyPosition[kBodyMax];
+	Vec2 mBodyDeadPosition[kBodyMax];
 	float mBodyAngle[kBodyMax];
 	Vec2 mOldHeadPosition[kMaxFrame];
 	float mOldHeadAngle[kMaxFrame];
@@ -92,5 +96,5 @@ public:
 	int superhead;
 	int superbody;
 	int fov;
-
+	int hiteffect;
 };

@@ -549,6 +549,7 @@ void Player::Draw(Screen& screen) {
 
 	//プレイヤー本体描画
 	screen.DrawSquare(mPosition, mSize, 0x606060FF);
+	screen.DrawPicture(mPosition, mSize, 0, 100, 100, toge, WHITE);
 
 	//ストライクしろ(圧)描画
 	if (mIsMarkActive && !mIsStrikeActive) {
@@ -600,5 +601,6 @@ void Player::LoadTexture() {
 		lb = Novice::LoadTexture("./Resources/Player/lb.png");
 		rb = Novice::LoadTexture("./Resources/Player/rb.png");
 		nopower = Novice::LoadTexture("./Resources/Player/nopower.png");
+		toge = Novice::LoadTexture("./Resources/Player/toge.png");
 	}
 }
