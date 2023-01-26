@@ -96,9 +96,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					{
 						//プレイヤーアップデート
 						player.Update(screen, fever.mIsFever, fever.mIsOldFever);
-					}
-					if ((ui.mIsStart || (ui.mIsOldStart && !ui.mIsStart)) && 0 < ui.mTimeLeft)
-					{
+
 						//ストライクしてないとき
 						if (!player.mIsStrikeActive)
 						{
@@ -223,7 +221,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 									}
 								}
 							}
-							if (!ui.mIsReady)
+							if (ui.mIsReady)
 							{
 								ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
 								ui.AddCombo();
@@ -255,7 +253,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						}
 						//フィーバーのとき || ストライク使用時パワーあったら
 						else if (fever.mIsFever || (0 < player.mStrikePower && player.mIsStrikeActive)) {
-							if (!ui.mIsReady)
+							if (ui.mIsReady)
 							{
 								ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
 								ui.AddCombo();
@@ -275,7 +273,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							if (!player.mIsStrikeActive) {
 								player.mStrikePower++;
 							} else {
-								if (!ui.mIsReady)
+								if (ui.mIsReady)
 								{
 									fever.mTsuchinokoDefeat++;
 									for (int k = 0; k < Fever::kMaxEnemy; k++) {
@@ -287,7 +285,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 									}
 								}
 							}
-							if (!ui.mIsReady)
+							if (ui.mIsReady)
 							{
 								ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
 								ui.AddCombo();

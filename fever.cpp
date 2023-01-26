@@ -23,10 +23,10 @@ void Fever::Update(Screen& screen, Vec2 PlayerPos) {
 			mFeverGauge = 0;
 		}
 	} else {
-		mFeverGauge += mSnakeDefeat * 5000;
-		mFeverGauge += mTsuchinokoDefeat * 5000;
-		mFeverGauge += mSnakeDefeat * 5000;
-		mFeverGauge += mTsuchinokoDefeat * 5000;
+		mFeverGauge += mSnakeDefeat * 50;
+		mFeverGauge += mTsuchinokoDefeat * 50;
+		mFeverGauge += mSnakeDefeat * 50;
+		mFeverGauge += mTsuchinokoDefeat * 50;
 		if ((mSnakeDefeat) || (mTsuchinokoDefeat)) {
 			feverGauge.Flag = 1;
 			feverGauge.Timer = kfeverGaugeDelayTime;
