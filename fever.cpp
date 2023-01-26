@@ -8,6 +8,8 @@ void Fever::Init() {
 	mFeverGauge = 0;
 	mIsFever = false;
 	mIsOldFever = false;
+	feverGauge.Pos = {};
+	mSnakeDefeat = 0;
 }
 
 void Fever::Update(Screen& screen, Vec2 PlayerPos) {
