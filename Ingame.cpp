@@ -10,6 +10,7 @@
 void UI::Init() {
 
 	//始めるかフラグ
+	mIsReady = false;
 	mIsStart = false;
 	mIsOldStart = true;
 	mStartPosition = { -Screen::kWindowWidth / 2.0 + 200,Screen::kWindowHeight / 2.0 };
@@ -143,65 +144,77 @@ void UI::TimeLimit() {
 	//敵の発生をさせるため、１フレームでやらせる
 	mIsOldStart = mIsStart;
 
-	//フレームが60になったら一秒経過
-	if (mTimeFrame == 60 && mTimeLeft != 0)
+	if (!mIsReady)
 	{
-		mTimeElapsed++;
-		mTimeFrame = 0;
+		if (Controller::IsTriggerButton(0,Controller::bY)) {
+			mIsReady = true;
+		}
+	}
+	else
+	{
+		//フレームが60になったら一秒経過
+		if (mTimeFrame == 60 && mTimeLeft != 0)
+		{
+			mTimeElapsed++;
+			mTimeFrame = 0;
 
-		//カウントダウンの初期化
+			//カウントダウンの初期化
+			if (mTimeLeft < 10 || !mIsStart) {
+				mTimeEasingt = 0.0f;
+				mTimeLastColor = 0xFFFFFF70;
+				mTimeLastScale = { 1.0f, 1.0f };
+			}
+		}
+
+		//時間のフレームを加算する
+		mTimeFrame++;
+
+		//残り時間 = 制限時間 - 経過時間
+		if (!mIsStart) {
+			mCountDownTime = kToStart - mTimeElapsed;
+		}
+		else {
+			mTimeLeft = kTimeLimit - mTimeElapsed;
+		}
+
+		//残り時間の限界値の設定
+		mTimeLeft = Clamp(mTimeLeft, 0, kTimeLimit);
+		mTimeElapsed = Clamp(mTimeElapsed, 0, kTimeLimit);
+		mCountDownTime = Clamp(mCountDownTime, 0, kToStart);
+
+		//カウントダウンの透明度と大きさをイージング処理する
 		if (mTimeLeft < 10 || !mIsStart) {
-			mTimeEasingt = 0.0f;
-			mTimeLastColor = 0xFFFFFF70;
-			mTimeLastScale = { 1.0f, 1.0f };
+			mTimeEasingt = EasingClamp(1.0f / 60.0f, mTimeEasingt);
+			mTimeLastColor = ColorEasingMove(0xFFFFFF70, 0xFFFFFF00, easeOutSine(mTimeEasingt));
+			mTimeLastScale = EasingMove({ 1.0f, 1.0f }, { 2.0f,2.0f }, easeOutSine(mTimeEasingt));
+		}
+
+		//始めるフラグをtrueにする
+		if (!mIsStart && mCountDownTime == 0) {
+			mTimeElapsed = 0;
+			mIsStart = true;
+		}
+
+		//スタート処理
+		if (mIsStart) {
+			mStartPosition.x += 30.0f;
+		}
+
+		//タイムアップ処理
+		if (mTimeLeft == 0) {
+
+			//タイムアップの文字を透明度イージングさせる
+			mTimeUpAlphat = EasingClamp(0.1f, mTimeUpAlphat);
+			mTimeUpColor = ColorEasingMove(0xFFFFFF00, WHITE, easeOutSine(mTimeUpAlphat));
+
+			//シーンをスコア画面に遷移させるフラグをtrueにする
+			if (240 < mTimeFrame) {
+				mIsTimeUpFinish = true;
+			}
 		}
 	}
 
-	//時間のフレームを加算する
-	mTimeFrame++;
 
-	//残り時間 = 制限時間 - 経過時間
-	if (!mIsStart) {
-		mCountDownTime = kToStart - mTimeElapsed;
-	} else {
-		mTimeLeft = kTimeLimit - mTimeElapsed;
-	}
-
-	//残り時間の限界値の設定
-	mTimeLeft = Clamp(mTimeLeft, 0, kTimeLimit);
-	mTimeElapsed = Clamp(mTimeElapsed, 0, kTimeLimit);
-	mCountDownTime = Clamp(mCountDownTime, 0, kToStart);
-
-	//カウントダウンの透明度と大きさをイージング処理する
-	if (mTimeLeft < 10 || !mIsStart) {
-		mTimeEasingt = EasingClamp(1.0f / 60.0f, mTimeEasingt);
-		mTimeLastColor = ColorEasingMove(0xFFFFFF70, 0xFFFFFF00, easeOutSine(mTimeEasingt));
-		mTimeLastScale = EasingMove({ 1.0f, 1.0f }, { 2.0f,2.0f }, easeOutSine(mTimeEasingt));
-	}
-
-	//始めるフラグをtrueにする
-	if (!mIsStart && mCountDownTime == 0) {
-		mTimeElapsed = 0;
-		mIsStart = true;
-	}
-
-	//スタート処理
-	if (mIsStart) {
-		mStartPosition.x += 30.0f;
-	}
-
-	//タイムアップ処理
-	if(mTimeLeft == 0) {
-
-		//タイムアップの文字を透明度イージングさせる
-		mTimeUpAlphat = EasingClamp(0.1f, mTimeUpAlphat);
-		mTimeUpColor = ColorEasingMove(0xFFFFFF00, WHITE, easeOutSine(mTimeUpAlphat));
-
-		//シーンをスコア画面に遷移させるフラグをtrueにする
-		if (240 < mTimeFrame) {
-			mIsTimeUpFinish = true;
-		}
-	}
 }
 void UI::Combo() {
 
@@ -351,7 +364,7 @@ void UI::DrawBackTimeLimit(Screen& screen) {
 
 	//カウントダウンの描画
 	//開始
-	if (!mIsStart) {
+	if (!mIsStart && mIsReady) {
 		screen.DrawUI(mCenterPosition, mTimeLastUISize, 288 * (mCountDownTime % 10), 288, 288, mTimeLimitNumber, 0xFFFFFF70);
 		screen.DrawUI(mCenterPosition, mTimeLastUISize, 288 * (mCountDownTime % 10), 288, 288, mTimeLimitNumber, mTimeLastColor, mTimeLastScale);
 	} else if (mStartPosition.x < (Screen::kWindowWidth + Screen::kWindowWidth / 2.0)) {

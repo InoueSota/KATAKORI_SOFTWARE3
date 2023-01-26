@@ -137,7 +137,7 @@ void Screen::ZoomUpdate(bool isFever, bool isOldFever, float playerSize) {
 	}
 	else if (!isFever)
 	{
-		float tmpZoom = 32 / playerSize;
+		float tmpZoom = 40 / playerSize;
 		mZoom += (tmpZoom - mZoom) * 0.025f;
 	}
 

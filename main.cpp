@@ -72,27 +72,27 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 				//初期化
-				if (Key::IsTrigger(DIK_R) || Controller::IsTriggerButton(0, Controller::bY)) {
-					screen.Init();
-					player.Init();
-					for (int i = 0; i < Snake::kMaxSnake; i++) {
-						snake[i].Init();
-					}
-					for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
-						tsuchinoko[i].Init();
-					}
-					ui.Init();
-					title.Init();
-					fever.Init();
-					map.Init();
-					scene = TITLE;
-				}
+				//if (Key::IsTrigger(DIK_R) || Controller::IsTriggerButton(0, Controller::bY)) {
+				//	screen.Init();
+				//	player.Init();
+				//	for (int i = 0; i < Snake::kMaxSnake; i++) {
+				//		snake[i].Init();
+				//	}
+				//	for (int i = 0; i < Tsuchinoko::kMaxTsuchinoko; i++) {
+				//		tsuchinoko[i].Init();
+				//	}
+				//	ui.Init();
+				//	title.Init();
+				//	fever.Init();
+				//	map.Init();
+				//	scene = TITLE;
+				//}
 
 				//ヒットストップしてないとき
 				if (!screen.GetHitStop())
 				{
 					//ゲームを始めているとき
-					if (ui.mIsStart)
+					if (ui.mIsStart || !ui.mIsReady)
 					{
 						//プレイヤーアップデート
 						player.Update(screen, fever.mIsFever, fever.mIsOldFever);
@@ -191,11 +191,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						}
 						//フィーバーのとき || ストライク使用時パワーがあったら
 						else if (fever.mIsFever || (0 < player.mStrikePower && player.mIsStrikeActive)) {
-							ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
-							ui.AddCombo();
+							if (ui.mIsReady)
+							{
+								ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
+								ui.AddCombo();
+								fever.mSnakeDefeat++;
+							}
 							screen.SetHitStop();
 							snake[i].mIsDeath = true;
-							fever.mSnakeDefeat++;
 						}
 
 					}
@@ -208,19 +211,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							if (!player.mIsStrikeActive) {
 								player.mStrikePower++;
 							} else {
-								fever.mSnakeDefeat++;
-							}
-							ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
-							ui.AddCombo();
-							screen.SetHitStop();
-							snake[i].mIsDeath = true;
-							for (int k = 0; k < Fever::kMaxEnemy; k++) {
-								if (!fever.particlecreat[k].IsUse) {
-									fever.particlecreat[k].IsUse = 1;
-									fever.particlecreat[k].Pos = snake[i].mHeadPosition;
-									break;
+								if (ui.mIsReady)
+								{
+									fever.mSnakeDefeat++;
+									for (int k = 0; k < Fever::kMaxEnemy; k++) {
+										if (!fever.particlecreat[k].IsUse) {
+											fever.particlecreat[k].IsUse = 1;
+											fever.particlecreat[k].Pos = snake[i].mHeadPosition;
+											break;
+										}
+									}
 								}
 							}
+							if (!ui.mIsReady)
+							{
+								ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
+								ui.AddCombo();
+							}
+							screen.SetHitStop();
+							snake[i].mIsDeath = true;
 						}
 					}
 				}
@@ -246,11 +255,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						}
 						//フィーバーのとき || ストライク使用時パワーあったら
 						else if (fever.mIsFever || (0 < player.mStrikePower && player.mIsStrikeActive)) {
-							ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
-							ui.AddCombo();
+							if (!ui.mIsReady)
+							{
+								ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
+								ui.AddCombo();
+								fever.mTsuchinokoDefeat++;
+							}
 							screen.SetHitStop();
 							tsuchinoko[i].mIsDeath = true;
-							fever.mTsuchinokoDefeat++;
 						}
 
 					}
@@ -263,19 +275,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							if (!player.mIsStrikeActive) {
 								player.mStrikePower++;
 							} else {
-								fever.mTsuchinokoDefeat++;
-							}
-							ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
-							ui.AddCombo();
-							screen.SetHitStop();
-							tsuchinoko[i].mIsDeath = true;
-							for (int k = 0; k < Fever::kMaxEnemy; k++) {
-								if (!fever.particlecreat[k].IsUse) {
-									fever.particlecreat[k].IsUse = 1;
-									fever.particlecreat[k].Pos = tsuchinoko[i].mCenterPosition;
-									break;
+								if (!ui.mIsReady)
+								{
+									fever.mTsuchinokoDefeat++;
+									for (int k = 0; k < Fever::kMaxEnemy; k++) {
+										if (!fever.particlecreat[k].IsUse) {
+											fever.particlecreat[k].IsUse = 1;
+											fever.particlecreat[k].Pos = tsuchinoko[i].mCenterPosition;
+											break;
+										}
+									}
 								}
 							}
+							if (!ui.mIsReady)
+							{
+								ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
+								ui.AddCombo();
+							}
+							screen.SetHitStop();
+							tsuchinoko[i].mIsDeath = true;
 						}
 
 					}
@@ -387,7 +405,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				tsuchinoko[i].Draw(screen);
 			}
 			//プレイヤー描画
-			player.Draw(screen);
+			player.Draw(screen, ui.mIsReady);
 
 			//制作中の操作説明を一時的に描画する
 			//Novice::DrawSprite(Screen::kWindowWidth - 420, Screen::kWindowHeight - 220, explanation, 1, 1, 0.0f, WHITE);

@@ -11,7 +11,7 @@ void Player::Init() {
 	//パラメータ
 	mPosition.setZero();
 	mVelocity.setZero();
-	mSizeValue = 80;
+	mSizeValue = 100;
 	mSize = mSizeValue;
 	mRadius = mSize / 2.0f;
 
@@ -57,14 +57,14 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 
 	//大きさをズームにしたがって変える
 	if (!isFever && isOldFever) {
-		mSizeValue = 80;
+		mSizeValue = 100;
 	}
 	mSizeValue = Clamp(mSizeValue, 0.0f, 200.0f);
 	if (!isFever) {
 		mSize += (mSizeValue - mSize) * 0.5f;
 	}
 	else if (isFever) {
-		mSize = 80 / screen.GetZoom() * 0.4f;
+		mSize = 100 / screen.GetZoom() * 0.4f;
 	}
 	mRadius = mSize / 2.0f;
 
@@ -527,16 +527,16 @@ void Player::Knockback() {
 	}
 }
 
-void Player::Draw(Screen& screen) {
+void Player::Draw(Screen& screen, bool isReady) {
 
 	//残像描画
 	for (int i = 0; i < kShadowMax; i++) {
-		screen.DrawSquare(mShadowPosition[i], mSize, mShadowColor[i]);
+		screen.DrawPicture(mShadowPosition[i], mSize, 0, 100, 100, toge, mShadowColor[i]);
 	}
 
 
 	for (int i = 0; i < 4; i++) {
-		screen.DrawSquare(mDushShadowPosition[i], mSize, mDushShadowColor);
+		screen.DrawPicture(mDushShadowPosition[i], mSize, 0, 100, 100, toge, mDushShadowColor);
 	}
 
 	//マーク描画
@@ -548,8 +548,13 @@ void Player::Draw(Screen& screen) {
 	}
 
 	//プレイヤー本体描画
-	screen.DrawSquare(mPosition, mSize, 0x606060FF);
+	//screen.DrawSquare(mPosition, mSize, 0x606060FF);
 	screen.DrawPicture(mPosition, mSize, 0, 100, 100, toge, WHITE);
+
+	if (!isReady)
+	{
+		screen.DrawPicture({ mPosition.x, mPosition.y + 100 }, 600, 150, 0.0f, 400, 100, areyouready, WHITE);
+	}
 
 	//ストライクしろ(圧)描画
 	if (mIsMarkActive && !mIsStrikeActive) {
@@ -602,5 +607,6 @@ void Player::LoadTexture() {
 		rb = Novice::LoadTexture("./Resources/Player/rb.png");
 		nopower = Novice::LoadTexture("./Resources/Player/nopower.png");
 		toge = Novice::LoadTexture("./Resources/Player/toge.png");
+		areyouready = Novice::LoadTexture("./Resources/UI/Explanation/areyouready.png");
 	}
 }

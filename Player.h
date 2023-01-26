@@ -12,7 +12,7 @@ public:
 
 	void Init();
 	void Update(Screen& screen, bool isFever, bool isOldFever);
-	void Draw(Screen& screen);
+	void Draw(Screen& screen, bool isReady);
 
 
 	//ƒpƒ‰ƒ[ƒ^
@@ -134,6 +134,7 @@ public:
 	int rb;
 	int nopower;
 	int toge;
+	int areyouready;
 	bool mIsLoadTexture = false;
 	void LoadTexture();
 
