@@ -14,7 +14,6 @@ public:
 	void Update(Vec2 playerposition, int mTimeLeft);
 	void Draw(Screen& screen);
 
-	static constexpr int kMaxTsuchinoko = 10;//敵の最大数
 	Vec2 mCenterPositionStart;//スタート地点
 	Vec2 mTargetPoint;//目標地点
 	Vec2 mDirectionPoint;
