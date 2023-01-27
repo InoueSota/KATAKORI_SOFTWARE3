@@ -495,9 +495,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			break;
 		case OUTGAME:
 			Novice::DrawSprite(0, 0, end, 1, 1, 0.0f, WHITE);
-			int Result[6];
+			int Result[7];
 			int tmpScore = ui.mScore;
-			for (int i = 5; i > -1; i--) {
+			for (int i = 6; i > -1; i--) {
 				Result[i] = tmpScore / powf(10, i);
 				tmpScore = tmpScore % (int)powf(10, i);
 				screen.DrawUI(ui.mScorePosition[i], ui.mTimeUISize, 32 * Result[i], 32, 32, ui.mTimeNumber, WHITE, ui.mComboScale);

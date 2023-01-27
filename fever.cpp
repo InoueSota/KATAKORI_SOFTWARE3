@@ -18,6 +18,8 @@ void Fever::Init() {
 	mFeverGaugeStrikeEndFlag = 0;
 }
 
+
+
 void Fever::Update(Screen& screen, Vec2 PlayerPos) {
 
 	//前回のフィーバーフラグを取得
@@ -213,6 +215,8 @@ void Fever::Update(Screen& screen, Vec2 PlayerPos) {
 		}
 	}
 }
+
+
 
 void Fever::Draw(Screen& screen) {
 
