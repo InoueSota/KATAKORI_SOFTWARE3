@@ -478,7 +478,6 @@ void Player::Shadow(bool isHitStop) {
 	}
 
 }
-
 void Player::SetKnockbackPosition(Vec2 enemyPosition, float enemyRadius) {
 
 	if (!mKnockbackActive && !mKnockbackSet) {
@@ -525,6 +524,8 @@ void Player::Knockback() {
 		}
 	}
 }
+
+
 
 void Player::Draw(Screen& screen, bool isReady) {
 
@@ -593,7 +594,6 @@ void Player::DrawStrikeUI(Screen& screen) {
 
 
 }
-
 void Player::LoadTexture() {
 
 	if (!mIsLoadTexture) {

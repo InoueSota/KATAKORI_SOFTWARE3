@@ -1,7 +1,10 @@
 #pragma once
+#include "Screen.h"
 #include "Vec2.h"
-#include "Snake.h"
-#include "Tsuchinoko.h"
+#include "Enemy.h"
+
+
+
 class Fever
 {
 public:
@@ -25,7 +28,7 @@ public:
 	void Draw(Screen& screen);		//描画
 	static constexpr int kMaxParticle = 30;//パーティクルの最大数
 	static constexpr int kMaxPlayerFeverParticle = 100;//パーティクルの最大数
-	static constexpr int kMaxEnemy = Snake::kMaxSnake + Tsuchinoko::kMaxTsuchinoko;//パーティクルの最大数
+	static constexpr int kMaxEnemy = Enemy::kEnemyMax + Enemy::kEnemyMax;//パーティクルの最大数
 	const float mParticleRadius = 200;//パーティクルを出す半径
 	static constexpr int kfeverGaugeDelayTime = 50;//フィーバーゲージ遅延フレーム数
 	static constexpr int kPlayerFeverParticleTime = 60;//プレイヤーフィーバーパーティクルのタイマー規定値

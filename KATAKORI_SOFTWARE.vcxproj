@@ -145,6 +145,7 @@
     <ClInclude Include="C:\KamataEngine\Adapter\Novice.h" />
     <ClInclude Include="ControllerInput.h" />
     <ClInclude Include="Easing.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Snake.h" />
     <ClInclude Include="Fever.h" />
     <ClInclude Include="Function.h" />

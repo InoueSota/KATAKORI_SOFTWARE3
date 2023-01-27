@@ -173,5 +173,6 @@
     <ClInclude Include="Tsuchinoko.h" />
     <ClInclude Include="Fever.h" />
     <ClInclude Include="Outgame.h" />
+    <ClInclude Include="Enemy.h" />
   </ItemGroup>
 </Project>

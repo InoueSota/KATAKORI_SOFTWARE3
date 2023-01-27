@@ -7,17 +7,13 @@
 #include "Outgame.h"
 #include "Ingame.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "Snake.h"
 #include "Tsuchinoko.h"
 #include "Collision.h"
 #include "Fever.h"
 
-class Enemy
-{
-public:
-	//敵の最大数
-	static constexpr int kEnemyMax = 10;
-};
+
 
 //インスタンス化
 Screen screen;

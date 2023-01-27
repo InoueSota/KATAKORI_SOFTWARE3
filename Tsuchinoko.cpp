@@ -76,7 +76,6 @@ void Tsuchinoko::Update(Vec2 playerposition, int mTimeLeft) {
 		Follow();
 	}
 }
-
 void Tsuchinoko::Make(Vec2 PlayerPos, int mTimeLeft) {
 
 	int SuperRand = RAND(1, 100);
@@ -111,7 +110,6 @@ void Tsuchinoko::Make(Vec2 PlayerPos, int mTimeLeft) {
 	}
 
 }
-
 void Tsuchinoko::Move(Vec2 playerPosition) {
 
 	//プレイヤーを追いかけて"ない"
@@ -168,8 +166,6 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 		mMapLimitFlag = false;
 	}
 }
-
-
 void Tsuchinoko::SetAngle() {
 
 	//移動している時のみ角度を設定する
@@ -185,7 +181,6 @@ void Tsuchinoko::SetAngle() {
 		mCenterAngle = atan2(cp, dp);
 	}
 }
-
 void Tsuchinoko::Follow() {
 
 	mHeadPosition.x = mCenterPosition.x + ( cosf(mCenterAngle + Degree(90)) * ( 150.0f + (mSize - mBodySize)));
@@ -200,7 +195,6 @@ void Tsuchinoko::Follow() {
 	}
 
 }
-
 void Tsuchinoko::LockOn(Vec2 playerposition, float radius) {
 
 	Vec2 toPlayer = playerposition - mCenterPosition;

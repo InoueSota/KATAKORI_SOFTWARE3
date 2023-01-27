@@ -1,6 +1,9 @@
 #include "Fever.h"
 #include "Novice.h"
 #include "Easing.h"
+#include "Function.h"
+
+
 
 void Fever::Init() {
 	mSnakeDefeat = 0;

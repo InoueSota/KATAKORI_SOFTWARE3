@@ -18,6 +18,8 @@ void Snake::Init() {
 	mIsSuper = 0;
 }
 
+
+
 void Snake::Update(int mTimeLeft, Vec2 PlayerPos) {
 
 	//速度の初期化
@@ -57,7 +59,6 @@ void Snake::Update(int mTimeLeft, Vec2 PlayerPos) {
 		Follow();
 	}
 }
-
 void Snake::Make(int mTimeLeft, Vec2 PlayerPos) {
 
 	int SuperRand = RAND(1, 100);
@@ -95,7 +96,6 @@ void Snake::Make(int mTimeLeft, Vec2 PlayerPos) {
 	}
 
 }
-
 void Snake::Move() {
 
 	//プレイヤーを追いかけて"ない"
@@ -155,7 +155,6 @@ void Snake::Move() {
 		mMapLimitFlag = false;
 	}
 }
-
 void Snake::Angle() {
 
 	//移動している時のみ角度を設定する
@@ -171,7 +170,6 @@ void Snake::Angle() {
 		mHeadAngle = atan2(cp, dp);
 	}
 }
-
 void Snake::LockOn(Vec2 playerposition, float radius) {
 
 	Vec2 toPlayer = playerposition - mHeadPosition;
@@ -187,7 +185,6 @@ void Snake::LockOn(Vec2 playerposition, float radius) {
 		IsPlayerLockon = false;
 	}
 }
-
 void Snake::Follow() {
 
 	//頭が動いているとき
@@ -241,6 +238,8 @@ void Snake::Follow() {
 	mBodyAngle[3] = mOldHeadAngle[79];
 
 }
+
+
 
 void Snake::Draw(Screen& screen) {
 
