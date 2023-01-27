@@ -28,6 +28,11 @@ void Snake::Update(int mTimeLeft, Vec2 PlayerPos) {
 	//生成処理
 	Make(mTimeLeft, PlayerPos);
 
+	//死亡エフェクトが完了したらフラグを初期化する
+	if (mIsClearAnimation) {
+		mIsClearAnimation = false;
+	}
+
 	for (int i = 0; i < kMaxSpawnParticle; i++) {
 		if (spawnParticle[i].IsUse) {
 			if (spawnParticle[i].T < 1) {

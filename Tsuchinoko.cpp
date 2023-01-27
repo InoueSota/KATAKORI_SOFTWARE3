@@ -4,7 +4,7 @@
 #include "Ingame.h"
 #include "Function.h"
 #include "Collision.h"
-#include <Easing.h>
+#include "Easing.h"
 
 
 
@@ -43,6 +43,11 @@ void Tsuchinoko::Update(Vec2 playerposition, int mTimeLeft) {
 
 	//生成処理
 	Make(playerposition, mTimeLeft);
+
+	//死亡エフェクトが完了したらフラグを初期化する
+	if (mIsClearAnimation) {
+		mIsClearAnimation = false;
+	}
 
 	for (int i = 0; i < kMaxSpawnParticle; i++) {
 		if (spawnParticle[i].IsUse) {
@@ -267,9 +272,9 @@ void Tsuchinoko::Draw(Screen& screen) {
 	if (mIsDeath && !mIsClearAnimation) {
 		for (int i = 0; i < kBodyMax; i++) {
 			mBodyDeadPosition[i] = mBodyPosition[i];
-			mHeadDeadPosition = mHeadPosition;
-			mTailDeadPosition = mTailPosition;
 		}
+		mHeadDeadPosition = mHeadPosition;
+		mTailDeadPosition = mTailPosition;
 		mIsAnimation = true;
 	}
 	//描画
@@ -277,10 +282,9 @@ void Tsuchinoko::Draw(Screen& screen) {
 		mDeadFrame++;
 		for (int i = 0; i < kBodyMax; i++) {
 			screen.DrawAnime(mBodyDeadPosition[i], mBodySize * 3, 0, 100, 100, 11, 3, mDeadFrame, hiteffect, WHITE);
-			screen.DrawAnime(mHeadDeadPosition, mSize * 3, 0, 100, 100, 11, 3, mDeadFrame, hiteffect, WHITE);
-			screen.DrawAnime(mTailDeadPosition, mSize * 3, 0, 100, 100, 11, 3, mDeadFrame, hiteffect, WHITE);
 		}
-
+		screen.DrawAnime(mHeadDeadPosition, mSize * 3, 0, 100, 100, 11, 3, mDeadFrame, hiteffect, WHITE);
+		screen.DrawAnime(mTailDeadPosition, mSize * 3, 0, 100, 100, 11, 3, mDeadFrame, hiteffect, WHITE);
 	}
 	if (mDeadFrame == 0 && mIsAnimation) {
 		mIsClearAnimation = true;
