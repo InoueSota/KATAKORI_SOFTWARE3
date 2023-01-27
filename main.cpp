@@ -491,8 +491,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//フィーバー
 			fever.Draw(screen);
 
-			Novice::ScreenPrintf(40, 60, "isDeath : %d", tsuchinoko[0].mIsDeath);
-			Novice::ScreenPrintf(40, 80, "isClearAnimation : %d", tsuchinoko[0].mIsClearAnimation);
 
 			break;
 		case OUTGAME:
