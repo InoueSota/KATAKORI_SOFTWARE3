@@ -165,6 +165,21 @@ void Fever::Update(Screen& screen, Vec2 PlayerPos) {
 				particlecreat[i].particle[j].IsUse = 1;
 				particlecreat[i].particle[j].Pos = particlecreat[i].Pos;
 				particlecreat[i].IsUse = 2;
+				int Defeat = mTsuchinokoDefeatStrike + mSnakeDefeatStrike;
+				if (Defeat == 1) {
+					particlecreat[i].particle[j].color = 0xFF1919FF;
+				} else if (Defeat == 2) {
+					particlecreat[i].particle[j].color = 0xFF7C19FF;
+				} else if (Defeat == 3) {
+					particlecreat[i].particle[j].color = 0xFFE819FF;
+				} else if (Defeat == 4) {
+					particlecreat[i].particle[j].color = 0x92E819FF;
+				} else if (Defeat == 5) {
+					particlecreat[i].particle[j].color = 0x919FEBFF;
+				} else{
+					particlecreat[i].particle[j].color = 0xDF4AEBFF;
+				}
+					
 			}
 		}
 	}
@@ -249,9 +264,9 @@ void Fever::Draw(Screen& screen) {
 		for (int j = 0; j < kMaxParticle; j++) {
 			if (particlecreat[i].particle[j].IsUse) {
 				if (!(particlecreat[i].particle[j].IsUse == 4)) {
-					screen.DrawBox(particlecreat[i].particle[j].Pos, 10, 10, 0, WHITE, kFillModeSolid);
+					screen.DrawBox(particlecreat[i].particle[j].Pos, 10, 10, 0, particlecreat[i].particle[j].color, kFillModeSolid);
 				} else {
-					screen.DrawBox(particlecreat[i].particle[j].Pos, 10, 10, 0, WHITE, kFillModeSolid, false);
+					screen.DrawBox(particlecreat[i].particle[j].Pos, 10, 10, 0, particlecreat[i].particle[j].color, kFillModeSolid, false);
 				}
 			}
 		}
