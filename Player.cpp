@@ -543,7 +543,7 @@ void Player::Draw(Screen& screen, bool isReady) {
 	if (mIsMarkActive){
 
 		screen.DrawLine(mPosition, mMarkPosition, RED);
-		screen.DrawSquare(mMarkPosition, mSize, RED);
+		screen.DrawPicture(mMarkPosition, mSize, 0, 100, 100, mark, WHITE);
 
 	}
 
@@ -606,6 +606,7 @@ void Player::LoadTexture() {
 		rb = Novice::LoadTexture("./Resources/Player/rb.png");
 		nopower = Novice::LoadTexture("./Resources/Player/nopower.png");
 		toge = Novice::LoadTexture("./Resources/Player/toge.png");
+		mark = Novice::LoadTexture("./Resources/Player/mark.png");
 		areyouready = Novice::LoadTexture("./Resources/UI/Explanation/areyouready.png");
 	}
 }

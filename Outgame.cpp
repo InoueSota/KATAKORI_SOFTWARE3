@@ -8,6 +8,7 @@ void Title::Init() {
 
 	mTitleAlphaT = 0.0f;
 	mTitleColor = 0xFFFFFF00;
+	mAEasingt = 0.0f;
 }
 void Title::Update() {
 
@@ -18,6 +19,14 @@ void Title::Update() {
 	else {
 		mTitleAlphaT = EasingClamp(0.02f, mTitleAlphaT);
 		mTitleColor = ColorEasingMove(0xFFFFFF00, WHITE, easeOutSine(mTitleAlphaT));
+
+		//Aボタンのアニメーション
+		mAEasingt = EasingClamp(0.02f, mAEasingt);
+		mAScaleColor = ColorEasingMove(0xFFFFFF80, 0xFFFFFF00, easeOutSine(mAEasingt));
+		mAScale = EasingMove({ 1.0f,1.0f }, { 1.5f, 1.5f }, easeOutSine(mAEasingt));
+		if (mAEasingt == 1.0f) {
+			mAEasingt = 0.0f;
+		}
 	}
 }
 void Title::Katakori() {
@@ -66,7 +75,9 @@ void Title::Draw(Screen& screen) {
 	//タイトル画面の描画
 	if (mIsKatakoriClear) {
 		screen.DrawRectAngle(mKatakoriPosition, Screen::kWindowWidth, Screen::kWindowHeight, BLACK, kFillModeSolid, false);
-		screen.DrawUI(mTitlePosition, Screen::kWindowWidth, Screen::kWindowHeight, 0, Screen::kWindowWidth, Screen::kWindowHeight, mTitle, mTitleColor);
+		screen.DrawUI(mTitlePosition, Screen::kWindowWidth, Screen::kWindowHeight, 0, 1920, 1080, mTitle, mTitleColor);
+		screen.DrawUI({ mTitlePosition.x, Screen::kWindowHeight - 75 }, 75, 75, 0, 160, 160, mA, mAScaleColor, mAScale);
+		screen.DrawUI({ mTitlePosition.x, Screen::kWindowHeight - 75 }, 75, 75, 0, 160, 160, mA, mTitleColor);
 	}
 
 }
@@ -75,6 +86,7 @@ void Title::LoadTexture() {
 	if (!mIsLoadTexture) {
 		mKatakori = Novice::LoadTexture("./Resources/Outgame/Title/katakorisoftware.png");
 		mTitle = Novice::LoadTexture("./Resources/Outgame/Title/title.png");
+		mA = Novice::LoadTexture("./Resources/UI/Explanation/a.png");
 		mIsLoadTexture = true;
 	}
 }

@@ -134,6 +134,7 @@ public:
 	int rb;
 	int nopower;
 	int toge;
+	int mark;
 	int areyouready;
 	bool mIsLoadTexture = false;
 	void LoadTexture();

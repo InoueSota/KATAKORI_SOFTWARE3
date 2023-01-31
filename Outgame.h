@@ -31,11 +31,15 @@ public:
 	Vec2 mTitlePosition{ Screen::kWindowWidth / 2, Screen::kWindowHeight / 2 };
 	float mTitleAlphaT;
 	unsigned int mTitleColor;
+	unsigned int mAScaleColor;
+	Vec2 mAScale;
+	float mAEasingt;
 
 	//‰æ‘œ
 	bool mIsLoadTexture = false;
 	int mKatakori;
 	int mTitle;
+	int mA;
 	void LoadTexture();
 
 };
