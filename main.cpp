@@ -110,15 +110,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				//制限時間をフィーバーに入ったら延ばす
 				ui.ExtendTime(fever.mIsFever, fever.mIsOldFever);
 
-				//ゲーム開始時に初期化する
-				if (!ui.mIsOldReady && ui.mIsReady) {
-					player.Init();
-					for (int i = 0; i < Enemy::kEnemyMax; i++) {
-						snake[i].Init();
-						tsuchinoko[i].Init();
-					}
-				}
-
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -365,8 +356,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					tsuchinoko[i].mCenterSpeed = 5 + player.LockonCount * 0.3;
 				}
 
-
-
 				//フィーバー
 				fever.Update(screen, player.mPosition);
 
@@ -375,6 +364,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 				//残像アップデート
 				player.Shadow(screen.GetHitStop());
+
+				//ゲーム開始時に初期化する
+				if (!ui.mIsOldReady && ui.mIsReady) {
+					player.Init();
+					for (int i = 0; i < Enemy::kEnemyMax; i++) {
+						snake[i].Init();
+						tsuchinoko[i].Init();
+					}
+				}
 
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

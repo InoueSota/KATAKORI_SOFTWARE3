@@ -266,7 +266,7 @@ void Fever::Draw(Screen& screen) {
 				if (!(particlecreat[i].particle[j].IsUse == 4)) {
 					screen.DrawBox(particlecreat[i].particle[j].Pos, 10, 10, 0, particlecreat[i].particle[j].color, kFillModeSolid);
 				} else {
-					screen.DrawBox(particlecreat[i].particle[j].Pos, 10, 10, 0, particlecreat[i].particle[j].color, kFillModeSolid, false);
+					screen.DrawBox(particlecreat[i].particle[j].Pos, 10 * screen.GetZoom(), 10 * screen.GetZoom(), 0, particlecreat[i].particle[j].color, kFillModeSolid, false);
 				}
 			}
 		}
