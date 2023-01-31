@@ -613,7 +613,9 @@ void Player::DrawStrikeUI(Screen& screen) {
 
 	//É}Å[ÉNÇÃí∑Ç≥
 	if (mIsMarkActive) {
-		screen.DrawBox({ 35.0f, 100.0f }, (mPosition - mMarkPosition).Length() * (250.0f / kMarkMaxLength), 25, 0.0f, WHITE, kFillModeSolid, false);
+		float marklength = (mPosition - mMarkPosition).Length();
+		marklength = Clamp(marklength, 0, kMarkMaxLength);
+		screen.DrawBox({ 35.0f, 100.0f }, marklength * (250.0f / kMarkMaxLength), 25, 0.0f, WHITE, kFillModeSolid, false);
 	}
 	screen.DrawUI({ 160.0f, 112.5f }, 250, 25, 0, 1000, 100, lengthflame, WHITE);
 
