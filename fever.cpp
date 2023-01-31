@@ -16,6 +16,7 @@ void Fever::Init() {
 	mSnakeDefeatStrike = 0;
 	mTsuchinokoDefeatStrike = 0;
 	mFeverGaugeStrikeEndFlag = 0;
+	mFeverStop = false;
 }
 
 
@@ -27,7 +28,9 @@ void Fever::Update(Screen& screen, Vec2 PlayerPos) {
 
 	//フィーバーシステム
 	if (mIsFever) {
-		mFeverGauge--;
+		if (!mFeverStop) {
+			mFeverGauge--;
+		}
 		if (mFeverGauge < 0) {
 			mIsFever = false;
 			mFeverGauge = 0;

@@ -351,6 +351,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						fever.mFeverGaugeStrikeEndFlag = 2;
 					}
 				}
+
+				if (0 >= ui.mTimeLeft) {
+					fever.mFeverStop = true;
+				} else {
+					fever.mFeverStop = false;
+				}
 				
 
 
