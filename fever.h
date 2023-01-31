@@ -23,6 +23,7 @@ public:
 	int mFeverGauge = 0;			//フィーバーゲージ
 	bool mIsFever = 0;				//フィーバーしているかどうか
 	bool mIsOldFever = 0;			//フィーバーしていたかどうか
+	bool mFeverStop = 0;
 	void Init();					//初期化
 	void Update(Screen& screen, Vec2 PlayerPos);	//アップデート
 	void Draw(Screen& screen);		//描画
