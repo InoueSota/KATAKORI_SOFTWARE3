@@ -46,7 +46,7 @@ public:
 	Vec2 mMarkPosition;
 	int mMarkFrame;
 	void Mark();
-	void MarkLimitLength();
+	void MarkLimitLength(bool isFever);
 
 
 	//ストライク = Strike

@@ -102,7 +102,7 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 		mPosition += (mVelocity / screen.GetZoom() * 0.4f);
 
 		//マークとの距離に制限をかける
-		MarkLimitLength();
+		MarkLimitLength(isFever);
 	}
 	if (Controller::IsTriggerButton(0, Controller::bA)) {
 		//ダッシュ判定のタイマーセット
@@ -194,9 +194,9 @@ void Player::Mark() {
 	}
 
 }
-void Player::MarkLimitLength() {
+void Player::MarkLimitLength(bool isFever) {
 
-	if (mIsMarkActive) {
+	if (mIsMarkActive && !isFever) {
 
 		if (!Collision(mPosition, 0, mMarkPosition, kMarkMaxLength)) {
 			Vec2 tmpDirection = (mPosition - mMarkPosition).Normalized();
