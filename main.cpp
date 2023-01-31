@@ -182,13 +182,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							if (!snake[i].mIsDeath && (CircleCapsuleCollsion(player, snake[i].mHeadPosition, snake[i].mHeadRadius * 0.6f))) {
 
 								//フィーバーじゃないとき
-								if (!fever.mIsFever) {
+								if (!fever.mIsFever && player.mDushTimer <= 0) {
 									player.SetKnockbackPosition(snake[i].mHeadPosition, snake[i].mHeadRadius);
 									ui.mCombo--;
 									ui.mIsWarning = true;
 								}
 								//フィーバーのとき
-								else if (fever.mIsFever) {
+								else if (fever.mIsFever || player.mDushTimer > 0) {
 
 									//準備フェーズはスコアを加算しない処理
 									if (ui.mIsReady) {
@@ -199,7 +199,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 									}
 									screen.SetHitStop();
 									snake[i].mShakeTimer = snake[i].kMaxShakeTimer;
+									//ダッシュタイマーリセット
+									player.mDushTimer = 0;
 								}
+								
 							}
 
 							//ヘビの体
@@ -252,7 +255,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							if (!tsuchinoko[i].mIsDeath && (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius * 0.6f) || CircleCapsuleCollsion(player, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius * 0.6f))) {
 
 								//フィーバーじゃないとき
-								if (!fever.mIsFever) {
+								if (!fever.mIsFever && player.mDushTimer <= 0) {
 
 									//ツチノコの頭か尾のどちらに当たったかを判定し、ノックバックの開始位置を変える
 									//頭の場合
@@ -268,7 +271,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 									ui.mIsWarning = true;
 								}
 								//フィーバーのとき
-								else if (fever.mIsFever) {
+								else if (fever.mIsFever || player.mDushTimer > 0) {
 
 									//準備フェーズはスコアを加算しない処理
 									if (ui.mIsReady) {
@@ -279,7 +282,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 									}
 									screen.SetHitStop();
 									tsuchinoko[i].mShakeTimer = tsuchinoko[i].kMaxShakeTimer;
+									//ダッシュタイマーリセット
+									player.mDushTimer = 0;
 								}
+								
 
 							}
 
@@ -322,6 +328,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 								}
 
 							}
+							
 						}
 						if (tsuchinoko[i].mShakeTimer > 0) {
 							tsuchinoko[i].mShakeTimer--;

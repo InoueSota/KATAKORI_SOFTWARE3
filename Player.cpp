@@ -34,6 +34,8 @@ void Player::Init() {
 	mStrikeModeScaleActive = false;
 	strikeMode = STRAIGHT;
 
+	mDushTimer = 0;
+
 	//ストライク演出
 	for (int i = 0; i < kStrikeLineMax; i++) {
 		mIsStrikeLineActive[i] = false;
@@ -94,6 +96,14 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 
 		//速度を代入する
 		mPosition += (mVelocity / screen.GetZoom() * 0.4f);
+
+	}
+	if (Controller::IsTriggerButton(0, Controller::bA)) {
+		//ダッシュ判定のタイマーセット
+		mDushTimer = kMaxDushTimer;
+	}
+	if (mDushTimer > 0) {
+		mDushTimer--;
 	}
 		
 }
@@ -146,6 +156,7 @@ void Player::Dush() {
 
 		//速度を代入する
 		mVelocity += mDushVelocity;
+		
 	}
 }
 void Player::Mark() {

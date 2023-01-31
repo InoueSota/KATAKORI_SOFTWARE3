@@ -34,6 +34,8 @@ public:
 	//ƒ_ƒbƒVƒ… = Dush
 	Vec2 mDushVelocity;
 	float mDushMag;
+	int mDushTimer = 0;
+	static constexpr int kMaxDushTimer = 30;
 	void Dush();
 
 
