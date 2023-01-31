@@ -379,7 +379,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 				//ズームアップデート
-				screen.ZoomUpdate(fever.mIsFever, fever.mIsOldFever, player.mSize);
+				screen.ZoomUpdate(fever.mIsFever, fever.mIsOldFever, player.mIsStrikeActive, player.mIsOldStrikeActive);
 
 				//スクロールアップデート
 				screen.ScrollUpdate(player);

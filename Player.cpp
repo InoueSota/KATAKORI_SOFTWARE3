@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Key.h"
 #include "ControllerInput.h"
+#include "Collision.h"
 #include "Function.h"
 #include "Easing.h"
 #include "Ingame.h"
@@ -56,6 +57,9 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 	//前回ポジションを取得する
 	mOldPosition = mPosition;
 
+	//前回ストライクフラグを取得する
+	mIsOldStrikeActive = mIsStrikeActive;
+
 	//速度を初期化する
 	mVelocity.setZero();
 
@@ -94,6 +98,9 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 
 		//速度を代入する
 		mPosition += (mVelocity / screen.GetZoom() * 0.4f);
+
+		//マークとの距離に制限をかける
+		MarkLimitLength();
 	}
 		
 }
@@ -176,6 +183,16 @@ void Player::Mark() {
 		mMarkFrame = 0;
 	}
 
+}
+void Player::MarkLimitLength() {
+
+	if (mIsMarkActive) {
+
+		if (!Collision(mPosition, 0, mMarkPosition, kMarkMaxLength)) {
+			Vec2 tmpDirection = (mPosition - mMarkPosition).Normalized();
+			mPosition = mMarkPosition + tmpDirection * kMarkMaxLength;
+		}
+	}
 }
 void Player::Strike(bool isFever, bool isOldFever) {
 
@@ -584,6 +601,12 @@ void Player::DrawStrikeUI(Screen& screen) {
 		}
 	}
 
+	//マークの長さ
+	if (mIsMarkActive) {
+		screen.DrawBox({ 35.0f, 100.0f }, (mPosition - mMarkPosition).Length() * (250.0f / kMarkMaxLength), 25, 0.0f, WHITE, kFillModeSolid, false);
+	}
+	screen.DrawUI({ 160.0f, 112.5f }, 250, 25, 0, 1000, 100, lengthflame, WHITE);
+
 	//screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, circle, WHITE);
 	//if (strikeMode == STRAIGHT) {
 	//	screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, straight, WHITE, mStrikeModeScale);
@@ -599,6 +622,7 @@ void Player::LoadTexture() {
 	if (!mIsLoadTexture) {
 		flame = Novice::LoadTexture("./Resources/Player/flame.png");
 		lastflame = Novice::LoadTexture("./Resources/Player/lastflame.png");
+		lengthflame = Novice::LoadTexture("./Resources/Player/lengthflame.png");
 		circle = Novice::LoadTexture("./Resources/Player/circle.png");
 		straight = Novice::LoadTexture("./Resources/Player/straight.png");
 		spiral = Novice::LoadTexture("./Resources/Player/spiral.png");

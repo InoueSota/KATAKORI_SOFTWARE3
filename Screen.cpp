@@ -18,6 +18,7 @@ void Screen::Init() {
 
 	//ズーム
 	mIsZoomEasing = false;
+	mIsStikeZoomEasing = false;
 	mZoom = 0.4f;
 	mZoomEasingt = 0.0f;
 
@@ -56,7 +57,6 @@ void Screen::ShakeUpdate(bool condition) {
 		}
 	}
 }
-
 void Screen::ShakeUpdate(int min, int max, bool condition) {
 
 	if (condition == true)
@@ -70,7 +70,6 @@ void Screen::ShakeUpdate(int min, int max, bool condition) {
 	}
 
 }
-
 void Screen::ShakeUpdate(int minX, int maxX, int minY, int maxY, bool condition) {
 
 	if (condition == true)
@@ -84,7 +83,6 @@ void Screen::ShakeUpdate(int minX, int maxX, int minY, int maxY, bool condition)
 	}
 
 }
-
 void Screen::HitStopUpdate() {
 
 	if (mIsHitStop)
@@ -99,30 +97,46 @@ void Screen::HitStopUpdate() {
 		mHitStopFrame = 0;
 	}
 }
-
 void Screen::ScrollUpdate(Player& player) {
 
 	mScroll.x += (( player.mPosition.x * mZoom) - mScroll.x) * 0.15f;
 	mScroll.y += ((-player.mPosition.y * mZoom) - mScroll.y) * 0.15f;
 }
-
-void Screen::ZoomUpdate(bool isFever, bool isOldFever, float playerSize) {
+void Screen::ZoomUpdate(bool isFever, bool isOldFever, bool isStrikeActive, bool isOldStrikeActive) {
 
 	//フィーバー時ズームにする
 	if (isFever && !isOldFever)
 	{
 		mZoomEasingt = 0.0f;
-		mZoomStartValue = 0.4f;
+		mZoomStartValue = mZoom;
 		mZoomEndValue = 0.18f;
+		mIsStikeZoomEasing = false;
 		mIsZoomEasing = true;
 	}
 	//通常時ズームにする
 	if (!isFever && isOldFever)
 	{
 		mZoomEasingt = 0.0f;
-		mZoomStartValue = 0.18f;
+		mZoomStartValue = mZoom;
 		mZoomEndValue = 0.4f;
+		mIsStikeZoomEasing = false;
 		mIsZoomEasing = true;
+	}
+	//ストライク中ズームにする
+	if (!isFever && isStrikeActive && !isOldStrikeActive)
+	{
+		mZoomEasingt = 0.0f;
+		mZoomStartValue = mZoom;
+		mZoomEndValue = 0.32f;
+		mIsStikeZoomEasing = true;
+	}
+	//ストライク中ズームから通常時ズームにする
+	else if (!isFever && !isStrikeActive && isOldStrikeActive)
+	{
+		mZoomEasingt = 0.0f;
+		mZoomStartValue = mZoom;
+		mZoomEndValue = 0.4f;
+		mIsStikeZoomEasing = true;
 	}
 
 	//ズーム値の変化をさせる
@@ -135,10 +149,16 @@ void Screen::ZoomUpdate(bool isFever, bool isOldFever, float playerSize) {
 			mIsZoomEasing = false;
 		}
 	}
-	else if (!isFever)
+
+	//ストライク専用ズーム
+	if (mIsStikeZoomEasing)
 	{
-		float tmpZoom = 40 / playerSize;
-		mZoom += (tmpZoom - mZoom) * 0.025f;
+		mZoomEasingt = EasingClamp(0.03f, mZoomEasingt);
+		mZoom = EasingMove(mZoomStartValue, mZoomEndValue, easeOutSine(mZoomEasingt));
+
+		if (mZoomEasingt == 1.0f) {
+			mIsZoomEasing = false;
+		}
 	}
 
 	mZoom = Clamp(mZoom, 0.15f, 0.8f);

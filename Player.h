@@ -38,11 +38,13 @@ public:
 
 
 	//マーキング = Mark
+	const int kMarkMaxLength = 1600;
+	static constexpr int kMarkTimeLimit = 240;
 	bool mIsMarkActive;
 	Vec2 mMarkPosition;
-	static constexpr int kMarkTimeLimit = 240;
 	int mMarkFrame;
 	void Mark();
+	void MarkLimitLength();
 
 
 	//ストライク = Strike
@@ -52,6 +54,7 @@ public:
 	};
 	StrikeMode strikeMode = STRAIGHT;
 	bool mIsStrikeActive;
+	bool mIsOldStrikeActive;
 	bool mIsStraightStrikeActive;
 	bool mIsStraightStrikeFinish;
 	static constexpr int kToHeadMinusValue = 4;
@@ -127,6 +130,7 @@ public:
 	//画像
 	int flame;
 	int lastflame;
+	int lengthflame;
 	int circle;
 	int straight;
 	int spiral;

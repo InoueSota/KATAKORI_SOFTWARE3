@@ -21,6 +21,7 @@ private:
 	Vec2 mScroll;			//スクロール値
 
 	bool mIsZoomEasing;		//ズームフラグ
+	bool mIsStikeZoomEasing;//ズームフラグ（ストライク専用）
 	float mZoom;			//ズーム値
 	float mZoomEasingt;		//ズームを徐々に行うイージング
 	float mZoomStartValue;	//ズーム開始値
@@ -97,7 +98,7 @@ public:
 	/// <summary>
 	/// ズーム
 	/// </summary>
-	void ZoomUpdate(bool isFever, bool isOldFever, float playerSize);
+	void ZoomUpdate(bool isFever, bool isOldFever, bool isStrikeActive, bool isOldStrikeActive);
 
 	/// <summary>
 	/// ズーム値を取得する
