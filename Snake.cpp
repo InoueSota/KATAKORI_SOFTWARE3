@@ -16,6 +16,7 @@ void Snake::Init() {
 	mFollowFrame = 0;
 	mDeadFlame = 0;
 	mIsSuper = 0;
+	mShakeTimer = -1;
 }
 
 
@@ -52,7 +53,9 @@ void Snake::Update(int mTimeLeft, Vec2 PlayerPos) {
 
 	if (mIsActive && !mIsDeath)
 	{
-		Move();
+		if (mShakeTimer == -1) {
+			Move();
+		}
 
 		//Œü‚«‚ğ•Ï‚¦‚éˆ—
 		Angle();
@@ -95,6 +98,7 @@ void Snake::Make(int mTimeLeft, Vec2 PlayerPos) {
 		}
 		mIsDeath = false;
 		mIsActive = true;
+		mShakeTimer = -1;
 		if (mTimeLeft < 30 && mTimeLeft > 0 && SuperRand <= 30) {
 			mIsSuper = 1;
 		}
@@ -258,24 +262,46 @@ void Snake::Draw(Screen& screen) {
 		mIsLoadTexture = true;
 	}
 
+	Vec2 ShakeRand = {};
+	ShakeRand.x = RAND(-10, 10);
+	ShakeRand.y = RAND(-10, 10);
+
 	//¶¬‚³‚ê‚Ä‚¢‚Ä€‚ñ‚Å‚¢‚È‚¢
 	if (mIsActive && !mIsDeath)
 	{
 		//‘Ì•`‰æ
 		for (int i = 0; i < kBodyMax; i++){
-			if (mIsSuper) {
-				screen.DrawPicture(mBodyPosition[i], mBodyRadius, mBodyAngle[i], 100, 100, superbody, WHITE);
-			} else{
-				screen.DrawPicture(mBodyPosition[i], mBodyRadius, mBodyAngle[i], 100, 100, body, WHITE);
+			if (mShakeTimer > 0) {
+				if (mIsSuper) {
+					screen.DrawPicture(mBodyPosition[i] + ShakeRand, mBodyRadius, mBodyAngle[i], 100, 100, superbody, WHITE);
+				} else {
+					screen.DrawPicture(mBodyPosition[i] + ShakeRand, mBodyRadius, mBodyAngle[i], 100, 100, body, WHITE);
+				}
+			} else {
+				if (mIsSuper) {
+					screen.DrawPicture(mBodyPosition[i], mBodyRadius, mBodyAngle[i], 100, 100, superbody, WHITE);
+				} else {
+					screen.DrawPicture(mBodyPosition[i], mBodyRadius, mBodyAngle[i], 100, 100, body, WHITE);
+				}
 			}
+			
 		}
 
 		//“ª•`‰æ
-		if (mIsSuper) {
-			screen.DrawPicture(mHeadPosition, mHeadRadius, mHeadAngle, 100, 100, superhead, WHITE);
+		if (mShakeTimer > 0) {
+			if (mIsSuper) {
+				screen.DrawPicture(mHeadPosition + ShakeRand, mHeadRadius, mHeadAngle, 100, 100, superhead, WHITE);
+			} else {
+				screen.DrawPicture(mHeadPosition + ShakeRand, mHeadRadius, mHeadAngle, 100, 100, head, WHITE);
+			}
 		} else {
-			screen.DrawPicture(mHeadPosition, mHeadRadius, mHeadAngle, 100, 100, head, WHITE);
+			if (mIsSuper) {
+				screen.DrawPicture(mHeadPosition, mHeadRadius, mHeadAngle, 100, 100, superhead, WHITE);
+			} else {
+				screen.DrawPicture(mHeadPosition, mHeadRadius, mHeadAngle, 100, 100, head, WHITE);
+			}
 		}
+		
 
 		//‹ŠE•`‰æ
 		if (IsPlayerLockon) {

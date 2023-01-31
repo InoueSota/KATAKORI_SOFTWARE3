@@ -58,6 +58,10 @@ public:
 	static constexpr int kEnemyMapLimit = 300;
 	bool mMapLimitFlag;
 
+	//“GŒ‚”jŒã‚Ék‚¦‚éƒ^ƒCƒ}[
+	static constexpr int kMaxShakeTimer = 8;
+	int mShakeTimer = -1;
+
 	//‘Ì•”•ª‹¤’Ê
 	static constexpr int kMaxFrame = 120;
 	static constexpr int kBodyMax = 4;

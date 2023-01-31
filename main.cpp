@@ -177,141 +177,163 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				//ノックバックしていないとき（ノックバック中は無敵）
 				if (!player.mKnockbackActive) {
 					for (int i = 0; i < Enemy::kEnemyMax; i++) {
+						if (snake[i].mShakeTimer == -1) {
+							//ヘビの頭
+							if (!snake[i].mIsDeath && (CircleCapsuleCollsion(player, snake[i].mHeadPosition, snake[i].mHeadRadius * 0.6f))) {
 
-						//ヘビの頭
-						if (!snake[i].mIsDeath && (CircleCapsuleCollsion(player, snake[i].mHeadPosition, snake[i].mHeadRadius * 0.6f))) {
-
-							//フィーバーじゃないとき
-							if (!fever.mIsFever) {
-								player.SetKnockbackPosition(snake[i].mHeadPosition, snake[i].mHeadRadius);
-								ui.mCombo--;
-								ui.mIsWarning = true;
-							}
-							//フィーバーのとき
-							else if (fever.mIsFever) {
-
-								//準備フェーズはスコアを加算しない処理
-								if (ui.mIsReady) {
-									ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
-									ui.AddCombo();
-									fever.mSnakeDefeat++;
-									fever.mSnakeDefeatStrike++;
+								//フィーバーじゃないとき
+								if (!fever.mIsFever && player.mDushTimer <= 0) {
+									player.SetKnockbackPosition(snake[i].mHeadPosition, snake[i].mHeadRadius);
+									ui.mCombo--;
+									ui.mIsWarning = true;
 								}
-								screen.SetHitStop();
-								snake[i].mIsDeath = true;
-							}
-						}
+								//フィーバーのとき
+								else if (fever.mIsFever || player.mDushTimer > 0) {
 
-						//ヘビの体
-						for (int j = 0; j < Snake::kBodyMax; j++) {
-
-							if (!snake[i].mIsDeath && CircleCapsuleCollsion(player, snake[i].mBodyPosition[j], snake[i].mBodyRadius) && !player.mKnockbackActive) {
-
-								//ダッシュで倒したらパワーを１増やす
-								if (!player.mIsStrikeActive) {
-									player.mStrikePower++;
-								} 
-								//ダッシュ使用時
-								else {
-
-									//準備フェーズはフィーバーゲージを増やさない処理
+									//準備フェーズはスコアを加算しない処理
 									if (ui.mIsReady) {
+										ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
+										ui.AddCombo();
 										fever.mSnakeDefeat++;
 										fever.mSnakeDefeatStrike++;
-										if (!fever.mIsFever) {
-											for (int k = 0; k < Fever::kMaxEnemy; k++) {
-												if (!fever.particlecreat[k].IsUse) {
-													fever.particlecreat[k].IsUse = 1;
-													fever.particlecreat[k].Pos = snake[i].mHeadPosition;
-													break;
+									}
+									screen.SetHitStop();
+									snake[i].mShakeTimer = snake[i].kMaxShakeTimer;
+									//ダッシュタイマーリセット
+									player.mDushTimer = 0;
+								}
+								
+							}
+
+							//ヘビの体
+							for (int j = 0; j < Snake::kBodyMax; j++) {
+
+								if (!snake[i].mIsDeath && CircleCapsuleCollsion(player, snake[i].mBodyPosition[j], snake[i].mBodyRadius) && !player.mKnockbackActive) {
+
+									//ダッシュで倒したらパワーを１増やす
+									if (!player.mIsStrikeActive) {
+										player.mStrikePower++;
+									}
+									//ダッシュ使用時
+									else {
+
+										//準備フェーズはフィーバーゲージを増やさない処理
+										if (ui.mIsReady) {
+											fever.mSnakeDefeat++;
+											fever.mSnakeDefeatStrike++;
+											if (!fever.mIsFever) {
+												for (int k = 0; k < Fever::kMaxEnemy; k++) {
+													if (!fever.particlecreat[k].IsUse) {
+														fever.particlecreat[k].IsUse = 1;
+														fever.particlecreat[k].Pos = snake[i].mHeadPosition;
+														break;
+													}
 												}
 											}
 										}
 									}
-								}
 
-								//準備フェーズはスコアを加算しない処理
-								if (ui.mIsReady) {
-									ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
-									ui.AddCombo();
-								}
-								screen.SetHitStop();
-								snake[i].mIsDeath = true;
-							}
-						}
-
-						//ツチノコの頭と尾
-						if (!tsuchinoko[i].mIsDeath && (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius * 0.6f) || CircleCapsuleCollsion(player, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius * 0.6f))) {
-
-							//フィーバーじゃないとき
-							if (!fever.mIsFever) {
-
-								//ツチノコの頭か尾のどちらに当たったかを判定し、ノックバックの開始位置を変える
-								//頭の場合
-								if (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius)) {
-									player.SetKnockbackPosition(tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius);
-								} 
-								//尾の場合
-								else {
-									player.SetKnockbackPosition(tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius);
-								}
-
-								ui.mCombo = 0;
-								ui.mIsWarning = true;
-							}
-							//フィーバーのとき
-							else if (fever.mIsFever) {
-
-								//準備フェーズはスコアを加算しない処理
-								if (ui.mIsReady) {
-									ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
-									ui.AddCombo();
-									fever.mTsuchinokoDefeat++;
-									fever.mTsuchinokoDefeatStrike++;
-								}
-								screen.SetHitStop();
-								tsuchinoko[i].mIsDeath = true;
-							}
-
-						}
-
-						//ツチノコの体
-						for (int j = 0; j < Tsuchinoko::kBodyMax; j++) {
-
-							if (!tsuchinoko[i].mIsDeath && CircleCapsuleCollsion(player, tsuchinoko[i].mBodyPosition[j], tsuchinoko[i].mBodyRadius) && !player.mKnockbackActive) {
-
-								//ダッシュで倒したらパワーを１増やす
-								if (!player.mIsStrikeActive) {
-									player.mStrikePower++;
-								} 
-								//ダッシュ使用時
-								else {
-
-									//準備フェーズはフィーバーゲージを増やさない処理
+									//準備フェーズはスコアを加算しない処理
 									if (ui.mIsReady) {
+										ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
+										ui.AddCombo();
+									}
+									screen.SetHitStop();
+									snake[i].mShakeTimer = snake[i].kMaxShakeTimer;
+									break;
+								}
+							}
+						}
+						if (snake[i].mShakeTimer > 0) {
+							snake[i].mShakeTimer--;
+						} else if (snake[i].mShakeTimer == 0) {
+							snake[i].mIsDeath = true;
+						}
+
+						if (tsuchinoko[i].mShakeTimer == -1) {
+							//ツチノコの頭と尾
+							if (!tsuchinoko[i].mIsDeath && (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius * 0.6f) || CircleCapsuleCollsion(player, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius * 0.6f))) {
+
+								//フィーバーじゃないとき
+								if (!fever.mIsFever && player.mDushTimer <= 0) {
+
+									//ツチノコの頭か尾のどちらに当たったかを判定し、ノックバックの開始位置を変える
+									//頭の場合
+									if (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius)) {
+										player.SetKnockbackPosition(tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius);
+									}
+									//尾の場合
+									else {
+										player.SetKnockbackPosition(tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius);
+									}
+
+									ui.mCombo = 0;
+									ui.mIsWarning = true;
+								}
+								//フィーバーのとき
+								else if (fever.mIsFever || player.mDushTimer > 0) {
+
+									//準備フェーズはスコアを加算しない処理
+									if (ui.mIsReady) {
+										ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
+										ui.AddCombo();
 										fever.mTsuchinokoDefeat++;
 										fever.mTsuchinokoDefeatStrike++;
-										if (!fever.mIsFever) {
-											for (int k = 0; k < Fever::kMaxEnemy; k++) {
-												if (!fever.particlecreat[k].IsUse) {
-													fever.particlecreat[k].IsUse = 1;
-													fever.particlecreat[k].Pos = tsuchinoko[i].mCenterPosition;
-													break;
+									}
+									screen.SetHitStop();
+									tsuchinoko[i].mShakeTimer = tsuchinoko[i].kMaxShakeTimer;
+									//ダッシュタイマーリセット
+									player.mDushTimer = 0;
+								}
+								
+
+							}
+
+							//ツチノコの体
+							for (int j = 0; j < Tsuchinoko::kBodyMax; j++) {
+
+								if (!tsuchinoko[i].mIsDeath && CircleCapsuleCollsion(player, tsuchinoko[i].mBodyPosition[j], tsuchinoko[i].mBodyRadius) && !player.mKnockbackActive) {
+
+									//ダッシュで倒したらパワーを１増やす
+									if (!player.mIsStrikeActive) {
+										player.mStrikePower++;
+									}
+									//ダッシュ使用時
+									else {
+
+										//準備フェーズはフィーバーゲージを増やさない処理
+										if (ui.mIsReady) {
+											fever.mTsuchinokoDefeat++;
+											fever.mTsuchinokoDefeatStrike++;
+											if (!fever.mIsFever) {
+												for (int k = 0; k < Fever::kMaxEnemy; k++) {
+													if (!fever.particlecreat[k].IsUse) {
+														fever.particlecreat[k].IsUse = 1;
+														fever.particlecreat[k].Pos = tsuchinoko[i].mCenterPosition;
+														break;
+													}
 												}
 											}
 										}
 									}
+
+									//準備フェーズはスコアを加算しない処理
+									if (ui.mIsReady) {
+										ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
+										ui.AddCombo();
+									}
+									screen.SetHitStop();
+									tsuchinoko[i].mShakeTimer = tsuchinoko[i].kMaxShakeTimer;
+									break;
 								}
 
-								//準備フェーズはスコアを加算しない処理
-								if (ui.mIsReady) {
-									ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
-									ui.AddCombo();
-								}
-								screen.SetHitStop();
-								tsuchinoko[i].mIsDeath = true;
 							}
-
+							
+						}
+						if (tsuchinoko[i].mShakeTimer > 0) {
+							tsuchinoko[i].mShakeTimer--;
+						} else if (tsuchinoko[i].mShakeTimer == 0) {
+							tsuchinoko[i].mIsDeath = true;
 						}
 					}
 				}
