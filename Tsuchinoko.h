@@ -55,6 +55,10 @@ public:
 	float mCenterAngle;
 	void SetAngle();
 
+	//“GŒ‚”jŒã‚Ék‚¦‚éƒ^ƒCƒ}[
+	static constexpr int kMaxShakeTimer = 8;
+	int mShakeTimer = -1;
+
 
 	//“ª‚Æ”ö
 	Vec2 mHeadPosition;

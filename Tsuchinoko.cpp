@@ -31,6 +31,8 @@ void Tsuchinoko::Init() {
 	mDeadFrame = 0;
 	mIsAnimation = false;
 	mIsClearAnimation = false;
+
+	mShakeTimer = -1;
 	
 }
 
@@ -69,7 +71,10 @@ void Tsuchinoko::Update(Vec2 playerposition, int mTimeLeft) {
 	if (mIsActive && !mIsDeath)
 	{
 		//à⁄ìÆèàóù
+		if (mShakeTimer == -1) {
 		Move(playerposition);
+		}
+		
 
 		//äpìxèàóù
 		SetAngle();
@@ -109,6 +114,7 @@ void Tsuchinoko::Make(Vec2 PlayerPos, int mTimeLeft) {
 		mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 		mIsDeath = false;
 		mIsActive = true;
+		mShakeTimer = -1;
 		if (mTimeLeft < 30 && mTimeLeft > 0 && SuperRand <= 30) {
 			mIsSuper = 1;
 		}
@@ -230,26 +236,48 @@ void Tsuchinoko::Draw(Screen& screen) {
 		mIsLoadTexture = true;
 	}
 
+	Vec2 ShakeRand = {};
+	ShakeRand.x = RAND(-10, 10);
+	ShakeRand.y = RAND(-10, 10);
+
 	//ê∂ê¨Ç≥ÇÍÇƒÇ¢ÇƒéÄÇÒÇ≈Ç¢Ç»Ç¢éû
 	if (mIsActive && !mIsDeath)
 	{
 		//ì™Ç∆îˆÇÃï`âÊ
-		if (mIsSuper) {
-			screen.DrawPicture(mHeadPosition, mSize, mCenterAngle, 100, 100, supertsuchinoko, WHITE);
-			screen.DrawPicture(mTailPosition, mSize, mCenterAngle, 100, 100, supertsuchinoko, WHITE);
+		if (mShakeTimer > 0) {
+			if (mIsSuper) {
+				screen.DrawPicture(mHeadPosition + ShakeRand, mSize, mCenterAngle, 100, 100, supertsuchinoko, WHITE);
+				screen.DrawPicture(mTailPosition + ShakeRand, mSize, mCenterAngle, 100, 100, supertsuchinoko, WHITE);
+			} else {
+				screen.DrawPicture(mHeadPosition + ShakeRand, mSize, mCenterAngle, 100, 100, tsuchinoko, WHITE);
+				screen.DrawPicture(mTailPosition + ShakeRand, mSize, mCenterAngle, 100, 100, tsuchinoko, WHITE);
+			}
 		} else {
-			screen.DrawPicture(mHeadPosition, mSize, mCenterAngle, 100, 100, tsuchinoko, WHITE);
-			screen.DrawPicture(mTailPosition, mSize, mCenterAngle, 100, 100, tsuchinoko, WHITE);
+			if (mIsSuper) {
+				screen.DrawPicture(mHeadPosition, mSize, mCenterAngle, 100, 100, supertsuchinoko, WHITE);
+				screen.DrawPicture(mTailPosition, mSize, mCenterAngle, 100, 100, supertsuchinoko, WHITE);
+			} else {
+				screen.DrawPicture(mHeadPosition, mSize, mCenterAngle, 100, 100, tsuchinoko, WHITE);
+				screen.DrawPicture(mTailPosition, mSize, mCenterAngle, 100, 100, tsuchinoko, WHITE);
+			}
 		}
+		
 		
 
 		//ëÃÇÃï`âÊ
-		for (int i = 0; i < kBodyMax; i++)
-		{
-			if (mIsSuper) {
-				screen.DrawPicture(mBodyPosition[i], mBodySize, mCenterAngle, 100, 100, supertsuchinokobody, WHITE);
+		for (int i = 0; i < kBodyMax; i++){
+			if (mShakeTimer > 0) {
+				if (mIsSuper) {
+					screen.DrawPicture(mBodyPosition[i] + ShakeRand, mBodySize, mCenterAngle, 100, 100, supertsuchinokobody, WHITE);
+				} else {
+					screen.DrawPicture(mBodyPosition[i] + ShakeRand, mBodySize, mCenterAngle, 100, 100, tsuchinokobody, WHITE);
+				}
 			} else {
-				screen.DrawPicture(mBodyPosition[i], mBodySize, mCenterAngle, 100, 100, tsuchinokobody, WHITE);
+				if (mIsSuper) {
+					screen.DrawPicture(mBodyPosition[i], mBodySize, mCenterAngle, 100, 100, supertsuchinokobody, WHITE);
+				} else {
+					screen.DrawPicture(mBodyPosition[i], mBodySize, mCenterAngle, 100, 100, tsuchinokobody, WHITE);
+				}
 			}
 		}
 
