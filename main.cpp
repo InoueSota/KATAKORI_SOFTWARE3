@@ -182,13 +182,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							if (!snake[i].mIsDeath && (CircleCapsuleCollsion(player, snake[i].mHeadPosition, snake[i].mHeadRadius * 0.6f))) {
 
 								//フィーバーじゃないとき
-								if (!fever.mIsFever && player.mDushTimer <= 0) {
+								if (!fever.mIsFever && !(player.mDushTimer > 0 && player.mIsStrikeActive)) {
 									player.SetKnockbackPosition(snake[i].mHeadPosition, snake[i].mHeadRadius);
 									ui.mCombo--;
 									ui.mIsWarning = true;
 								}
 								//フィーバーのとき
-								else if (fever.mIsFever || player.mDushTimer > 0) {
+								else if (fever.mIsFever || (player.mDushTimer > 0 && player.mIsStrikeActive)) {
 
 									//準備フェーズはスコアを加算しない処理
 									if (ui.mIsReady) {
@@ -255,7 +255,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							if (!tsuchinoko[i].mIsDeath && (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius * 0.6f) || CircleCapsuleCollsion(player, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius * 0.6f))) {
 
 								//フィーバーじゃないとき
-								if (!fever.mIsFever && player.mDushTimer <= 0) {
+								if (!fever.mIsFever && !(player.mDushTimer > 0 && player.mIsStrikeActive)) {
 
 									//ツチノコの頭か尾のどちらに当たったかを判定し、ノックバックの開始位置を変える
 									//頭の場合
@@ -271,7 +271,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 									ui.mIsWarning = true;
 								}
 								//フィーバーのとき
-								else if (fever.mIsFever || player.mDushTimer > 0) {
+								else if (fever.mIsFever || (player.mDushTimer > 0 && player.mIsStrikeActive)) {
 
 									//準備フェーズはスコアを加算しない処理
 									if (ui.mIsReady) {
