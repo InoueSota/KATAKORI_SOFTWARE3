@@ -20,7 +20,6 @@ void Snake::Init() {
 }
 
 
-
 void Snake::Update(int mTimeLeft, Vec2 PlayerPos) {
 
 	//ë¨ìxÇÃèâä˙âª
@@ -249,7 +248,6 @@ void Snake::Follow() {
 }
 
 
-
 void Snake::Draw(Screen& screen) {
 
 	if (!mIsLoadTexture) {
@@ -334,7 +332,6 @@ void Snake::Draw(Screen& screen) {
 			screen.DrawAnime(mBodyDeadPosition[i], mBodyRadius * 3, 0, 100, 100, 11, 3, mDeadFlame, hiteffect, WHITE);
 			screen.DrawAnime(mHeadDeadPosition, mHeadRadius * 3, 0, 100, 100, 11, 3, mDeadFlame, hiteffect, WHITE);
 		}
-		
 	}
 	if (mDeadFlame == 0 && mIsAnimation) {
 		mIsAnimation = false;

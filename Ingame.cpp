@@ -384,6 +384,7 @@ void UI::Draw(Screen& screen) {
 	}
 
 	//ƒRƒ“ƒ{
+	mCombo = Clamp(mCombo, 0, 1000);
 	if (10 <= mCombo) {
 		screen.DrawUI(mComboPosition[1], mTimeUISize, 32 * (mCombo / 10), 32, 32, mTimeNumber, WHITE, mComboScale);
 	}

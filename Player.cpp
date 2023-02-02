@@ -629,18 +629,16 @@ void Player::DrawStrikeUI(Screen& screen) {
 }
 void Player::LoadTexture() {
 
-	if (!mIsLoadTexture) {
-		flame = Novice::LoadTexture("./Resources/Player/flame.png");
-		lastflame = Novice::LoadTexture("./Resources/Player/lastflame.png");
-		lengthflame = Novice::LoadTexture("./Resources/Player/lengthflame.png");
-		circle = Novice::LoadTexture("./Resources/Player/circle.png");
-		straight = Novice::LoadTexture("./Resources/Player/straight.png");
-		spiral = Novice::LoadTexture("./Resources/Player/spiral.png");
-		b = Novice::LoadTexture("./Resources/Player/b.png");
-		rb = Novice::LoadTexture("./Resources/Player/rb.png");
-		nopower = Novice::LoadTexture("./Resources/Player/nopower.png");
-		toge = Novice::LoadTexture("./Resources/Player/toge.png");
-		mark = Novice::LoadTexture("./Resources/Player/mark.png");
-		areyouready = Novice::LoadTexture("./Resources/UI/Explanation/areyouready.png");
-	}
+	flame = Novice::LoadTexture("./Resources/Player/flame.png");
+	lastflame = Novice::LoadTexture("./Resources/Player/lastflame.png");
+	lengthflame = Novice::LoadTexture("./Resources/Player/lengthflame.png");
+	circle = Novice::LoadTexture("./Resources/Player/circle.png");
+	straight = Novice::LoadTexture("./Resources/Player/straight.png");
+	spiral = Novice::LoadTexture("./Resources/Player/spiral.png");
+	b = Novice::LoadTexture("./Resources/Player/b.png");
+	rb = Novice::LoadTexture("./Resources/Player/rb.png");
+	nopower = Novice::LoadTexture("./Resources/Player/nopower.png");
+	toge = Novice::LoadTexture("./Resources/Player/toge.png");
+	mark = Novice::LoadTexture("./Resources/Player/mark.png");
+	areyouready = Novice::LoadTexture("./Resources/UI/Explanation/areyouready.png");
 }

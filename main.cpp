@@ -69,7 +69,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 				//初期化
-				if (Key::IsTrigger(DIK_R)) {
+				if (Key::IsTrigger(DIK_R) || Controller::IsTriggerButton(0,Controller::bSTART)) {
 					screen.Init();
 					player.Init();
 					for (int i = 0; i < Enemy::kEnemyMax; i++) {
@@ -267,7 +267,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 										player.SetKnockbackPosition(tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius);
 									}
 
-									ui.mCombo = 0;
+									ui.mCombo--;
 									ui.mIsWarning = true;
 								}
 								//フィーバーのとき
