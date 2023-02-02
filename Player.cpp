@@ -53,7 +53,6 @@ void Player::Init() {
 }
 
 
-
 void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 
 	//前回ポジションを取得する
@@ -551,7 +550,6 @@ void Player::Knockback() {
 		}
 	}
 }
-
 
 
 void Player::Draw(Screen& screen, bool isReady) {
