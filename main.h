@@ -18,6 +18,7 @@
 //インスタンス化
 Screen screen;
 Title title;
+Result result;
 UI ui;
 Map map;
 Player player;

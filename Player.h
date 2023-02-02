@@ -22,6 +22,7 @@ public:
 	float mSizeValue;
 	float mSize;
 	float mRadius;
+	unsigned int mColor;
 
 
 	//’ÊíˆÚ“® = NormalMove

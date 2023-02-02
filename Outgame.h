@@ -44,3 +44,29 @@ public:
 
 };
 
+class Result
+{
+public:
+	Result() {
+		Init();
+	}
+
+	void Init();
+	void Update();
+	void Draw(Screen& screen);
+
+
+	//ƒ^ƒCƒgƒ‹
+	Vec2 mCenterPosition{ Screen::kWindowWidth / 2, Screen::kWindowHeight / 2 };
+	unsigned int mXScaleColor;
+	Vec2 mXScale;
+	float mXEasingt;
+
+	//‰æ‘œ
+	int mResult;
+	int mX;
+	void LoadTexture();
+
+
+};
+

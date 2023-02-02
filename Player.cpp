@@ -15,6 +15,7 @@ void Player::Init() {
 	mSizeValue = 100;
 	mSize = mSizeValue;
 	mRadius = mSize / 2.0f;
+	mColor = WHITE;
 
 	//通常移動
 	mNormalMag = 6.0f;
@@ -542,10 +543,12 @@ void Player::Knockback() {
 		mIsMarkActive = false;
 	}
 	if (mKnockbackActive) {
+		mColor = 0xFFFFFF50;
 		mKnockBackT = EasingClamp(0.033f, mKnockBackT);
 		mPosition = EasingMove(mKnockbackStart, mKnockbackEnd, easeOutSine(mKnockBackT));
 		if (mKnockBackT >= 0.7f) {
 			mKnockBackT = 0.0f;
+			mColor = WHITE;
 			mKnockbackActive = false;
 		}
 	}
@@ -573,7 +576,7 @@ void Player::Draw(Screen& screen, bool isReady) {
 	}
 
 	//プレイヤー本体描画
-	screen.DrawPicture(mPosition, mSize, 0, 100, 100, toge, WHITE);
+	screen.DrawPicture(mPosition, mSize, 0, 100, 100, toge, mColor);
 
 	if (!isReady) {
 		screen.DrawUI({ Screen::kWindowWidth / 2.0, 100 }, 400, 100, 0.0f, 400, 100, areyouready, WHITE);

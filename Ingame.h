@@ -63,7 +63,7 @@ public:
 
 
 	//ÉXÉRÉA
-	const int kSnakeScore = 1200;
+	const int kSnakeScore = 1000;
 	const int kTsuchinokoScore = 1000;
 	Vec2 mScorePosition[7];
 	float mScore;

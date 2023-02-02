@@ -90,3 +90,33 @@ void Title::LoadTexture() {
 		mIsLoadTexture = true;
 	}
 }
+
+
+void Result::Init() {
+
+	mXEasingt = 0.0f;
+
+}
+void Result::Update() {
+
+	//Xボタンのアニメーション
+	mXEasingt = EasingClamp(0.02f, mXEasingt);
+	mXScaleColor = ColorEasingMove(0xFFFFFF80, 0xFFFFFF00, easeOutSine(mXEasingt));
+	mXScale = EasingMove({ 1.0f,1.0f }, { 1.5f, 1.5f }, easeOutSine(mXEasingt));
+	if (mXEasingt == 1.0f) {
+		mXEasingt = 0.0f;
+	}
+
+}
+void Result::Draw(Screen& screen) {
+
+	screen.DrawUI(mCenterPosition, Screen::kWindowWidth, Screen::kWindowHeight, 0, 1280, 720, mResult, WHITE);
+	screen.DrawUI({ mCenterPosition.x, Screen::kWindowHeight - 75 }, 75, 75, 0, 160, 160, mX, mXScaleColor, mXScale);
+	screen.DrawUI({ mCenterPosition.x, Screen::kWindowHeight - 75 }, 75, 75, 0, 160, 160, mX, WHITE);
+
+}
+void Result::LoadTexture() {
+
+	mResult = Novice::LoadTexture("./Resources/Outgame/End/end.png");
+	mX = Novice::LoadTexture("./Resources/UI/Explanation/x.png");
+}

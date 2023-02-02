@@ -9,9 +9,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Novice::Initialize(kWindowTitle, Screen::kWindowWidth, Screen::kWindowHeight);
 
 	// 画像読み込み
-	int end = Novice::LoadTexture("./Resources/Outgame/End/end.png");
 	ui.LoadTexture();
 	title.LoadTexture();
+	result.LoadTexture();
 	player.LoadTexture();
 
 	bool isStop = true;
@@ -40,6 +40,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//Aボタン押下時ゲームシーン（初期化を行う）
 			if (title.mIsKatakoriClear && Controller::IsTriggerButton(0, Controller::bA)) {
+				result.Init();
 				screen.Init();
 				player.Init();
 				for (int i = 0; i < Enemy::kEnemyMax; i++) {
@@ -429,6 +430,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			break;
 		case OUTGAME:
 
+			result.Update();
+
 			//Aボタン押下時にタイトル（初期化を行う）
 			if (Controller::IsTriggerButton(0, Controller::bX)) {
 				title.Init();
@@ -471,10 +474,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			map.Draw(screen);
 
 
-
 			//カウントダウン描画（プレイヤーの後ろに描画し、邪魔にならないようにする）
 			ui.DrawBackTimeLimit(screen);
-
 
 
 			//敵描画
@@ -484,10 +485,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 
-
 			//プレイヤー描画
 			player.Draw(screen, ui.mIsReady);
-
 
 
 			//ＵＩ描画
@@ -508,10 +507,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			screen.DrawMiniMap(player.mPosition, 0xFFFF00FF, kFillModeSolid, 4.0f);
 
 
-
 			//ストライクUI描画
 			player.DrawStrikeUI(screen);
-
 
 
 			//フィーバー
@@ -520,7 +517,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			break;
 		case OUTGAME:
-			Novice::DrawSprite(0, 0, end, 1, 1, 0.0f, WHITE);
+
+			//リザルト画面描画
+			result.Draw(screen);
+
+			//スコア描画
 			int Result[7];
 			int tmpScore = ui.mScore;
 			for (int i = 6; i > -1; i--) {
