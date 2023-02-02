@@ -98,8 +98,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						{
 							//敵アップデート
 							for (int i = 0; i < Enemy::kEnemyMax; i++) {
-								snake[i].Update(ui.mTimeLeft, player.mPosition);
-								tsuchinoko[i].Update(player.mPosition, ui.mTimeLeft);
+								snake[i].Update(ui.mTimeLeft, player.mPosition, player.LockonCount);
+								tsuchinoko[i].Update(player.mPosition, ui.mTimeLeft, player.LockonCount);
 							}
 						}
 					}
@@ -167,8 +167,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						}
 					}
 				}
-
-
 
 				//１フレームに倒した敵を計算する（毎フレーム初期化）
 				fever.mSnakeDefeat = 0;
@@ -490,7 +488,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 			//ＵＩ描画
-			ui.Draw(screen);
+			ui.Draw(screen, ui.mIsReady);
 
 			//ミニマップの位置の描画
 			//敵描画

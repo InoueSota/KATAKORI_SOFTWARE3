@@ -128,7 +128,7 @@ void Player::NormalMove(Screen& screen) {
 
 	//‚Ž”{‚·‚é
 	if (LockonCount) {
-		mNormalVelocity *= mNormalMagLockon;
+		mNormalVelocity *= (mNormalMagLockon + (LockonCount * 1));
 	} else {
 		mNormalVelocity *= mNormalMag;
 	}

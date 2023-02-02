@@ -38,7 +38,7 @@ void Tsuchinoko::Init() {
 
 
 
-void Tsuchinoko::Update(Vec2 playerposition, int mTimeLeft) {
+void Tsuchinoko::Update(Vec2 playerposition, int mTimeLeft, int LockonCount) {
 
 	//速度を初期化する
 	mVelocity.setZero();
@@ -72,7 +72,7 @@ void Tsuchinoko::Update(Vec2 playerposition, int mTimeLeft) {
 	{
 		//移動処理
 		if (mShakeTimer == -1) {
-		Move(playerposition);
+		Move(playerposition, LockonCount);
 		}
 		
 
@@ -121,7 +121,7 @@ void Tsuchinoko::Make(Vec2 PlayerPos, int mTimeLeft) {
 	}
 
 }
-void Tsuchinoko::Move(Vec2 playerPosition) {
+void Tsuchinoko::Move(Vec2 playerPosition, int LockonCount) {
 
 	//プレイヤーを追いかけて"ない"
 	if (!IsPlayerLockon) {
@@ -159,9 +159,9 @@ void Tsuchinoko::Move(Vec2 playerPosition) {
 		mDirectionPoint += (mTargetPoint - mCenterPosition) * 0.001f;
 		mDirectionPoint = mDirectionPoint.Normalized();
 		if (mIsSuper) {
-			mVelocity += mDirectionPoint * mLockonSuperCenterSpeed;
+			mVelocity += mDirectionPoint * (mLockonSuperCenterSpeed + (LockonCount * 1));
 		} else {
-			mVelocity += mDirectionPoint * mLockonCenterSpeed;
+			mVelocity += mDirectionPoint * (mLockonCenterSpeed + (LockonCount * 1));
 		}
 		LockOnMoveTimer = kMaxLockOnMoveTimer;
 	}

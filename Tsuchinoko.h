@@ -11,7 +11,7 @@ public:
 	}
 
 	void Init();
-	void Update(Vec2 playerposition, int mTimeLeft);
+	void Update(Vec2 playerposition, int mTimeLeft, int LockonCount);
 	void Draw(Screen& screen);
 
 	Vec2 mCenterPositionStart;//スタート地点
@@ -48,7 +48,7 @@ public:
 
 
 	//移動処理
-	void Move(Vec2 playerPosition);
+	void Move(Vec2 playerPosition, int LockonCount);
 
 
 	//角度処理
