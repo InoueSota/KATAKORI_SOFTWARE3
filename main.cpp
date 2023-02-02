@@ -167,8 +167,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					}
 				}
 
-
-
 				//１フレームに倒した敵を計算する（毎フレーム初期化）
 				fever.mSnakeDefeat = 0;
 				fever.mTsuchinokoDefeat = 0;
