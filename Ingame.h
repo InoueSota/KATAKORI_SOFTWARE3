@@ -13,7 +13,7 @@ public:
 
 	void Init();
 	void Update();
-	void Draw(Screen& screen);
+	void Draw(Screen& screen, bool mIsReady);
 
 	//Žn‚ß‚é‚©ƒtƒ‰ƒO
 	const int kToStart = 3;

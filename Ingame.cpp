@@ -368,7 +368,7 @@ void UI::DrawBackTimeLimit(Screen& screen) {
 		screen.DrawUI(mCenterPosition, mTimeLastUISize, 288 * (mTimeLeft % 10), 288, 288, mTimeLimitNumber, mTimeLastColor, mTimeLastScale);
 	}
 }
-void UI::Draw(Screen& screen) {
+void UI::Draw(Screen& screen, bool mIsReady) {
 
 	//頭か尾に当たってしまったとき
 	screen.DrawUI(mCenterPosition, Screen::kWindowWidth, Screen::kWindowHeight, 0, Screen::kWindowWidth, Screen::kWindowHeight, mWarningRed, mWarningColor);
@@ -384,43 +384,50 @@ void UI::Draw(Screen& screen) {
 	}
 
 	//コンボ
-	mCombo = Clamp(mCombo, 0, 1000);
-	if (10 <= mCombo) {
-		screen.DrawUI(mComboPosition[1], mTimeUISize, 32 * (mCombo / 10), 32, 32, mTimeNumber, WHITE, mComboScale);
+	if (mIsReady) {
+		mCombo = Clamp(mCombo, 0, 1000);
+		if (10 <= mCombo) {
+			screen.DrawUI(mComboPosition[1], mTimeUISize, 32 * (mCombo / 10), 32, 32, mTimeNumber, WHITE, mComboScale);
+		}
+		if (0 <= mCombo) {
+			screen.DrawUI(mComboPosition[0], mTimeUISize, 32 * (mCombo % 10), 32, 32, mTimeNumber, WHITE, mComboScale);
+		}
+		screen.DrawUI({ mScorePosition[0].x, mComboPosition[0].y + 50.0f }, 100, 50, 0, 200, 100, mComboLetter, WHITE);
 	}
-	if (0 <= mCombo) {
-		screen.DrawUI(mComboPosition[0], mTimeUISize, 32 * (mCombo % 10), 32, 32, mTimeNumber, WHITE, mComboScale);
-	}
-	screen.DrawUI({ mScorePosition[0].x, mComboPosition[0].y + 50.0f }, 100, 50, 0, 200, 100, mComboLetter, WHITE);
 
 	//敵スコア
-	for (int j = 0; j < kEnemyScoreMax; j++) {
+	if (mIsReady) {
+		for (int j = 0; j < kEnemyScoreMax; j++) {
 
-		if (mIsEnemyScoreActive[j]) {
-			float Result[7];
-			float tmpScore = mEnemyScore[j];
-			for (int i = 6; i > -1; i--) {
-				Result[i] = tmpScore / powf(10, i);
-				tmpScore = (int)tmpScore % (int)powf(10, i);
-				if (powf(10, i) <= mEnemyScore[j]) {
-					screen.DrawUI({ mEnemyScorePosition[j].x - (i * 24) / screen.GetZoom(), mEnemyScorePosition[j].y }, 24 / screen.GetZoom(), 32 * (int)Result[i], 32, 32, mTimeNumber, WHITE, { 1.0f,1.0f }, true);
+			if (mIsEnemyScoreActive[j]) {
+				float Result[7];
+				float tmpScore = mEnemyScore[j];
+				for (int i = 6; i > -1; i--) {
+					Result[i] = tmpScore / powf(10, i);
+					tmpScore = (int)tmpScore % (int)powf(10, i);
+					if (powf(10, i) <= mEnemyScore[j]) {
+						screen.DrawUI({ mEnemyScorePosition[j].x - (i * 24) / screen.GetZoom(), mEnemyScorePosition[j].y }, 24 / screen.GetZoom(), 32 * (int)Result[i], 32, 32, mTimeNumber, WHITE, { 1.0f,1.0f }, true);
+					}
 				}
 			}
-		}
 
+		}
 	}
+	
 
 
 	//スコア
-	mScore = Clamp(mScore, 0, 10000000);
-	float Result[7];
-	float tmpScore = mScore;
-	for (int i = 6; i > -1; i--) {
-		Result[i] = tmpScore / powf(10, i);
-		tmpScore = (int)tmpScore % (int)powf(10, i);
-		screen.DrawUI(mScorePosition[i], mTimeUISize, 32 * (int)Result[i], 32, 32, mTimeNumber, WHITE, mComboScale);
+	if (mIsReady) {
+		mScore = Clamp(mScore, 0, 10000000);
+		float Result[7];
+		float tmpScore = mScore;
+		for (int i = 6; i > -1; i--) {
+			Result[i] = tmpScore / powf(10, i);
+			tmpScore = (int)tmpScore % (int)powf(10, i);
+			screen.DrawUI(mScorePosition[i], mTimeUISize, 32 * (int)Result[i], 32, 32, mTimeNumber, WHITE, mComboScale);
+		}
+		screen.DrawUI({ mScorePosition[0].x, mScorePosition[0].y + 50.0f }, 100, 50, 0, 200, 100, mScoreLetter, WHITE);
 	}
-	screen.DrawUI({ mScorePosition[0].x, mScorePosition[0].y + 50.0f }, 100, 50, 0, 200, 100, mScoreLetter, WHITE);
 
 	//ミニマップ
 	screen.DrawSquare(mMiniMapPosition, Screen::kMiniMapSize * 2, 0x00000080, kFillModeSolid, false);

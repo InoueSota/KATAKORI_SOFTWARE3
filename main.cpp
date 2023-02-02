@@ -489,7 +489,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 			//ＵＩ描画
-			ui.Draw(screen);
+			ui.Draw(screen, ui.mIsReady);
 
 			//ミニマップの位置の描画
 			//敵描画
