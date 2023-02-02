@@ -97,8 +97,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						{
 							//敵アップデート
 							for (int i = 0; i < Enemy::kEnemyMax; i++) {
-								snake[i].Update(ui.mTimeLeft, player.mPosition);
-								tsuchinoko[i].Update(player.mPosition, ui.mTimeLeft);
+								snake[i].Update(ui.mTimeLeft, player.mPosition, player.LockonCount);
+								tsuchinoko[i].Update(player.mPosition, ui.mTimeLeft, player.LockonCount);
 							}
 						}
 					}

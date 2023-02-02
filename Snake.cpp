@@ -20,7 +20,7 @@ void Snake::Init() {
 }
 
 
-void Snake::Update(int mTimeLeft, Vec2 PlayerPos) {
+void Snake::Update(int mTimeLeft, Vec2 PlayerPos, int LockonCount) {
 
 	//速度の初期化
 	mVelocity.setZero();
@@ -53,7 +53,7 @@ void Snake::Update(int mTimeLeft, Vec2 PlayerPos) {
 	if (mIsActive && !mIsDeath)
 	{
 		if (mShakeTimer == -1) {
-			Move();
+			Move(LockonCount);
 		}
 
 		//向きを変える処理
@@ -104,7 +104,7 @@ void Snake::Make(int mTimeLeft, Vec2 PlayerPos) {
 	}
 
 }
-void Snake::Move() {
+void Snake::Move(int LockonCount) {
 
 	//プレイヤーを追いかけて"ない"
 	if (!IsPlayerLockon) {
@@ -144,9 +144,9 @@ void Snake::Move() {
 		mDirectionPoint = mDirectionPoint.Normalized();
 
 		if (mIsSuper) {
-			mVelocity += mDirectionPoint * mLockonSuperSpeed;
+			mVelocity += mDirectionPoint * (mLockonSuperSpeed + (LockonCount * 1));
 		} else {
-			mVelocity += mDirectionPoint * mLockonSpeed;
+			mVelocity += mDirectionPoint * (mLockonSpeed + (LockonCount * 1));
 		}
 
 		LockOnMoveTimer = kMaxLockOnMoveTimer;

@@ -16,7 +16,7 @@ public:
 	}
 
 	void Init();
-	void Update(int mTimeLeft, Vec2 PlayerPos);
+	void Update(int mTimeLeft, Vec2 PlayerPos, int LockonCount);
 	void Draw(Screen& screen);
 
 	static constexpr int kMaxLength = 10;
@@ -38,7 +38,7 @@ public:
 	Vec2 mTargetPoint;//目標地点
 	Vec2 mDirectionPoint;
 	Vec2 mVelocity;//速度
-	void Move();
+	void Move(int LockonCount);
 	void Angle();
 
 	//速度
