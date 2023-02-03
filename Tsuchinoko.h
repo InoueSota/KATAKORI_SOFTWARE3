@@ -53,6 +53,7 @@ public:
 
 	//角度処理
 	float mCenterAngle;
+	float mDeadAngle;
 	void SetAngle();
 
 	//敵撃破後に震えるタイマー

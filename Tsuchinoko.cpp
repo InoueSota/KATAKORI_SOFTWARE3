@@ -72,7 +72,7 @@ void Tsuchinoko::Update(Vec2 playerposition, int mTimeLeft, int LockonCount) {
 	{
 		//ˆÚ“®ˆ—
 		if (mShakeTimer == -1) {
-		Move(playerposition, LockonCount);
+			Move(playerposition, LockonCount);
 		}
 		
 
@@ -94,10 +94,13 @@ void Tsuchinoko::Make(Vec2 PlayerPos, int mTimeLeft) {
 	{
 		mIsClearAnimation = false;
 
-		while ((mCenterPosition.x >= PlayerPos.x - 640) && (mCenterPosition.x <= PlayerPos.x + 640)) {
+		mCenterPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+		mCenterPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+
+		while ((mCenterPosition.x >= PlayerPos.x - 1280) && (mCenterPosition.x <= PlayerPos.x + 1280)) {
 			mCenterPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
 		}
-		while ((mCenterPosition.y >= PlayerPos.y - 360) && (mCenterPosition.y <= PlayerPos.y + 360)) {
+		while ((mCenterPosition.y >= PlayerPos.y - 720) && (mCenterPosition.y <= PlayerPos.y + 720)) {
 			mCenterPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 		}
 		for (int i = 0; i < kMaxSpawnParticle; i++) {
@@ -303,16 +306,17 @@ void Tsuchinoko::Draw(Screen& screen) {
 		}
 		mHeadDeadPosition = mHeadPosition;
 		mTailDeadPosition = mTailPosition;
+		mDeadAngle = mCenterAngle;
 		mIsAnimation = true;
 	}
 	//•`‰æ
 	if (mIsAnimation) {
 		mDeadFrame++;
 		for (int i = 0; i < kBodyMax; i++) {
-			screen.DrawAnime(mBodyDeadPosition[i], mBodySize * 3, 0, 100, 100, 11, 3, mDeadFrame, hiteffect, WHITE);
+			screen.DrawAnime(mBodyDeadPosition[i], mBodySize * 3, mDeadAngle, 0, 100, 100, 11, 3, mDeadFrame, hiteffect, WHITE);
 		}
-		screen.DrawAnime(mHeadDeadPosition, mSize * 3, 0, 100, 100, 11, 3, mDeadFrame, hiteffect, WHITE);
-		screen.DrawAnime(mTailDeadPosition, mSize * 3, 0, 100, 100, 11, 3, mDeadFrame, hiteffect, WHITE);
+		screen.DrawAnime(mHeadDeadPosition, mSize * 3, mDeadAngle, 0, 100, 100, 11, 3, mDeadFrame, hiteffect, WHITE);
+		screen.DrawAnime(mTailDeadPosition, mSize * 3, mDeadAngle, 0, 100, 100, 11, 3, mDeadFrame, hiteffect, WHITE);
 	}
 	if (mDeadFrame == 0 && mIsAnimation) {
 		mIsClearAnimation = true;

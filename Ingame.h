@@ -93,6 +93,8 @@ public:
 
 	//‘€ìà–¾
 	Vec2 mStickPosition{ 60, 685 };
+	unsigned int mLStickColor;
+	unsigned int mLStickBackColor;
 	unsigned int mXColor;
 	bool mXScaleActive;
 	Vec2 mXScale;
@@ -104,7 +106,6 @@ public:
 
 
 	//‰æ‘œ
-	bool mIsLoadTexture = false;
 	int mTimeNumber;
 	int mTimeLimitNumber;
 	int mStart;

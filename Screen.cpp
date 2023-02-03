@@ -102,7 +102,7 @@ void Screen::ScrollUpdate(Player& player) {
 	mScroll.x += (( player.mPosition.x * mZoom) - mScroll.x) * 0.15f;
 	mScroll.y += ((-player.mPosition.y * mZoom) - mScroll.y) * 0.15f;
 }
-void Screen::ZoomUpdate(bool isFever, bool isOldFever, bool isStrikeActive, bool isOldStrikeActive) {
+void Screen::ZoomUpdate(bool isFever, bool isOldFever, bool isStrikeActive, bool isOldStrikeActive, Vec2 markPosition, Vec2 playerPosition) {
 
 	//フィーバー時ズームにする
 	if (isFever && !isOldFever)
@@ -127,7 +127,8 @@ void Screen::ZoomUpdate(bool isFever, bool isOldFever, bool isStrikeActive, bool
 	{
 		mZoomEasingt = 0.0f;
 		mZoomStartValue = mZoom;
-		mZoomEndValue = 0.32f;
+		mZoomEndValue = 32.0f / ((playerPosition - markPosition).Length() / Player::kMarkMaxLength * 100) - 0.3f;
+		mZoomEndValue = Clamp(mZoomEndValue, 0.32f, 0.4f);
 		mIsStikeZoomEasing = true;
 	}
 	//ストライク中ズームから通常時ズームにする
@@ -261,9 +262,9 @@ void Screen::DrawPicture(Vec2 Position, float size, float angle, float srcW, flo
 }
 
 
-void Screen::DrawAnime(Vec2 Position, float width, float height, int srcX, int srcW, int srcH, int sheets, int frame, int& frameVariable, int textureHandle, unsigned int color) {
+void Screen::DrawAnime(Vec2 Position, float width, float height, float angle, int srcX, int srcW, int srcH, int sheets, int frame, int& frameVariable, int textureHandle, unsigned int color) {
 	Quad OriginalPosition = RectAssign(width, height);
-	Quad Rect = Transform(OriginalPosition, MakeAffineMatrix({ mZoom,mZoom }, 0.0f, ScreenTransform(Position)));
+	Quad Rect = Transform(OriginalPosition, MakeAffineMatrix({ mZoom,mZoom }, angle, ScreenTransform(Position)));
 	srcX = srcW * (frameVariable / frame);
 	if (srcX >= srcW * sheets) {
 		frameVariable = 0;
@@ -273,8 +274,8 @@ void Screen::DrawAnime(Vec2 Position, float width, float height, int srcX, int s
 }
 
 
-void Screen::DrawAnime(Vec2 Position, float size, int srcX, int srcW, int srcH, int sheets, int frame, int& frameVariable, int textureHandle, unsigned int color) {
-	DrawAnime(Position, size, size, srcX, srcW, srcH, sheets, frame, frameVariable, textureHandle, color);
+void Screen::DrawAnime(Vec2 Position, float size, float angle, int srcX, int srcW, int srcH, int sheets, int frame, int& frameVariable, int textureHandle, unsigned int color) {
+	DrawAnime(Position, size, size, angle, srcX, srcW, srcH, sheets, frame, frameVariable, textureHandle, color);
 }
 
 

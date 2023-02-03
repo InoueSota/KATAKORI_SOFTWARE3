@@ -37,11 +37,15 @@ public:
 	float mDushMag;
 	int mDushTimer = 0;
 	static constexpr int kMaxDushTimer = 30;
+	bool mIsUseDushOutOfRange;
+	bool mIsOldUseDushOutOfRange;
+	int mUseDushFrame;
+	int mUseDushCount;
 	void Dush();
 
 
 	//マーキング = Mark
-	const int kMarkMaxLength = 1600;
+	static constexpr int kMarkMaxLength = 1600;
 	static constexpr int kMarkTimeLimit = 240;
 	bool mIsMarkActive;
 	Vec2 mMarkPosition;
@@ -115,7 +119,7 @@ public:
 	Vec2 mDushShadowPosition[4];
 	float mDushShadowAlphat;
 	unsigned int mDushShadowColor;
-	void Shadow(bool isHitStop);
+	void Shadow(bool isHitStop, bool isStart, bool isReady);
 
 
 	//ノックバック

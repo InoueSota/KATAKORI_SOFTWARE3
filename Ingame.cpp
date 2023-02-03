@@ -74,6 +74,13 @@ void UI::Update() {
 	//前回準備完了フラグの保存
 	mIsOldReady = mIsReady;
 
+	//操作確認フェーズを終了するか
+	if (!mIsReady) {
+		if (Controller::IsTriggerButton(0, Controller::bY)) {
+			mIsReady = true;
+		}
+	}
+
 	//コンボ
 	Combo();
 
@@ -101,6 +108,13 @@ void UI::Update() {
 	}
 	else {
 		mAColor = 0xFFFFFF50;
+	}
+	if (LeftStickVelocity(15.0f).x != 0.0f) {
+		mLStickColor = WHITE;
+		mLStickBackColor = 0x606060FF;
+	} else {
+		mLStickColor = 0xFFFFFF40;
+		mLStickBackColor = 0x60606040;
 	}
 
 	//スケールイージング
@@ -147,17 +161,11 @@ void UI::TimeLimit() {
 	//敵の発生をさせるため、１フレームでやらせる
 	mIsOldStart = mIsStart;
 
-	if (!mIsReady)
-	{
-		if (Controller::IsTriggerButton(0,Controller::bY)) {
-			mIsReady = true;
-		}
-	}
-	else
-	{
+	if (mIsReady) {
+
 		//フレームが60になったら一秒経過
-		if (mTimeFrame == 60 && mTimeLeft != 0)
-		{
+		if (mTimeFrame == 60 && mTimeLeft != 0) {
+
 			mTimeElapsed++;
 			mTimeFrame = 0;
 
@@ -336,23 +344,6 @@ void UI::Warning() {
 		mWarningColor = 0xFFFFFF00;
 	}
 }
-void UI::LoadTexture() {
-	if (!mIsLoadTexture) {
-		mTimeNumber = Novice::LoadTexture("./Resources/UI/Time/number.png");
-		mTimeLimitNumber = Novice::LoadTexture("./Resources/UI/Time/timelimit.png");
-		mStart = Novice::LoadTexture("./Resources/UI/Time/start.png");
-		mTimeUp = Novice::LoadTexture("./Resources/UI/Time/timeup.png");
-		mComboLetter = Novice::LoadTexture("./Resources/UI/Combo/combo.png");
-		mScoreLetter = Novice::LoadTexture("./Resources/UI/Score/score.png");
-		mWarningRed = Novice::LoadTexture("./Resources/Player/warningred.png");
-		mRadar = Novice::LoadTexture("./Resources/UI/Minimap/radar.png");
-		mStick = Novice::LoadTexture("./Resources/UI/Explanation/stick.png");
-		mLStick = Novice::LoadTexture("./Resources/UI/Explanation/lstick.png");
-		mX = Novice::LoadTexture("./Resources/UI/Explanation/x.png");
-		mA = Novice::LoadTexture("./Resources/UI/Explanation/a.png");
-		mIsLoadTexture = true;
-	}
-}
 void UI::DrawBackTimeLimit(Screen& screen) {
 
 	//カウントダウンの描画
@@ -435,10 +426,25 @@ void UI::Draw(Screen& screen, bool mIsReady) {
 	screen.DrawUI(mRadarPosition, 150, 75, 0, 200, 100, mRadar, WHITE);
 
 	//操作説明
-	screen.DrawUI(mStickPosition, 50, 0, 100, 100, mStick, 0x606060FF);
-	screen.DrawUI({ mStickPosition.x + LeftStickVelocity(15.0f).x, mStickPosition.y - LeftStickVelocity(15.0f).y}, 50, 0, 160, 160, mLStick, WHITE);
+	screen.DrawUI(mStickPosition, 50, 0, 100, 100, mStick, mLStickBackColor);
+	screen.DrawUI({ mStickPosition.x + LeftStickVelocity(15.0f).x, mStickPosition.y - LeftStickVelocity(15.0f).y}, 50, 0, 160, 160, mLStick, mLStickColor);
 	screen.DrawUI({ mStickPosition.x, mStickPosition.y - 55 }, 50, 0, 160, 160, mX, mXColor, mXScale);
 	screen.DrawUI({ mStickPosition.x, mStickPosition.y - 110 }, 50, 0, 160, 160, mA, mAColor, mAScale);
+}
+void UI::LoadTexture() {
+
+	mTimeNumber = Novice::LoadTexture("./Resources/UI/Time/number.png");
+	mTimeLimitNumber = Novice::LoadTexture("./Resources/UI/Time/timelimit.png");
+	mStart = Novice::LoadTexture("./Resources/UI/Time/start.png");
+	mTimeUp = Novice::LoadTexture("./Resources/UI/Time/timeup.png");
+	mComboLetter = Novice::LoadTexture("./Resources/UI/Combo/combo.png");
+	mScoreLetter = Novice::LoadTexture("./Resources/UI/Score/score.png");
+	mWarningRed = Novice::LoadTexture("./Resources/Player/warningred.png");
+	mRadar = Novice::LoadTexture("./Resources/UI/Minimap/radar.png");
+	mStick = Novice::LoadTexture("./Resources/UI/Explanation/stick.png");
+	mLStick = Novice::LoadTexture("./Resources/UI/Explanation/lstick.png");
+	mX = Novice::LoadTexture("./Resources/UI/Explanation/x.png");
+	mA = Novice::LoadTexture("./Resources/UI/Explanation/a.png");
 }
 
 //マップ

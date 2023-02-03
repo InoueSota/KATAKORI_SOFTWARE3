@@ -34,6 +34,7 @@ public:
 	Vec2 mHeadDeadPosition;
 	int mHeadRadius;
 	float mHeadAngle;
+	float mDeadAngle;
 	Vec2 mHeadPositionStart;//スタート地点
 	Vec2 mTargetPoint;//目標地点
 	Vec2 mDirectionPoint;
@@ -68,6 +69,7 @@ public:
 	Vec2 mBodyPosition[kBodyMax];
 	Vec2 mBodyDeadPosition[kBodyMax];
 	float mBodyAngle[kBodyMax];
+	float mBodyDeadAngle[kBodyMax];
 	Vec2 mOldHeadPosition[kMaxFrame];
 	float mOldHeadAngle[kMaxFrame];
 	int mFollowFrame;

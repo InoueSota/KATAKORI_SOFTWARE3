@@ -65,37 +65,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			if (isStop) {
 
+
 				//UIアップデート
 				ui.Update();
 
 
 				//初期化
 				if (Key::IsTrigger(DIK_R) || Controller::IsTriggerButton(0,Controller::bSTART)) {
-					screen.Init();
-					player.Init();
-					for (int i = 0; i < Enemy::kEnemyMax; i++) {
-						snake[i].Init();
-						tsuchinoko[i].Init();
-					}
-					ui.Init();
 					title.Init();
-					fever.Init();
-					map.Init();
 					scene = TITLE;
 				}
 
+
 				//ヒットストップしてないとき
-				if (!screen.GetHitStop())
-				{
+				if (!screen.GetHitStop()) {
+
 					//ゲームを始めているとき
-					if ((ui.mIsStart || !ui.mIsReady) && 0 < ui.mTimeLeft)
-					{
+					if ((ui.mIsStart || !ui.mIsReady) && 0 < ui.mTimeLeft) {
+
 						//プレイヤーアップデート
 						player.Update(screen, fever.mIsFever, fever.mIsOldFever);
 
 						//ストライクしてないとき
-						if (!player.mIsStrikeActive)
-						{
+						if (!player.mIsStrikeActive) {
+
 							//敵アップデート
 							for (int i = 0; i < Enemy::kEnemyMax; i++) {
 								snake[i].Update(ui.mTimeLeft, player.mPosition, player.LockonCount);
@@ -103,13 +96,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							}
 						}
 					}
-
-					//制限時間の経過
-					ui.TimeLimit();
 				}
+
+				//制限時間の経過
+				ui.TimeLimit();
 
 				//制限時間をフィーバーに入ったら延ばす
 				ui.ExtendTime(fever.mIsFever, fever.mIsOldFever);
+
+
+				//ゲーム開始時に初期化する
+				if (!ui.mIsOldReady && ui.mIsReady) {
+					for (int i = 0; i < Enemy::kEnemyMax; i++) {
+						snake[i].Init();
+						tsuchinoko[i].Init();
+						snake[i].Update(ui.mTimeLeft, player.mPosition, player.LockonCount);
+						tsuchinoko[i].Update(player.mPosition, ui.mTimeLeft, player.LockonCount);
+					}
+					player.Init();
+				}
 
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -119,7 +124,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				for (int i = 0; i < Enemy::kEnemyMax; i++) {
 
 					//ヘビ
-					if (Collision(player.mPosition, player.mRadius, snake[i].mHeadPosition, snake[i].mLockonRadius)) {
+					if (Collision(player.mPosition, 0.0f, snake[i].mHeadPosition, snake[i].mLockonRadius)) {
 						snake[i].LockOn(player.mPosition, player.mRadius);
 					}
 					else {
@@ -127,7 +132,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					}
 
 					//ツチノコ
-					if (Collision(player.mPosition, player.mRadius, tsuchinoko[i].mCenterPosition, tsuchinoko[i].mLockonRadius)) {
+					if (Collision(player.mPosition, 0.0f, tsuchinoko[i].mCenterPosition, tsuchinoko[i].mLockonRadius)) {
 						tsuchinoko[i].LockOn(player.mPosition, player.mRadius);
 					}
 					else {
@@ -168,14 +173,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					}
 				}
 
+
 				//１フレームに倒した敵を計算する（毎フレーム初期化）
 				fever.mSnakeDefeat = 0;
 				fever.mTsuchinokoDefeat = 0;
 
+
 				//プレイヤーとの当たり判定
 				//ノックバックしていないとき（ノックバック中は無敵）
-				if (!player.mKnockbackActive) {
+				if (!player.mKnockbackActive && (ui.mIsStart || !ui.mIsReady)) {
+
 					for (int i = 0; i < Enemy::kEnemyMax; i++) {
+
 						if (snake[i].mShakeTimer == -1) {
 							//ヘビの頭
 							if (!snake[i].mIsDeath && (CircleCapsuleCollsion(player, snake[i].mHeadPosition, snake[i].mHeadRadius * 0.6f))) {
@@ -207,7 +216,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							//ヘビの体
 							for (int j = 0; j < Snake::kBodyMax; j++) {
 
-								if (!snake[i].mIsDeath && CircleCapsuleCollsion(player, snake[i].mBodyPosition[j], snake[i].mBodyRadius) && !player.mKnockbackActive) {
+								if (!snake[i].mIsDeath && CircleCapsuleCollsion(player, snake[i].mBodyPosition[j], snake[i].mBodyRadius * 0.5f) && !player.mKnockbackActive) {
 
 									//ダッシュで倒したらパワーを１増やす
 									if (!player.mIsStrikeActive) {
@@ -250,8 +259,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						}
 
 						if (tsuchinoko[i].mShakeTimer == -1) {
+
 							//ツチノコの頭と尾
-							if (!tsuchinoko[i].mIsDeath && (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius * 0.6f) || CircleCapsuleCollsion(player, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius * 0.6f))) {
+							if (!tsuchinoko[i].mIsDeath && (CircleCapsuleCollsion(player, tsuchinoko[i].mHeadPosition, tsuchinoko[i].mRadius * 0.7f) || CircleCapsuleCollsion(player, tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius * 0.6f))) {
 
 								//フィーバーじゃないとき
 								if (!fever.mIsFever && !(player.mDushTimer > 0 && player.mIsStrikeActive)) {
@@ -291,7 +301,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							//ツチノコの体
 							for (int j = 0; j < Tsuchinoko::kBodyMax; j++) {
 
-								if (!tsuchinoko[i].mIsDeath && CircleCapsuleCollsion(player, tsuchinoko[i].mBodyPosition[j], tsuchinoko[i].mBodyRadius) && !player.mKnockbackActive) {
+								if (!tsuchinoko[i].mIsDeath && CircleCapsuleCollsion(player, tsuchinoko[i].mBodyPosition[j], tsuchinoko[i].mBodyRadius * 0.6f) && !player.mKnockbackActive) {
 
 									//ダッシュで倒したらパワーを１増やす
 									if (!player.mIsStrikeActive) {
@@ -390,23 +400,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				map.Update(fever.mIsFever, fever.mIsOldFever);
 
 				//残像アップデート
-				player.Shadow(screen.GetHitStop());
-
-				//ゲーム開始時に初期化する
-				if (!ui.mIsOldReady && ui.mIsReady) {
-					player.Init();
-					for (int i = 0; i < Enemy::kEnemyMax; i++) {
-						snake[i].Init();
-						tsuchinoko[i].Init();
-					}
-				}
+				player.Shadow(screen.GetHitStop(), ui.mIsStart, ui.mIsReady);
 
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 				//ズームアップデート
-				screen.ZoomUpdate(fever.mIsFever, fever.mIsOldFever, player.mIsStrikeActive, player.mIsOldStrikeActive);
+				screen.ZoomUpdate(fever.mIsFever, fever.mIsOldFever, player.mIsStrikeActive, player.mIsOldStrikeActive, player.mMarkPosition, player.mPosition);
 
 				//スクロールアップデート
 				screen.ScrollUpdate(player);
@@ -493,8 +494,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//ミニマップの位置の描画
 			//敵描画
 			for (int i = 0; i < Enemy::kEnemyMax; i++) {
-				screen.DrawMiniMap(snake[i].mHeadPosition, WHITE);
-				screen.DrawMiniMap(tsuchinoko[i].mCenterPosition, WHITE);
+				screen.DrawMiniMap(snake[i].mHeadPosition, 0xFFF40EFF);
+				screen.DrawMiniMap(tsuchinoko[i].mCenterPosition, 0x37BBF3FF);
 			}
 			//マークと線描画
 			if (player.mIsMarkActive) {
@@ -502,7 +503,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				screen.DrawMiniMap(player.mMarkPosition, RED, kFillModeSolid, 4.0f);
 			}
 			//プレイヤーの位置描画
-			screen.DrawMiniMap(player.mPosition, 0xFFFF00FF, kFillModeSolid, 4.0f);
+			screen.DrawMiniMap(player.mPosition, WHITE, kFillModeSolid, 4.0f);
 
 
 			//ストライクUI描画

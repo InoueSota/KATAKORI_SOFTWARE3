@@ -98,7 +98,7 @@ public:
 	/// <summary>
 	/// ズーム
 	/// </summary>
-	void ZoomUpdate(bool isFever, bool isOldFever, bool isStrikeActive, bool isOldStrikeActive);
+	void ZoomUpdate(bool isFever, bool isOldFever, bool isStrikeActive, bool isOldStrikeActive, Vec2 markPosition, Vec2 playerPosition);
 
 	/// <summary>
 	/// ズーム値を取得する
@@ -212,6 +212,7 @@ public:
 	/// <param name="position">中心座標</param>
 	/// <param name="width">横幅</param>
 	/// <param name="height">縦幅</param>
+	/// <param name="angle">傾き</param>
 	/// <param name="srcX">画像上の描画したい範囲左上座標 X</param>
 	/// <param name="srcW">画像上の描画したい範囲横幅</param>
 	/// <param name="srcH">画像上の描画したい範囲縦幅</param>
@@ -220,13 +221,14 @@ public:
 	/// <param name="frameVariable">加算しているフレームの変数</param>
 	/// <param name="textureHandle">テクスチャのハンドル</param>
 	/// <param name="color">描画するスプライトの色</param>
-	void DrawAnime(Vec2 position, float width, float height, int srcX, int srcW, int srcH, int sheets, int frame, int& frameVariable, int textureHandle, unsigned int color);
+	void DrawAnime(Vec2 position, float width, float height, float angle, int srcX, int srcW, int srcH, int sheets, int frame, int& frameVariable, int textureHandle, unsigned int color);
 
 	/// <summary>
 	/// 連番画像（正方形）を描画する
 	/// </summary>
 	/// <param name="position">中心座標</param>
 	/// <param name="size">大きさ(= 直径)</param>
+	/// <param name="angle">傾き</param>
 	/// <param name="srcX">画像上の描画したい範囲左上座標 X</param>
 	/// <param name="srcW">画像上の描画したい範囲横幅</param>
 	/// <param name="srcH">画像上の描画したい範囲縦幅</param>
@@ -235,7 +237,7 @@ public:
 	/// <param name="frameVariable">加算しているフレームの変数</param>
 	/// <param name="textureHandle">テクスチャのハンドル</param>
 	/// <param name="color">描画するスプライトの色</param>
-	void DrawAnime(Vec2 position, float size, int srcX, int srcW, int srcH, int sheets, int frame, int& frameVariable, int textureHandle, unsigned int color);
+	void DrawAnime(Vec2 position, float size, float angle, int srcX, int srcW, int srcH, int sheets, int frame, int& frameVariable, int textureHandle, unsigned int color);
 
 	/// <summary>
 	/// ＵＩ（スクロールしない）（長方形）

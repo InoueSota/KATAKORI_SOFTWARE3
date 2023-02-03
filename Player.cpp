@@ -23,6 +23,9 @@ void Player::Init() {
 
 	//ダッシュ
 	mDushMag = 300.0f;
+	mIsUseDushOutOfRange = false;
+	mUseDushFrame = 0;
+	mUseDushCount = 0;
 
 	//マーキング
 	mIsMarkActive = false;
@@ -196,13 +199,41 @@ void Player::Mark() {
 }
 void Player::MarkLimitLength(bool isFever) {
 
+	mIsOldUseDushOutOfRange = mIsUseDushOutOfRange;
+
 	if (mIsMarkActive && !isFever) {
 
 		if (!Collision(mPosition, 0, mMarkPosition, kMarkMaxLength)) {
+			if (Controller::IsTriggerButton(0, Controller::bA)) {
+				mUseDushCount++;
+				mIsUseDushOutOfRange = true;
+			}
 			Vec2 tmpDirection = (mPosition - mMarkPosition).Normalized();
 			mPosition = mMarkPosition + tmpDirection * kMarkMaxLength;
 		}
 	}
+
+	//範囲外にダッシュを続けたらマークを切る
+	if (mIsUseDushOutOfRange) {
+		mUseDushFrame++;
+	}
+	//ダッシュを利用して範囲外に出ようとした瞬間、フレームを初期化する
+	if (!mIsOldUseDushOutOfRange && mIsUseDushOutOfRange) {
+		mUseDushFrame = 0;
+	}
+	//３回以上ダッシュで抜けようとしたらマークを切る
+	if (3 <= mUseDushCount) {
+		mUseDushCount = 0;
+		mUseDushFrame = 0;
+		mIsMarkActive = false;
+		mIsUseDushOutOfRange = false;
+		mIsOldUseDushOutOfRange = false;
+	}
+	//抜けるのに６０フレームかかったらカウントを初期化する
+	if (60 <= mUseDushFrame) {
+		mUseDushCount = 0;
+	}
+
 }
 void Player::Strike(bool isFever, bool isOldFever) {
 
@@ -438,7 +469,7 @@ void Player::StrikeLine(Screen& screen) {
 	//}
 
 }
-void Player::Shadow(bool isHitStop) {
+void Player::Shadow(bool isHitStop, bool isStart, bool isReady) {
 
 	//マップ内に収める
 	mPosition.x = Clamp(mPosition.x, Map::kMapLeft + (mSize / 2), Map::kMapRight - (mSize / 2));
@@ -467,7 +498,7 @@ void Player::Shadow(bool isHitStop) {
 	}
 
 	//Aボタン押下時
-	if (Controller::IsTriggerButton(0, Controller::bA) && !mKnockbackActive) {
+	if (Controller::IsTriggerButton(0, Controller::bA) && !mKnockbackActive && (isStart || !isReady)) {
 
 		float distanceX = mPosition.x - mOldPosition.x;
 		float distanceY = mPosition.y - mOldPosition.y;
@@ -501,7 +532,14 @@ void Player::Shadow(bool isHitStop) {
 		if (mDushShadowAlphat == 1.0f) {
 			mIsDushShadowActive = false;
 		}
+	}
 
+	//ゲームに入ったら影を初期化する
+	if (isReady && !isStart) {
+		mIsDushShadowActive = false;
+		for (int i = 0; i < kShadowMax; i++) {
+			mIsShadowActive[i] = false;
+		}
 	}
 
 }
@@ -559,18 +597,22 @@ void Player::Draw(Screen& screen, bool isReady) {
 
 	//残像描画
 	for (int i = 0; i < kShadowMax; i++) {
-		screen.DrawPicture(mShadowPosition[i], mSize, 0, 100, 100, toge, mShadowColor[i]);
+		if (mIsShadowActive[i]) {
+			screen.DrawPicture(mShadowPosition[i], mSize, 0, 100, 100, toge, mShadowColor[i]);
+		}
 	}
 
-
-	for (int i = 0; i < 4; i++) {
-		screen.DrawPicture(mDushShadowPosition[i], mSize, 0, 100, 100, toge, mDushShadowColor);
+	if (mIsDushShadowActive) {
+		for (int i = 0; i < 4; i++) {
+			screen.DrawPicture(mDushShadowPosition[i], mSize, 0, 100, 100, toge, mDushShadowColor);
+		}
 	}
+
 
 	//マーク描画
 	if (mIsMarkActive){
 
-		screen.DrawLine(mPosition, mMarkPosition, RED);
+		screen.DrawPicture((mPosition - mMarkPosition) / 2.0f + mMarkPosition, (mPosition - mMarkPosition).Length(), 20, BetweenTheta(mMarkPosition - mPosition), 0, 0, 192, RED);
 		screen.DrawPicture(mMarkPosition, mSize, 0, 100, 100, mark, WHITE);
 
 	}
@@ -585,7 +627,7 @@ void Player::Draw(Screen& screen, bool isReady) {
 	//ストライクしろ(圧)描画
 	if (mIsMarkActive && !mIsStrikeActive) {
 		if (0 < mStrikePower) {
-			screen.DrawAnime({ mPosition.x, mPosition.y + (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0, 200, 100, 2, 20, mMarkFrame, rb, 0xFFFFFFE5);
+			screen.DrawAnime({ mPosition.x, mPosition.y + (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0.0f, 0, 200, 100, 2, 20, mMarkFrame, rb, 0xFFFFFFE5);
 		} else {
 			screen.DrawPicture({ mPosition.x, mPosition.y + (40 / screen.GetZoom()) }, 360, 120, 0.0f, 300, 100, nopower, WHITE);
 		}

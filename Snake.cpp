@@ -74,10 +74,10 @@ void Snake::Make(int mTimeLeft, Vec2 PlayerPos) {
 	{
 		mIsClearAnimation = false;
 
-		while ((mHeadPosition.x >= PlayerPos.x - 640) && (mHeadPosition.x <= PlayerPos.x + 640)) {
+		while ((mHeadPosition.x >= PlayerPos.x - 1280) && (mHeadPosition.x <= PlayerPos.x + 1280)) {
 			mHeadPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
 		}
-		while ((mHeadPosition.y >= PlayerPos.y - 360) && (mHeadPosition.y <= PlayerPos.y + 360)) {
+		while ((mHeadPosition.y >= PlayerPos.y - 720) && (mHeadPosition.y <= PlayerPos.y + 720)) {
 			mHeadPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 		}
 		for (int i = 0; i < kMaxSpawnParticle; i++) {
@@ -321,21 +321,22 @@ void Snake::Draw(Screen& screen) {
 	if (mIsDeath && !mIsClearAnimation) {
 		for (int i = 0; i < kBodyMax; i++) {
 			mBodyDeadPosition[i] = mBodyPosition[i];
-			mHeadDeadPosition = mHeadPosition;
+			mBodyDeadAngle[i] = mBodyAngle[i];
 		}
+		mHeadDeadPosition = mHeadPosition;
+		mDeadAngle = mHeadAngle;
 		mIsAnimation = true;
 	}
 	//•`‰æ
 	if (mIsAnimation) {
 		mDeadFlame++;
 		for (int i = 0; i < kBodyMax; i++) {
-			screen.DrawAnime(mBodyDeadPosition[i], mBodyRadius * 3, 0, 100, 100, 11, 3, mDeadFlame, hiteffect, WHITE);
-			screen.DrawAnime(mHeadDeadPosition, mHeadRadius * 3, 0, 100, 100, 11, 3, mDeadFlame, hiteffect, WHITE);
+			screen.DrawAnime(mBodyDeadPosition[i], mBodyRadius * 3, mBodyDeadAngle[i], 0, 100, 100, 11, 3, mDeadFlame, hiteffect, WHITE);
 		}
+		screen.DrawAnime(mHeadDeadPosition, mHeadRadius * 3, mDeadAngle, 0, 100, 100, 11, 3, mDeadFlame, hiteffect, WHITE);
 	}
 	if (mDeadFlame == 0 && mIsAnimation) {
 		mIsAnimation = false;
 		mIsClearAnimation = true;
 	}
 }
-
