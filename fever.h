@@ -73,7 +73,7 @@ public:
 		int Bnum = 1;
 		int Gnum = 1;
 		int alpha = 255;
-		double color = 0xFFFFFF00;
+		unsigned int color = 0xFFFFFF00;
 	};
 	FeverGauge feverGauge;
 

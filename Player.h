@@ -12,7 +12,7 @@ public:
 
 	void Init();
 	void Update(Screen& screen, bool isFever, bool isOldFever);
-	void Draw(Screen& screen, bool isReady);
+	void Draw(Screen& screen, bool isReady, bool isFever, unsigned int feverGaugeColor);
 
 
 	//パラメータ
@@ -84,7 +84,7 @@ public:
 	bool mStrikeModeScaleActive;
 	float mStrikeModeScaleEasingt;
 	int mStrikePower;
-	void DrawStrikeUI(Screen& screen);
+	void DrawStrikeUI(Screen& screen, bool isFever, unsigned int feverGaugeColor);
 	//フィーバーストライク
 	float mStrikeEasingt;
 	float mStrikeEasingtIncrementValue;

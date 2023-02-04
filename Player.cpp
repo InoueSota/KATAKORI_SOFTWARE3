@@ -593,7 +593,7 @@ void Player::Knockback() {
 }
 
 
-void Player::Draw(Screen& screen, bool isReady) {
+void Player::Draw(Screen& screen, bool isReady, bool isFever, unsigned int feverGaugeColor) {
 
 	//残像描画
 	for (int i = 0; i < kShadowMax; i++) {
@@ -612,9 +612,12 @@ void Player::Draw(Screen& screen, bool isReady) {
 	//マーク描画
 	if (mIsMarkActive){
 
-		screen.DrawPicture((mPosition - mMarkPosition) / 2.0f + mMarkPosition, (mPosition - mMarkPosition).Length(), 20, BetweenTheta(mMarkPosition - mPosition), 0, 0, 192, RED);
+		if (!isFever) {
+			screen.DrawPicture((mPosition - mMarkPosition) / 2.0f + mMarkPosition, (mPosition - mMarkPosition).Length(), 20, BetweenTheta(mMarkPosition - mPosition), 0, 0, 192, RED);
+		} else {
+			screen.DrawPicture((mPosition - mMarkPosition) / 2.0f + mMarkPosition, (mPosition - mMarkPosition).Length(), 20, BetweenTheta(mMarkPosition - mPosition), 0, 0, 192, feverGaugeColor);
+		}
 		screen.DrawPicture(mMarkPosition, mSize, 0, 100, 100, mark, WHITE);
-
 	}
 
 	//プレイヤー本体描画
@@ -640,35 +643,33 @@ void Player::Draw(Screen& screen, bool isReady) {
 	}
 
 }
-void Player::DrawStrikeUI(Screen& screen) {
+void Player::DrawStrikeUI(Screen& screen, bool isFever, unsigned int feverGaugeColor) {
 
 	//ストライクパワーを収める
 	mStrikePower = Clamp(mStrikePower, 0, kStrikePowerMax);
-	screen.DrawBox({ 35.0f, 62.5f }, 50 * mStrikePower, 25, 0.0f, WHITE, kFillModeSolid, false);
+	if (!isFever) {
+		screen.DrawBox({ 50.0f, 62.5f }, 50 * mStrikePower, 25, 0.0f, WHITE, kFillModeSolid, false);
+	} else {
+		screen.DrawBox({ 50.0f, 62.5f }, 50 * mStrikePower, 25, 0.0f, feverGaugeColor, kFillModeSolid, false);
+	}
 
 	for (int i = 0; i < kStrikePowerMax; i++) {
 		if (i == kStrikePowerMax - 1) {
-			screen.DrawUI({ 10.0f + (i + 1) * 50, 75.0f }, 50, 25, 0, 200, 100, lastflame, WHITE);
+			screen.DrawUI({ 25.0f + (i + 1) * 50, 75.0f }, 50, 25, 0, 200, 100, lastflame, WHITE);
 		} else {
-			screen.DrawUI({ 10.0f + (i + 1) * 50, 75.0f }, 50, 25, 0, 200, 100, flame, WHITE);
+			screen.DrawUI({ 25.0f + (i + 1) * 50, 75.0f }, 50, 25, 0, 200, 100, flame, WHITE);
 		}
 	}
 
 	//マークの長さ
-	if (mIsMarkActive) {
+	if (!isFever && mIsMarkActive) {
 		float marklength = (mPosition - mMarkPosition).Length();
 		marklength = Clamp(marklength, 0, kMarkMaxLength);
-		screen.DrawBox({ 35.0f, 100.0f }, marklength * (250.0f / kMarkMaxLength), 25, 0.0f, WHITE, kFillModeSolid, false);
+		screen.DrawBox({ 50.0f, 100.0f }, marklength * (250.0f / kMarkMaxLength), 25, 0.0f, WHITE, kFillModeSolid, false);
+	} else if (isFever) {
+		screen.DrawBox({ 50.0f, 100.0f }, 250.0f, 25, 0.0f, feverGaugeColor, kFillModeSolid, false);
 	}
-	screen.DrawUI({ 160.0f, 112.5f }, 250, 25, 0, 1000, 100, lengthflame, WHITE);
-
-	//screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, circle, WHITE);
-	//if (strikeMode == STRAIGHT) {
-	//	screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, straight, WHITE, mStrikeModeScale);
-	//} else {
-	//	screen.DrawUI(mStrikeModePosition, 170, 0, 500, 500, spiral, WHITE, mStrikeModeScale);
-	//}
-	//screen.DrawUI({ mStrikeModePosition.x + 50, mStrikeModePosition.y - 50 }, 60, 0, 160, 160, b, WHITE, mStrikeModeBScale);
+	screen.DrawUI({ 175.0f, 112.5f }, 250, 25, 0, 1000, 100, lengthflame, WHITE);
 
 
 }

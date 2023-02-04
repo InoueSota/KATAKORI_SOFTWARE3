@@ -485,7 +485,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 			//プレイヤー描画
-			player.Draw(screen, ui.mIsReady);
+			player.Draw(screen, ui.mIsReady, fever.mIsFever, fever.feverGauge.color);
 
 
 			//ＵＩ描画
@@ -507,7 +507,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 			//ストライクUI描画
-			player.DrawStrikeUI(screen);
+			player.DrawStrikeUI(screen, fever.mIsFever, fever.feverGauge.color);
 
 
 			//フィーバー
