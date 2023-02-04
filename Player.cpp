@@ -30,6 +30,15 @@ void Player::Init() {
 	//マーキング
 	mIsMarkActive = false;
 	mMarkFrame = 0;
+	mMarkLength = 0.0f;
+	mMarkScale.setZero();
+	mMarkUIPosition = { 50.0f,100.0f };
+	mMarkShake.setZero();
+	mMarkShakeMag = 1.0f;
+	mMarkAnimationEasingt = 0.0f;
+	mMarkScaleEasingt = 0.0f;
+	mMarkScaleColor = 0xFFFFFF80;
+	mIsMarkLimitAnimationActive = false;
 
 	//ストライク
 	mIsStrikeActive = false;
@@ -175,22 +184,22 @@ void Player::Mark() {
 
 		mMarkPosition = mPosition;
 		mMarkFrame = 0;
+		mMarkScaleEasingt = 0.0f;
 		mIsMarkActive = true;
 
 	}
-
-	//制限時間でマーキングを消す
+	//RBのアニメーションに使うフレームを更新する
 	if (mIsMarkActive){
-
-		//フレームの加算
 		mMarkFrame++;
 
-		////制限時間を超えたらフラグをfalseにする
-		//if (kMarkTimeLimit <= mMarkFrame){
-		//	mIsMarkActive = false;
-		//}
+		//マークのアニメーション
+		mMarkScaleEasingt = EasingClamp(0.02f, mMarkScaleEasingt);
+		mMarkScaleColor = ColorEasingMove(0xFFFFFFA0, 0xFFFFFF00, easeOutCirc(mMarkScaleEasingt));
+		mMarkScale = EasingMove({ 1.0f,1.0f }, { 5.0f, 5.0f }, easeOutSine(mMarkScaleEasingt));
+		if (mMarkScaleEasingt == 1.0f) {
+			mMarkScaleEasingt = 0.0f;
+		}
 	}
-
 	//初期化
 	if (!mIsMarkActive){
 		mMarkFrame = 0;
@@ -232,6 +241,40 @@ void Player::MarkLimitLength(bool isFever) {
 	//抜けるのに６０フレームかかったらカウントを初期化する
 	if (60 <= mUseDushFrame) {
 		mUseDushCount = 0;
+		mIsUseDushOutOfRange = false;
+		mIsOldUseDushOutOfRange = false;
+	}
+
+	//距離を求める
+	mMarkLength = (mPosition - mMarkPosition).Length();
+	mMarkLength = Clamp(mMarkLength, 0, kMarkMaxLength);
+
+	//マークの限界距離が最大に達したら赤色にする
+	if (kMarkMaxLength - 1 <= mMarkLength) {
+
+		if (!mIsMarkLimitAnimationActive) {
+			mMarkAnimationEasingt = 0.0f;
+			mMarkShakeMag = 1.0f;
+			mIsMarkLimitAnimationActive = true;
+		}
+		mMarkColor = RED;
+
+	} else {
+
+		mMarkColor = WHITE;
+
+		if (mMarkAnimationEasingt == 1.0f && mIsMarkLimitAnimationActive) {
+			mIsMarkLimitAnimationActive = false;
+		}
+	}
+	//マークが限界距離に達したら、UIをシェイクする
+	if (mIsMarkLimitAnimationActive) {
+
+		mMarkAnimationEasingt = EasingClamp(0.033f, mMarkAnimationEasingt);
+		mMarkShakeMag = EasingMove(1.0f, 0.0f, easeOutSine(mMarkAnimationEasingt));
+
+		mMarkShake.x = RAND(-3.0f, 5.0f) * mMarkShakeMag;
+		mMarkShake.y = RAND(-3.0f, 5.0f) * mMarkShakeMag;
 	}
 
 }
@@ -613,10 +656,11 @@ void Player::Draw(Screen& screen, bool isReady, bool isFever, unsigned int fever
 	if (mIsMarkActive){
 
 		if (!isFever) {
-			screen.DrawPicture((mPosition - mMarkPosition) / 2.0f + mMarkPosition, (mPosition - mMarkPosition).Length(), 20, BetweenTheta(mMarkPosition - mPosition), 0, 0, 192, RED);
+			screen.DrawPicture((mPosition - mMarkPosition) / 2.0f + mMarkPosition, (mPosition - mMarkPosition).Length(), 10, BetweenTheta(mMarkPosition - mPosition), 0, 0, 192, mMarkColor);
 		} else {
-			screen.DrawPicture((mPosition - mMarkPosition) / 2.0f + mMarkPosition, (mPosition - mMarkPosition).Length(), 20, BetweenTheta(mMarkPosition - mPosition), 0, 0, 192, feverGaugeColor);
+			screen.DrawPicture((mPosition - mMarkPosition) / 2.0f + mMarkPosition, (mPosition - mMarkPosition).Length(), 10, BetweenTheta(mMarkPosition - mPosition), 0, 0, 192, feverGaugeColor);
 		}
+		screen.DrawPicture(mMarkPosition, mSize, 0, 100, 100, mark, mMarkScaleColor, mMarkScale);
 		screen.DrawPicture(mMarkPosition, mSize, 0, 100, 100, mark, WHITE);
 	}
 
@@ -663,13 +707,11 @@ void Player::DrawStrikeUI(Screen& screen, bool isFever, unsigned int feverGaugeC
 
 	//マークの長さ
 	if (!isFever && mIsMarkActive) {
-		float marklength = (mPosition - mMarkPosition).Length();
-		marklength = Clamp(marklength, 0, kMarkMaxLength);
-		screen.DrawBox({ 50.0f, 100.0f }, marklength * (250.0f / kMarkMaxLength), 25, 0.0f, WHITE, kFillModeSolid, false);
+		screen.DrawBox(mMarkUIPosition + mMarkShake, mMarkLength * (250.0f / kMarkMaxLength), 25, 0.0f, mMarkColor, kFillModeSolid, false);
 	} else if (isFever) {
-		screen.DrawBox({ 50.0f, 100.0f }, 250.0f, 25, 0.0f, feverGaugeColor, kFillModeSolid, false);
+		screen.DrawBox(mMarkUIPosition + mMarkShake, 250.0f, 25, 0.0f, feverGaugeColor, kFillModeSolid, false);
 	}
-	screen.DrawUI({ 175.0f, 112.5f }, 250, 25, 0, 1000, 100, lengthflame, WHITE);
+	screen.DrawUI({ 175.0f + mMarkShake.x, 112.5f + mMarkShake.y }, 250, 25, 0, 1000, 100, lengthflame, WHITE);
 
 
 }

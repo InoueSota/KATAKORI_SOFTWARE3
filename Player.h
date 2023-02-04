@@ -46,10 +46,19 @@ public:
 
 	//マーキング = Mark
 	static constexpr int kMarkMaxLength = 1600;
-	static constexpr int kMarkTimeLimit = 240;
 	bool mIsMarkActive;
+	bool mIsMarkLimitAnimationActive;
 	Vec2 mMarkPosition;
+	Vec2 mMarkUIPosition;
+	Vec2 mMarkShake;
+	Vec2 mMarkScale;
 	int mMarkFrame;
+	unsigned int mMarkColor;
+	unsigned int mMarkScaleColor;
+	float mMarkLength;
+	float mMarkAnimationEasingt;
+	float mMarkScaleEasingt;
+	float mMarkShakeMag;
 	void Mark();
 	void MarkLimitLength(bool isFever);
 

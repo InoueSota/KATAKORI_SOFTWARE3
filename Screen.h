@@ -192,7 +192,7 @@ public:
 	/// <param name="srcH">画像上の描画したい範囲縦幅</param>
 	/// <param name="textureHandle">テクスチャのハンドル</param>
 	/// <param name="color">描画するスプライトの色</param>
-	void DrawPicture(Vec2 position, float width, float height, float angle, float srcW, float srcH, int textureHandle, unsigned int color);
+	void DrawPicture(Vec2 position, float width, float height, float angle, float srcW, float srcH, int textureHandle, unsigned int color, Vec2 scale = { 1.0f, 1.0f });
 
 	/// <summary>
 	/// 静止画（正方形）を描画する
@@ -204,7 +204,7 @@ public:
 	/// <param name="srcH">画像上の描画したい範囲縦幅</param>
 	/// <param name="textureHandle">テクスチャのハンドル</param>
 	/// <param name="color">描画するスプライトの色</param>
-	void DrawPicture(Vec2 position, float size, float angle, float srcW, float srcH, int textureHandle, unsigned int color);
+	void DrawPicture(Vec2 position, float size, float angle, float srcW, float srcH, int textureHandle, unsigned int color, Vec2 scale = { 1.0f, 1.0f });
 
 	/// <summary>
 	/// 連番画像（長方形）を描画する

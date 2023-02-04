@@ -250,15 +250,17 @@ void Screen::DrawSquare(Vec2 Position, float size, unsigned int color, FillMode 
 }
 
 
-void Screen::DrawPicture(Vec2 Position, float width, float height, float angle, float srcW, float srcH, int textureHandle, unsigned int color) {
+void Screen::DrawPicture(Vec2 Position, float width, float height, float angle, float srcW, float srcH, int textureHandle, unsigned int color, Vec2 scale) {
 	Quad OriginalPosition = RectAssign(width, height);
-	Quad Rect = Transform(OriginalPosition, MakeAffineMatrix({ mZoom, mZoom }, angle, ScreenTransform(Position)));
+	Quad Rect = Transform(OriginalPosition, MakeAffineMatrix({ mZoom * scale.x, mZoom * scale.y }, angle, ScreenTransform(Position)));
 	Novice::DrawQuad((int)Rect.LeftTop.x, (int)Rect.LeftTop.y, (int)Rect.RightTop.x, (int)Rect.RightTop.y, (int)Rect.LeftBottom.x, (int)Rect.LeftBottom.y, (int)Rect.RightBottom.x, (int)Rect.RightBottom.y, 0, 0, srcW, srcH, textureHandle, color);
 }
 
 
-void Screen::DrawPicture(Vec2 Position, float size, float angle, float srcW, float srcH, int textureHandle, unsigned int color) {
-	DrawPicture(Position, size, size, angle, srcW, srcH, textureHandle, color);
+void Screen::DrawPicture(Vec2 Position, float size, float angle, float srcW, float srcH, int textureHandle, unsigned int color, Vec2 scale) {
+	Quad OriginalPosition = RectAssign(size, size);
+	Quad Rect = Transform(OriginalPosition, MakeAffineMatrix({ mZoom * scale.x, mZoom * scale.y }, angle, ScreenTransform(Position)));
+	Novice::DrawQuad((int)Rect.LeftTop.x, (int)Rect.LeftTop.y, (int)Rect.RightTop.x, (int)Rect.RightTop.y, (int)Rect.LeftBottom.x, (int)Rect.LeftBottom.y, (int)Rect.RightBottom.x, (int)Rect.RightBottom.y, 0, 0, srcW, srcH, textureHandle, color);
 }
 
 

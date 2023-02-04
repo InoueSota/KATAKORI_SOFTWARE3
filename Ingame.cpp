@@ -43,9 +43,11 @@ void UI::Init() {
 	mComboPosition[0].y = 300.0f;
 	mComboPosition[1].x = Screen::kWindowWidth - mTimeUISize * 2;
 	mComboPosition[1].y = mComboPosition[0].y;
+	mComboPosition[2].x = Screen::kWindowWidth - mTimeUISize * 3;
+	mComboPosition[2].y = mComboPosition[0].y;
 	mComboScale.x = 1.0f;
 	mComboScale.y = 1.0f;
-	mCombo = 0;
+	mDefeatedEnemyCount = 0;
 
 	//スコア
 	mScore = 0;
@@ -254,7 +256,7 @@ void UI::Combo() {
 void UI::AddCombo() {
 
 	//コンボを足す
-	mCombo++;
+	mDefeatedEnemyCount++;
 	//拡縮アニメーション
 	mComboScale.x = 1.8f;
 	mComboScale.y = 1.8f;
@@ -265,7 +267,7 @@ void UI::SnakeScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition
 	if (isStrikeActive) {
 		for (int i = 0; i < kEnemyScoreMax; i++) {
 			if (!mIsEnemyScoreActive[i]) {
-				mEnemyScore[i] = (kSnakeScore * 2.5) * (1.0f + (float)mCombo / 10);
+				mEnemyScore[i] = (kSnakeScore * 2.5) * (1.0f + (float)mDefeatedEnemyCount / 10);
 				mScore += mEnemyScore[i];
 				mEnemyScorePosition[i] = enemyPosition;
 				mEnemyScoreLife[i] = 180;
@@ -277,7 +279,7 @@ void UI::SnakeScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition
 	else {
 		for (int i = 0; i < kEnemyScoreMax; i++) {
 			if (!mIsEnemyScoreActive[i]) {
-				mEnemyScore[i] = kSnakeScore * (1.0f + (float)mCombo / 10);;
+				mEnemyScore[i] = kSnakeScore * (1.0f + (float)mDefeatedEnemyCount / 10);;
 				mScore += mEnemyScore[i];
 				mEnemyScorePosition[i] = enemyPosition;
 				mEnemyScoreLife[i] = 180;
@@ -294,7 +296,7 @@ void UI::TsuchinokoScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPos
 	if (isStrikeActive) {
 		for (int i = 0; i < kEnemyScoreMax; i++) {
 			if (!mIsEnemyScoreActive[i]) {
-				mEnemyScore[i] = (kTsuchinokoScore * 2.5) * (1.0f + (float)mCombo / 10);
+				mEnemyScore[i] = (kTsuchinokoScore * 2.5) * (1.0f + (float)mDefeatedEnemyCount / 10);
 				mScore += mEnemyScore[i];
 				mEnemyScorePosition[i] = enemyPosition;
 				mEnemyScoreLife[i] = 180;
@@ -306,7 +308,7 @@ void UI::TsuchinokoScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPos
 	else {
 		for (int i = 0; i < kEnemyScoreMax; i++) {
 			if (!mIsEnemyScoreActive[i]) {
-				mEnemyScore[i] = kTsuchinokoScore * (1.0f + (float)mCombo / 10);;
+				mEnemyScore[i] = kTsuchinokoScore * (1.0f + (float)mDefeatedEnemyCount / 10);;
 				mScore += mEnemyScore[i];
 				mEnemyScorePosition[i] = enemyPosition;
 				mEnemyScoreLife[i] = 180;
@@ -376,46 +378,71 @@ void UI::Draw(Screen& screen, bool mIsReady) {
 
 	//コンボ
 	if (mIsReady) {
-		mCombo = Clamp(mCombo, 0, 1000);
-		if (10 <= mCombo) {
-			screen.DrawUI(mComboPosition[1], mTimeUISize, 32 * (mCombo / 10), 32, 32, mTimeNumber, WHITE, mComboScale);
+
+		//スコアの桁より大きい数字は色を薄くする
+		mIsDarkDefeatedEnemyCount = false;
+		for (int i = 0; i < 3; i++) {
+			mDefeatedEnemyCountColor[i] = 0xFFFFFF50;
 		}
-		if (0 <= mCombo) {
-			screen.DrawUI(mComboPosition[0], mTimeUISize, 32 * (mCombo % 10), 32, 32, mTimeNumber, WHITE, mComboScale);
+
+		mDefeatedEnemyCount = Clamp(mDefeatedEnemyCount, 0, 1000);
+		float Result[3];
+		float tmpScore = mDefeatedEnemyCount;
+		for (int i = 2; i > -1; i--) {
+			Result[i] = tmpScore / powf(10, i);
+			tmpScore = (int)tmpScore % (int)powf(10, i);
+			if ((int)Result[i] != 0) {
+				mIsDarkDefeatedEnemyCount = true;
+			}
+			if (mIsDarkDefeatedEnemyCount) {
+				mDefeatedEnemyCountColor[i] = WHITE;
+			} else {
+				mDefeatedEnemyCountColor[i] = 0xFFFFFF50;
+			}
+			screen.DrawUI(mComboPosition[i], mTimeUISize, 32 * (int)Result[i], 32, 32, mNumber, mDefeatedEnemyCountColor[i], mComboScale);
 		}
 		screen.DrawUI({ mScorePosition[0].x, mComboPosition[0].y + 50.0f }, 100, 50, 0, 200, 100, mComboLetter, WHITE);
 	}
 
 	//敵スコア
-	if (mIsReady) {
-		for (int j = 0; j < kEnemyScoreMax; j++) {
-
-			if (mIsEnemyScoreActive[j]) {
-				float Result[7];
-				float tmpScore = mEnemyScore[j];
-				for (int i = 6; i > -1; i--) {
-					Result[i] = tmpScore / powf(10, i);
-					tmpScore = (int)tmpScore % (int)powf(10, i);
-					if (powf(10, i) <= mEnemyScore[j]) {
-						screen.DrawUI({ mEnemyScorePosition[j].x - (i * 24) / screen.GetZoom(), mEnemyScorePosition[j].y }, 24 / screen.GetZoom(), 32 * (int)Result[i], 32, 32, mTimeNumber, WHITE, { 1.0f,1.0f }, true);
-					}
+	for (int j = 0; j < kEnemyScoreMax; j++) {
+		if (mIsEnemyScoreActive[j]) {
+			float Result[7];
+			float tmpScore = mEnemyScore[j];
+			for (int i = 6; i > -1; i--) {
+				Result[i] = tmpScore / powf(10, i);
+				tmpScore = (int)tmpScore % (int)powf(10, i);
+				if (powf(10, i) <= mEnemyScore[j]) {
+					screen.DrawUI({ mEnemyScorePosition[j].x - (i * 24) / screen.GetZoom(), mEnemyScorePosition[j].y }, 24 / screen.GetZoom(), 32 * (int)Result[i], 32, 32, mNumber, WHITE, { 1.0f,1.0f }, true);
 				}
 			}
-
 		}
+
 	}
-	
-
-
 	//スコア
 	if (mIsReady) {
+
+		//スコアの桁より大きい数字は色を薄くする
+		mIsDarkScore = false;
+		for (int i = 0; i < 7; i++) {
+			mScoreColor[i] = 0xFFFFFF50;
+		}
+
 		mScore = Clamp(mScore, 0, 10000000);
 		float Result[7];
 		float tmpScore = mScore;
 		for (int i = 6; i > -1; i--) {
 			Result[i] = tmpScore / powf(10, i);
 			tmpScore = (int)tmpScore % (int)powf(10, i);
-			screen.DrawUI(mScorePosition[i], mTimeUISize, 32 * (int)Result[i], 32, 32, mTimeNumber, WHITE, mComboScale);
+			if ((int)Result[i] != 0) {
+				mIsDarkScore = true;
+			}
+			if (mIsDarkScore) {
+				mScoreColor[i] = WHITE;
+			} else {
+				mScoreColor[i] = 0xFFFFFF50;
+			}
+			screen.DrawUI(mScorePosition[i], mTimeUISize, 32 * (int)Result[i], 32, 32, mNumber, mScoreColor[i], mComboScale);
 		}
 		screen.DrawUI({ mScorePosition[0].x, mScorePosition[0].y + 50.0f }, 100, 50, 0, 200, 100, mScoreLetter, WHITE);
 	}
@@ -433,7 +460,7 @@ void UI::Draw(Screen& screen, bool mIsReady) {
 }
 void UI::LoadTexture() {
 
-	mTimeNumber = Novice::LoadTexture("./Resources/UI/Time/number.png");
+	mNumber = Novice::LoadTexture("./Resources/UI/Time/number.png");
 	mTimeLimitNumber = Novice::LoadTexture("./Resources/UI/Time/timelimit.png");
 	mStart = Novice::LoadTexture("./Resources/UI/Time/start.png");
 	mTimeUp = Novice::LoadTexture("./Resources/UI/Time/timeup.png");

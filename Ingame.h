@@ -53,11 +53,13 @@ public:
 	void DrawBackTimeLimit(Screen& screen);
 
 
-	//コンボ
+	//敵を倒した数（スコアの加算に影響する）
 	bool mIsComboScaleAnime;
-	Vec2 mComboPosition[2];
+	bool mIsDarkDefeatedEnemyCount;
+	Vec2 mComboPosition[3];
 	Vec2 mComboScale;
-	int mCombo;
+	unsigned int mDefeatedEnemyCountColor[3];
+	int mDefeatedEnemyCount;
 	void Combo();
 	void AddCombo();
 
@@ -65,8 +67,10 @@ public:
 	//スコア
 	const int kSnakeScore = 1000;
 	const int kTsuchinokoScore = 1000;
+	bool mIsDarkScore;
 	Vec2 mScorePosition[7];
 	float mScore;
+	unsigned int mScoreColor[7];
 	static constexpr int kEnemyScoreMax = 20;
 	bool mIsEnemyScoreActive[kEnemyScoreMax];
 	Vec2 mEnemyScorePosition[kEnemyScoreMax];
@@ -106,7 +110,7 @@ public:
 
 
 	//画像
-	int mTimeNumber;
+	int mNumber;
 	int mTimeLimitNumber;
 	int mStart;
 	int mTimeUp;

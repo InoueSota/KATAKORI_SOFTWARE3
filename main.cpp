@@ -192,7 +192,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 								//フィーバーじゃないとき
 								if (!fever.mIsFever && !(player.mDushTimer > 0 && player.mIsStrikeActive)) {
 									player.SetKnockbackPosition(snake[i].mHeadPosition, snake[i].mHeadRadius);
-									ui.mCombo--;
 									ui.mIsWarning = true;
 								}
 								//フィーバーのとき
@@ -276,7 +275,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 										player.SetKnockbackPosition(tsuchinoko[i].mTailPosition, tsuchinoko[i].mRadius);
 									}
 
-									ui.mCombo--;
 									ui.mIsWarning = true;
 								}
 								//フィーバーのとき
@@ -526,7 +524,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			for (int i = 6; i > -1; i--) {
 				Result[i] = tmpScore / powf(10, i);
 				tmpScore = tmpScore % (int)powf(10, i);
-				screen.DrawUI(ui.mScorePosition[i], ui.mTimeUISize, 32 * Result[i], 32, 32, ui.mTimeNumber, WHITE, ui.mComboScale);
+				screen.DrawUI(ui.mScorePosition[i], ui.mTimeUISize, 32 * Result[i], 32, 32, ui.mNumber, ui.mScoreColor[i], ui.mComboScale);
 			}
 			break;
 		}
