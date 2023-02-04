@@ -394,7 +394,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				}
 
 				//フィーバー
-				fever.Update(screen, player.mPosition);
+				fever.Update(screen, player.mPosition, player.mIsStrikeActive);
 
 				//マップアップデート（フィーバーカラーにする）
 				map.Update(fever.mIsFever, fever.mIsOldFever);

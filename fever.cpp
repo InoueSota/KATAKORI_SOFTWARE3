@@ -20,8 +20,7 @@ void Fever::Init() {
 }
 
 
-
-void Fever::Update(Screen& screen, Vec2 PlayerPos) {
+void Fever::Update(Screen& screen, Vec2 PlayerPos, bool isStrikeActive) {
 
 	//前回のフィーバーフラグを取得
 	mIsOldFever = mIsFever;
@@ -31,7 +30,7 @@ void Fever::Update(Screen& screen, Vec2 PlayerPos) {
 		if (!mFeverStop) {
 			mFeverGauge--;
 		}
-		if (mFeverGauge < 0) {
+		if (mFeverGauge < 0 && !isStrikeActive) {
 			mIsFever = false;
 			mFeverGauge = 0;
 		}
@@ -238,7 +237,6 @@ void Fever::Update(Screen& screen, Vec2 PlayerPos) {
 }
 
 
-
 void Fever::Draw(Screen& screen) {
 
 	if (!mIsLoadTexture) {
@@ -246,6 +244,7 @@ void Fever::Draw(Screen& screen) {
 		mIsLoadTexture = true;
 	}
 	
+	mFeverGauge = Clamp(mFeverGauge, 0, 1000);
 	screen.DrawBox({ 49,14 }, 1.18 * 1000, 22, 0.0f, BLACK, kFillModeWireFrame, false);
 	screen.DrawBox({ 50,15 }, 1.18 * mFeverGauge, 20, 0.0f, WHITE, kFillModeSolid, false);
 	if (!(feverGauge.Pos.x <= 50)) {

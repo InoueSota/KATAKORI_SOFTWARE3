@@ -25,7 +25,7 @@ public:
 	bool mIsOldFever = 0;			//フィーバーしていたかどうか
 	bool mFeverStop = 0;
 	void Init();					//初期化
-	void Update(Screen& screen, Vec2 PlayerPos);	//アップデート
+	void Update(Screen& screen, Vec2 PlayerPos, bool isStrikeActive);	//アップデート
 	void Draw(Screen& screen);		//描画
 	static constexpr int kMaxParticle = 30;//パーティクルの最大数
 	static constexpr int kMaxPlayerFeverParticle = 100;//パーティクルの最大数
