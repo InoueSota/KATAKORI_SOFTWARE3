@@ -54,14 +54,14 @@ public:
 
 
 	//敵を倒した数（スコアの加算に影響する）
-	bool mIsComboScaleAnime;
-	bool mIsDarkDefeatedEnemyCount;
-	Vec2 mComboPosition[3];
-	Vec2 mComboScale;
-	unsigned int mDefeatedEnemyCountColor[3];
-	int mDefeatedEnemyCount;
-	void Combo();
-	void AddCombo();
+	bool mIsKillCountScaleAnimation;
+	bool mIsDarkKillCount;
+	Vec2 mKillCountPosition[3];
+	Vec2 mKillCountScale;
+	unsigned int mKillCountColor[3];
+	int mKillCount;
+	void KillCount();
+	void AddKillCount();
 
 
 	//スコア
@@ -114,7 +114,7 @@ public:
 	int mTimeLimitNumber;
 	int mStart;
 	int mTimeUp;
-	int mComboLetter;
+	int mKillCountLetter;
 	int mScoreLetter;
 	int mWarningRed;
 	int mRadar;

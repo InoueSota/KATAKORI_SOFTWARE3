@@ -200,7 +200,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 									//準備フェーズはスコアを加算しない処理
 									if (ui.mIsReady) {
 										ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
-										ui.AddCombo();
+										ui.AddKillCount();
 										fever.mSnakeDefeat++;
 										fever.mSnakeDefeatStrike++;
 									}
@@ -243,7 +243,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 									//準備フェーズはスコアを加算しない処理
 									if (ui.mIsReady) {
 										ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
-										ui.AddCombo();
+										ui.AddKillCount();
 									}
 									screen.SetHitStop();
 									snake[i].mShakeTimer = snake[i].kMaxShakeTimer;
@@ -283,7 +283,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 									//準備フェーズはスコアを加算しない処理
 									if (ui.mIsReady) {
 										ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
-										ui.AddCombo();
+										ui.AddKillCount();
 										fever.mTsuchinokoDefeat++;
 										fever.mTsuchinokoDefeatStrike++;
 									}
@@ -327,7 +327,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 									//準備フェーズはスコアを加算しない処理
 									if (ui.mIsReady) {
 										ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
-										ui.AddCombo();
+										ui.AddKillCount();
 									}
 									screen.SetHitStop();
 									tsuchinoko[i].mShakeTimer = tsuchinoko[i].kMaxShakeTimer;
@@ -524,7 +524,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			for (int i = 6; i > -1; i--) {
 				Result[i] = tmpScore / powf(10, i);
 				tmpScore = tmpScore % (int)powf(10, i);
-				screen.DrawUI(ui.mScorePosition[i], ui.mTimeUISize, 32 * Result[i], 32, 32, ui.mNumber, ui.mScoreColor[i], ui.mComboScale);
+				screen.DrawUI(ui.mScorePosition[i], ui.mTimeUISize, 32 * Result[i], 32, 32, ui.mNumber, ui.mScoreColor[i], ui.mKillCountScale);
 			}
 			break;
 		}

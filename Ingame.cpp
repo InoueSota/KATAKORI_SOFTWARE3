@@ -38,16 +38,16 @@ void UI::Init() {
 	mTimeUpColor = 0xFFFFFF00;
 	
 	//コンボ
-	mIsComboScaleAnime = false;
-	mComboPosition[0].x = Screen::kWindowWidth - mTimeUISize;
-	mComboPosition[0].y = 300.0f;
-	mComboPosition[1].x = Screen::kWindowWidth - mTimeUISize * 2;
-	mComboPosition[1].y = mComboPosition[0].y;
-	mComboPosition[2].x = Screen::kWindowWidth - mTimeUISize * 3;
-	mComboPosition[2].y = mComboPosition[0].y;
-	mComboScale.x = 1.0f;
-	mComboScale.y = 1.0f;
-	mDefeatedEnemyCount = 0;
+	mIsKillCountScaleAnimation = false;
+	mKillCountPosition[0].x = Screen::kWindowWidth - mTimeUISize;
+	mKillCountPosition[0].y = 300.0f;
+	mKillCountPosition[1].x = Screen::kWindowWidth - mTimeUISize * 2;
+	mKillCountPosition[1].y = mKillCountPosition[0].y;
+	mKillCountPosition[2].x = Screen::kWindowWidth - mTimeUISize * 3;
+	mKillCountPosition[2].y = mKillCountPosition[0].y;
+	mKillCountScale.x = 1.0f;
+	mKillCountScale.y = 1.0f;
+	mKillCount = 0;
 
 	//スコア
 	mScore = 0;
@@ -84,7 +84,7 @@ void UI::Update() {
 	}
 
 	//コンボ
-	Combo();
+	KillCount();
 
 	//頭か尾に当たってしまったとき
 	Warning();
@@ -229,7 +229,7 @@ void UI::TimeLimit() {
 
 
 }
-void UI::Combo() {
+void UI::KillCount() {
 
 	//敵の位置に表示しているスコアを消す
 	for (int i = 0; i < kEnemyScoreMax; i++) {
@@ -243,31 +243,31 @@ void UI::Combo() {
 	}
 
 	//拡縮アニメーション
-	if (mIsComboScaleAnime) {
-		mComboScale.x -= 0.1f;
-		mComboScale.y -= 0.1f;
-		mComboScale.x = Clamp(mComboScale.x, 1.0f, 1.8f);
-		mComboScale.y = Clamp(mComboScale.y, 1.0f, 1.8f);
-		if (mComboScale.x == 1.0f) {
-			mIsComboScaleAnime = false;
+	if (mIsKillCountScaleAnimation) {
+		mKillCountScale.x -= 0.1f;
+		mKillCountScale.y -= 0.1f;
+		mKillCountScale.x = Clamp(mKillCountScale.x, 1.0f, 1.8f);
+		mKillCountScale.y = Clamp(mKillCountScale.y, 1.0f, 1.8f);
+		if (mKillCountScale.x == 1.0f) {
+			mIsKillCountScaleAnimation = false;
 		}
 	}
 }
-void UI::AddCombo() {
+void UI::AddKillCount() {
 
 	//コンボを足す
-	mDefeatedEnemyCount++;
+	mKillCount++;
 	//拡縮アニメーション
-	mComboScale.x = 1.8f;
-	mComboScale.y = 1.8f;
-	mIsComboScaleAnime = true;
+	mKillCountScale.x = 1.8f;
+	mKillCountScale.y = 1.8f;
+	mIsKillCountScaleAnimation = true;
 }
 void UI::SnakeScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition) {
 
 	if (isStrikeActive) {
 		for (int i = 0; i < kEnemyScoreMax; i++) {
 			if (!mIsEnemyScoreActive[i]) {
-				mEnemyScore[i] = (kSnakeScore * 2.5) * (1.0f + (float)mDefeatedEnemyCount / 10);
+				mEnemyScore[i] = (kSnakeScore * 2.5) * (1.0f + (float)mKillCount / 10);
 				mScore += mEnemyScore[i];
 				mEnemyScorePosition[i] = enemyPosition;
 				mEnemyScoreLife[i] = 180;
@@ -279,7 +279,7 @@ void UI::SnakeScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition
 	else {
 		for (int i = 0; i < kEnemyScoreMax; i++) {
 			if (!mIsEnemyScoreActive[i]) {
-				mEnemyScore[i] = kSnakeScore * (1.0f + (float)mDefeatedEnemyCount / 10);;
+				mEnemyScore[i] = kSnakeScore * (1.0f + (float)mKillCount / 10);;
 				mScore += mEnemyScore[i];
 				mEnemyScorePosition[i] = enemyPosition;
 				mEnemyScoreLife[i] = 180;
@@ -296,7 +296,7 @@ void UI::TsuchinokoScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPos
 	if (isStrikeActive) {
 		for (int i = 0; i < kEnemyScoreMax; i++) {
 			if (!mIsEnemyScoreActive[i]) {
-				mEnemyScore[i] = (kTsuchinokoScore * 2.5) * (1.0f + (float)mDefeatedEnemyCount / 10);
+				mEnemyScore[i] = (kTsuchinokoScore * 2.5) * (1.0f + (float)mKillCount / 10);
 				mScore += mEnemyScore[i];
 				mEnemyScorePosition[i] = enemyPosition;
 				mEnemyScoreLife[i] = 180;
@@ -308,7 +308,7 @@ void UI::TsuchinokoScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPos
 	else {
 		for (int i = 0; i < kEnemyScoreMax; i++) {
 			if (!mIsEnemyScoreActive[i]) {
-				mEnemyScore[i] = kTsuchinokoScore * (1.0f + (float)mDefeatedEnemyCount / 10);;
+				mEnemyScore[i] = kTsuchinokoScore * (1.0f + (float)mKillCount / 10);;
 				mScore += mEnemyScore[i];
 				mEnemyScorePosition[i] = enemyPosition;
 				mEnemyScoreLife[i] = 180;
@@ -376,32 +376,32 @@ void UI::Draw(Screen& screen, bool mIsReady) {
 		screen.DrawUI(mCenterPosition, Screen::kWindowWidth, Screen::kWindowHeight, 0, Screen::kWindowWidth, Screen::kWindowHeight, mTimeUp, mTimeUpColor);
 	}
 
-	//コンボ
+	//キルカウント
 	if (mIsReady) {
 
 		//スコアの桁より大きい数字は色を薄くする
-		mIsDarkDefeatedEnemyCount = false;
+		mIsDarkKillCount = false;
 		for (int i = 0; i < 3; i++) {
-			mDefeatedEnemyCountColor[i] = 0xFFFFFF50;
+			mKillCountColor[i] = 0xFFFFFF50;
 		}
 
-		mDefeatedEnemyCount = Clamp(mDefeatedEnemyCount, 0, 1000);
+		mKillCount = Clamp(mKillCount, 0, 1000);
 		float Result[3];
-		float tmpScore = mDefeatedEnemyCount;
+		float tmpScore = mKillCount;
 		for (int i = 2; i > -1; i--) {
 			Result[i] = tmpScore / powf(10, i);
 			tmpScore = (int)tmpScore % (int)powf(10, i);
 			if ((int)Result[i] != 0) {
-				mIsDarkDefeatedEnemyCount = true;
+				mIsDarkKillCount = true;
 			}
-			if (mIsDarkDefeatedEnemyCount) {
-				mDefeatedEnemyCountColor[i] = WHITE;
+			if (mIsDarkKillCount) {
+				mKillCountColor[i] = WHITE;
 			} else {
-				mDefeatedEnemyCountColor[i] = 0xFFFFFF50;
+				mKillCountColor[i] = 0xFFFFFF50;
 			}
-			screen.DrawUI(mComboPosition[i], mTimeUISize, 32 * (int)Result[i], 32, 32, mNumber, mDefeatedEnemyCountColor[i], mComboScale);
+			screen.DrawUI(mKillCountPosition[i], mTimeUISize, 32 * (int)Result[i], 32, 32, mNumber, mKillCountColor[i], mKillCountScale);
 		}
-		screen.DrawUI({ mScorePosition[0].x, mComboPosition[0].y + 50.0f }, 100, 50, 0, 200, 100, mComboLetter, WHITE);
+		screen.DrawUI({ mScorePosition[0].x - 50.0f, mKillCountPosition[0].y + 50.0f }, 200, 50, 0, 400, 100, mKillCountLetter, WHITE);
 	}
 
 	//敵スコア
@@ -442,7 +442,7 @@ void UI::Draw(Screen& screen, bool mIsReady) {
 			} else {
 				mScoreColor[i] = 0xFFFFFF50;
 			}
-			screen.DrawUI(mScorePosition[i], mTimeUISize, 32 * (int)Result[i], 32, 32, mNumber, mScoreColor[i], mComboScale);
+			screen.DrawUI(mScorePosition[i], mTimeUISize, 32 * (int)Result[i], 32, 32, mNumber, mScoreColor[i], mKillCountScale);
 		}
 		screen.DrawUI({ mScorePosition[0].x, mScorePosition[0].y + 50.0f }, 100, 50, 0, 200, 100, mScoreLetter, WHITE);
 	}
@@ -464,7 +464,7 @@ void UI::LoadTexture() {
 	mTimeLimitNumber = Novice::LoadTexture("./Resources/UI/Time/timelimit.png");
 	mStart = Novice::LoadTexture("./Resources/UI/Time/start.png");
 	mTimeUp = Novice::LoadTexture("./Resources/UI/Time/timeup.png");
-	mComboLetter = Novice::LoadTexture("./Resources/UI/Combo/combo.png");
+	mKillCountLetter = Novice::LoadTexture("./Resources/UI/Killcount/killcount.png");
 	mScoreLetter = Novice::LoadTexture("./Resources/UI/Score/score.png");
 	mWarningRed = Novice::LoadTexture("./Resources/Player/warningred.png");
 	mRadar = Novice::LoadTexture("./Resources/UI/Minimap/radar.png");

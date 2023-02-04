@@ -51,9 +51,7 @@ void Player::Init() {
 	mDushTimer = 0;
 
 	//ストライク演出
-	for (int i = 0; i < kStrikeLineMax; i++) {
-		mIsStrikeLineActive[i] = false;
-	}
+	mIsStrikeBoxActive = false;
 
 	//残像
 	mIsDushShadowActive = false;
@@ -91,10 +89,8 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 	mRadius = mSize / 2.0f;
 
 	//ストライク
-	Strike(isFever, isOldFever);
-	if (!isFever) {
-		StrikeLine(screen);
-	}
+	Strike(isFever, isOldFever, screen);
+	StrikeBox();
 
 	//ストライクをしていない時に可能
 	if (!mIsStrikeActive) {
@@ -278,7 +274,7 @@ void Player::MarkLimitLength(bool isFever) {
 	}
 
 }
-void Player::Strike(bool isFever, bool isOldFever) {
+void Player::Strike(bool isFever, bool isOldFever, Screen& screen) {
 
 	//フィーバー状態が始まった || 終わった
 	if ((isFever && !isOldFever) || (!isFever && isOldFever)) {
@@ -290,32 +286,6 @@ void Player::Strike(bool isFever, bool isOldFever) {
 	if (isFever) {
 		mStrikePower = kStrikePowerMax;
 	}
-
-	/*
-	//モードチェンジ
-	if (Controller::IsTriggerButton(0, Controller::bB) && !mIsStrikeActive) {
-
-		if (strikeMode == STRAIGHT) {
-			strikeMode = SPIRAL;
-		}
-		else {
-			strikeMode = STRAIGHT;
-		}
-		mStrikeModeScaleEasingt = 0.0f;
-		mStrikeModeScaleActive = true;
-	}
-	//モードチェンジのスケールイージング
-	if (mStrikeModeScaleActive) {
-
-		mStrikeModeScaleEasingt = EasingClamp(0.1f, mStrikeModeScaleEasingt);
-		mStrikeModeScale = EasingMove({ 1.5f, 1.5f }, { 1.0f, 1.0f }, easeOutSine(mStrikeModeScaleEasingt));
-		mStrikeModeBScale = EasingMove({ 0.7f, 0.7f }, { 1.0f, 1.0f }, easeOutSine(mStrikeModeScaleEasingt));
-
-		if (mStrikeModeScaleEasingt == 1.0f) {
-			mStrikeModeScaleActive = false;
-		}
-	}
-	*/
 
 	if (mIsMarkActive && !mIsStrikeActive) {
 
@@ -423,6 +393,7 @@ void Player::Strike(bool isFever, bool isOldFever) {
 			if ((mPosition.x == mMarkPosition.x && mPosition.y == mMarkPosition.y) || mIsStraightStrikeFinish == true) {
 				mIsMarkActive = false;
 				mIsStrikeActive = false;
+				StrikeBoxInit(screen);
 			}
 		}
 		else {
@@ -441,75 +412,39 @@ void Player::Strike(bool isFever, bool isOldFever) {
 				mIsStrikeActive = false;
 			}
 		}
-
 	}
-
-
 }
-void Player::StrikeLine(Screen& screen) {
+void Player::StrikeBoxInit(Screen& screen) {
 
-	//if (mIsStrikeActive && 0.2f <= mStrikeEasingt && mStrikeEasingt <= 0.85f)
-	//{
-	//	//基準線とストライクの方向を取得
-	//	Vec2 base = { 1,0 };
-	//	Vec2 tmpDirection = mStrikeEndPosition - mStrikeStartPosition;
+	//初期化
+	for (int i = 0; i < kStrikeBoxMax; i++) {
 
-	//	//方向を正規化してｎ倍する
-	//	tmpDirection = tmpDirection.Normalized();
-	//	tmpDirection = tmpDirection * (100 / screen.GetZoom());
+		float tmpLength = 150 - RAND(0, 2) * 20;
+		mStrikeBoxAngle[i] = RAND(Degree(0), Degree(360));
+		mStrikeBoxStartPosition[i].x = mMarkPosition.x;
+		mStrikeBoxStartPosition[i].y = mMarkPosition.y;
+		mStrikeBoxEndPosition[i].x = cosf(mStrikeBoxAngle[i]) * (tmpLength / screen.GetZoom()) + mStrikeBoxStartPosition[i].x;
+		mStrikeBoxEndPosition[i].y = sinf(mStrikeBoxAngle[i]) * (tmpLength / screen.GetZoom()) + mStrikeBoxStartPosition[i].y;
+		mStrikeBoxStartSize = 30 / screen.GetZoom();
+	}
+	mStrikeBoxEasingt = 0.0f;
+	mIsStrikeBoxActive = true;
+}
+void Player::StrikeBox() {
 
-	//	//なす角を求める
-	//	float dp = tmpDirection.Dot(base);
-	//	float cp = tmpDirection.Cross(base);
-	//	mStrikeLineAngle = atan2(cp, dp);
+	//ストライクが終わった時のアニメーション
+	if (mIsStrikeBoxActive) {
 
-	//	//生成位置の最少値と最大値
-	//	float randminX = mPosition.x - ((float)Screen::kWindowWidth  / screen.GetZoom());
-	//	float randmaxX = mPosition.x + ((float)Screen::kWindowWidth  / screen.GetZoom());
-	//	float randminY = mPosition.y - ((float)Screen::kWindowHeight / screen.GetZoom());
-	//	float randmaxY = mPosition.y + ((float)Screen::kWindowHeight / screen.GetZoom());
+		mStrikeBoxEasingt = EasingClamp(0.02f, mStrikeBoxEasingt);
+		for (int i = 0; i < kStrikeBoxMax; i++) {
+			mStrikeBoxPosition[i] = EasingMove(mStrikeBoxStartPosition[i], mStrikeBoxEndPosition[i], easeOutSine(mStrikeBoxEasingt));
+		}
+		mStrikeBoxSize = EasingMove(mStrikeBoxStartSize, 0.0, easeOutSine(mStrikeBoxEasingt));
 
-	//	for (int i = 0; i < kStrikeLineMax; i++)
-	//	{
-	//		//生成
-	//		if (!mIsStrikeLineActive[i])
-	//		{
-	//			mStrikeLinePosition[i].x = RAND(randminX, randmaxX);
-	//			mStrikeLinePosition[i].y = RAND(randminY, randmaxY);
-	//			mStrikeLinePosition[i] += tmpDirection;
-	//			mStrikeLineWidth[i] = RAND(200, 400);
-	//			mStrikeLineHeight[i] = RAND(2.5f, 3.5f);
-	//			mStrikeLineAlphat[i] = 0.0f;
-	//			mStrikeLineColor[i] = 0x50505000;
-	//			mIsStrikeLineActive[i] = true;
-	//			break;
-	//		}
-	//	}
-	//}
-	//for (int i = 0; i < kStrikeLineMax; i++) 
-	//{
-	//	if (mIsStrikeLineActive[i])
-	//	{
-	//		//透明度を変える
-	//		mStrikeLineAlphat[i] = EasingClamp(0.015f, mStrikeLineAlphat[i]);
-	//		if (mStrikeLineAlphat[i] < 0.5f) {
-	//			mStrikeLineColor[i] = ColorEasingMove(0x50505000, 0x505050BB, easeLinear(mStrikeLineAlphat[i] * 2));
-	//		}
-	//		else {
-	//			mStrikeLineColor[i] = ColorEasingMove(0x505050BB, 0x50505000, easeLinear(mStrikeLineAlphat[i] * 2 - 0.5f));
-	//		}
-	//		if (mStrikeLineAlphat[i] == 1.0f) {
-	//			mIsStrikeLineActive[i] = false;
-	//		}
-	//	}
-	//}
-	//if (!mIsStrikeActive) 
-	//{
-	//	for (int i = 0; i < kStrikeLineMax; i++)
-	//	{
-	//		mIsStrikeLineActive[i] = false;
-	//	}
-	//}
+		if (mStrikeBoxEasingt == 1.0f) {
+			mIsStrikeBoxActive = false;
+		}
+	}
 
 }
 void Player::Shadow(bool isHitStop, bool isStart, bool isReady) {
@@ -651,7 +586,14 @@ void Player::Draw(Screen& screen, bool isReady, bool isFever, unsigned int fever
 		}
 	}
 
+	//ストライク演出
+	if (mIsStrikeBoxActive) {
 
+		for (int i = 0; i < kStrikeBoxMax; i++) {
+			screen.DrawRectAngle(mStrikeBoxPosition[i], mStrikeBoxSize, mStrikeBoxSize, mStrikeBoxAngle[i], WHITE, kFillModeWireFrame, true);
+		}
+	}
+	
 	//マーク描画
 	if (mIsMarkActive){
 
@@ -678,12 +620,6 @@ void Player::Draw(Screen& screen, bool isReady, bool isFever, unsigned int fever
 		} else {
 			screen.DrawPicture({ mPosition.x, mPosition.y + (40 / screen.GetZoom()) }, 360, 120, 0.0f, 300, 100, nopower, WHITE);
 		}
-	}
-
-	//ストライク中の線描画
-	for (int i = 0; i < kStrikeLineMax; i++)
-	{
-		screen.DrawRectAngle(mStrikeLinePosition[i], mStrikeLineWidth[i] / screen.GetZoom(), mStrikeLineHeight[i] / screen.GetZoom(), mStrikeLineAngle, mStrikeLineColor[i]);
 	}
 
 }

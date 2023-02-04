@@ -101,19 +101,21 @@ public:
 	float mStrikeThetaStartValue;
 	float mStrikeRadius;
 	float mStrikeRadiusStartValue;
-	void Strike(bool isFever, bool isOldFever);
+	void Strike(bool isFever, bool isOldFever, Screen& screen);
 
 
 	//ストライク演出
-	static constexpr int kStrikeLineMax = 200;
-	bool mIsStrikeLineActive[kStrikeLineMax];
-	Vec2 mStrikeLinePosition[kStrikeLineMax];
-	int mStrikeLineWidth[kStrikeLineMax];
-	int mStrikeLineHeight[kStrikeLineMax];
-	float mStrikeLineAngle;
-	float mStrikeLineAlphat[kStrikeLineMax];
-	unsigned int mStrikeLineColor[kStrikeLineMax];
-	void StrikeLine(Screen& screen);
+	static constexpr int kStrikeBoxMax = 10;
+	bool mIsStrikeBoxActive;
+	Vec2 mStrikeBoxPosition[kStrikeBoxMax];
+	Vec2 mStrikeBoxStartPosition[kStrikeBoxMax];
+	Vec2 mStrikeBoxEndPosition[kStrikeBoxMax];
+	float mStrikeBoxAngle[kStrikeBoxMax];
+	float mStrikeBoxEasingt;
+	int mStrikeBoxSize;
+	int mStrikeBoxStartSize;
+	void StrikeBoxInit(Screen& screen);
+	void StrikeBox();
 
 
 	//残像
