@@ -12,7 +12,7 @@ public:
 
 	void Init();
 	void Update(Screen& screen, bool isFever, bool isOldFever);
-	void Draw(Screen& screen, bool isReady, bool isFever, unsigned int feverGaugeColor);
+	void Draw(Screen& screen, bool isReady, bool isFever, unsigned int feverGaugeColor, unsigned int backLineColor);
 
 
 	//パラメータ
@@ -107,6 +107,7 @@ public:
 	//ストライク演出
 	static constexpr int kStrikeBoxMax = 10;
 	bool mIsStrikeBoxActive;
+	bool mIsStrikeBoxShakeActive;
 	Vec2 mStrikeBoxPosition[kStrikeBoxMax];
 	Vec2 mStrikeBoxStartPosition[kStrikeBoxMax];
 	Vec2 mStrikeBoxEndPosition[kStrikeBoxMax];

@@ -158,6 +158,7 @@ public:
 	//デバッグ用
 	static constexpr int kAxisLength = 66;
 	static constexpr int kLineInterval = 150;
+	unsigned int mBackLineColor;
 	Vec2 mXaxisStartPosition[kAxisLength];
 	Vec2 mXaxisEndPosition[kAxisLength];
 	Vec2 mYaxisStartPosition[kAxisLength];

@@ -107,13 +107,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 				//ゲーム開始時に初期化する
 				if (!ui.mIsOldReady && ui.mIsReady) {
+					player.Init();
 					for (int i = 0; i < Enemy::kEnemyMax; i++) {
 						snake[i].Init();
 						tsuchinoko[i].Init();
 						snake[i].Update(ui.mTimeLeft, player.mPosition, player.LockonCount);
 						tsuchinoko[i].Update(player.mPosition, ui.mTimeLeft, player.LockonCount);
 					}
-					player.Init();
 				}
 
 
@@ -368,6 +368,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 				//プレイヤーのノックバック
+				screen.ShakeUpdate(player.mKnockbackSet);
 				player.Knockback();
 
 
@@ -411,7 +412,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				screen.ScrollUpdate(player);
 
 				//シェイクアップデート
-				screen.ShakeUpdate(player.mKnockbackSet);
+				screen.ShakeUpdate(player.mIsStrikeBoxShakeActive);
 
 				//ヒットストップアップデート
 				screen.HitStopUpdate();
@@ -483,7 +484,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 			//プレイヤー描画
-			player.Draw(screen, ui.mIsReady, fever.mIsFever, fever.feverGauge.color);
+			player.Draw(screen, ui.mIsReady, fever.mIsFever, fever.feverGauge.color, map.mBackLineColor);
 
 
 			//ＵＩ描画

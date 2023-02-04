@@ -65,7 +65,7 @@ public:
 
 	//‘Ì•”•ª‹¤’Ê
 	static constexpr int kMaxFrame = 120;
-	static constexpr int kBodyMax = 4;
+	static constexpr int kBodyMax = 5;
 	Vec2 mBodyPosition[kBodyMax];
 	Vec2 mBodyDeadPosition[kBodyMax];
 	float mBodyAngle[kBodyMax];

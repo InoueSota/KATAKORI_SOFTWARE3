@@ -474,6 +474,7 @@ void UI::LoadTexture() {
 	mA = Novice::LoadTexture("./Resources/UI/Explanation/a.png");
 }
 
+
 //ƒ}ƒbƒv
 void Map::Init() {
 
@@ -490,27 +491,28 @@ void Map::Init() {
 	}
 
 	mIsBackGroundColorChange = false;
-	mBackGroundColor = 0x589E35FF;
-
+	mBackGroundColor = 0xEAEAEAFF;
+	mBackLineColor = 0x202020FF;
 }
 void Map::Update(bool isFever, bool isOldFever) {
 
 	if (isFever && !isOldFever) {
 		mBackGroundEasingt = 0.0f;
-		mBackGroundStartColor = 0x589E35FF;
+		mBackGroundStartColor = 0xEAEAEAFF;
 		mBackGroundEndColor = 0x202020FF;
 		mIsBackGroundColorChange = true;
 	}
 	else if (!isFever && isOldFever) {
 		mBackGroundEasingt = 0.0f;
 		mBackGroundStartColor = 0x202020FF;
-		mBackGroundEndColor = 0x589E35FF;
+		mBackGroundEndColor = 0xEAEAEAFF;
 		mIsBackGroundColorChange = true;
 	}
 
 	if (mIsBackGroundColorChange) {
 		mBackGroundEasingt = EasingClamp(0.01f, mBackGroundEasingt);
 		mBackGroundColor = ColorEasingMove(mBackGroundStartColor, mBackGroundEndColor, easeOutSine(mBackGroundEasingt));
+		mBackLineColor = ColorEasingMove(mBackGroundEndColor, mBackGroundStartColor, easeOutSine(mBackGroundEasingt));
 
 		if (mBackGroundEasingt == 1.0f) {
 			mIsBackGroundColorChange = false;
@@ -557,8 +559,8 @@ void Map::Draw(Screen& screen) {
 
 	for (int i = 0; i < kAxisLength; i++)
 	{
-		screen.DrawLine(mXaxisStartPosition[i], mXaxisEndPosition[i]);
-		screen.DrawLine(mYaxisStartPosition[i], mYaxisEndPosition[i]);
+		screen.DrawLine(mXaxisStartPosition[i], mXaxisEndPosition[i], mBackLineColor);
+		screen.DrawLine(mYaxisStartPosition[i], mYaxisEndPosition[i], mBackLineColor);
 	}
 
 	screen.DrawLine({ kMapLeft, kMapTop }, { kMapRight, kMapTop }, BLACK);

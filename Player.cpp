@@ -42,6 +42,7 @@ void Player::Init() {
 
 	//ストライク
 	mIsStrikeActive = false;
+	mIsStrikeBoxShakeActive = false;
 	mStrikePower = 0;
 	mStrikeModeScale = { 1.0f, 1.0f };
 	mStrikeModeBScale = { 1.0f, 1.0f };
@@ -71,6 +72,9 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 
 	//前回ストライクフラグを取得する
 	mIsOldStrikeActive = mIsStrikeActive;
+
+	//シェイクフラグを初期化する
+	mIsStrikeBoxShakeActive = false;
 
 	//速度を初期化する
 	mVelocity.setZero();
@@ -343,7 +347,7 @@ void Player::Strike(bool isFever, bool isOldFever, Screen& screen) {
 
 			mStrikeVelocity.setZero();
 			mStrikeVelocity = mStrikeDirection * mStrikeSpeed + LeftStickVelocity(30.0f);
-			mStrikeSpeed += 1.0f;
+			mStrikeSpeed += 0.8f;
 
 			mPosition += mStrikeVelocity;
 
@@ -425,10 +429,11 @@ void Player::StrikeBoxInit(Screen& screen) {
 		mStrikeBoxStartPosition[i].y = mMarkPosition.y;
 		mStrikeBoxEndPosition[i].x = cosf(mStrikeBoxAngle[i]) * (tmpLength / screen.GetZoom()) + mStrikeBoxStartPosition[i].x;
 		mStrikeBoxEndPosition[i].y = sinf(mStrikeBoxAngle[i]) * (tmpLength / screen.GetZoom()) + mStrikeBoxStartPosition[i].y;
-		mStrikeBoxStartSize = 30 / screen.GetZoom();
+		mStrikeBoxStartSize = 40 / screen.GetZoom();
 	}
 	mStrikeBoxEasingt = 0.0f;
 	mIsStrikeBoxActive = true;
+	mIsStrikeBoxShakeActive = true;
 }
 void Player::StrikeBox() {
 
@@ -571,7 +576,7 @@ void Player::Knockback() {
 }
 
 
-void Player::Draw(Screen& screen, bool isReady, bool isFever, unsigned int feverGaugeColor) {
+void Player::Draw(Screen& screen, bool isReady, bool isFever, unsigned int feverGaugeColor, unsigned int backLineColor) {
 
 	//残像描画
 	for (int i = 0; i < kShadowMax; i++) {
@@ -590,7 +595,7 @@ void Player::Draw(Screen& screen, bool isReady, bool isFever, unsigned int fever
 	if (mIsStrikeBoxActive) {
 
 		for (int i = 0; i < kStrikeBoxMax; i++) {
-			screen.DrawRectAngle(mStrikeBoxPosition[i], mStrikeBoxSize, mStrikeBoxSize, mStrikeBoxAngle[i], WHITE, kFillModeWireFrame, true);
+			screen.DrawRectAngle(mStrikeBoxPosition[i], mStrikeBoxSize, mStrikeBoxSize, mStrikeBoxAngle[i], backLineColor, kFillModeWireFrame, true);
 		}
 	}
 	

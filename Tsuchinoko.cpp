@@ -37,7 +37,6 @@ void Tsuchinoko::Init() {
 }
 
 
-
 void Tsuchinoko::Update(Vec2 playerposition, int mTimeLeft, int LockonCount) {
 
 	//‘¬“x‚ğ‰Šú‰»‚·‚é
@@ -224,7 +223,6 @@ void Tsuchinoko::LockOn(Vec2 playerposition, float radius) {
 		IsPlayerLockon = false;
 	}
 }
-
 
 
 void Tsuchinoko::Draw(Screen& screen) {

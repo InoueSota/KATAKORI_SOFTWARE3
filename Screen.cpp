@@ -46,11 +46,11 @@ void Screen::ShakeUpdate(bool condition) {
 
 	if (mIsShakeActive) {
 
-		mShakeEasingt = EasingClamp(0.033f, mShakeEasingt);
+		mShakeEasingt = EasingClamp(0.01f, mShakeEasingt);
 		mShakeMag = EasingMove(1.0f, 0.0f, easeOutSine(mShakeEasingt));
 
-		mScreenShake.x = RAND(-3.0f, 5.0f) * mShakeMag;
-		mScreenShake.y = RAND(-3.0f, 5.0f) * mShakeMag;
+		mScreenShake.x = RAND(-10.0f, 10.0f) * mShakeMag;
+		mScreenShake.y = RAND(-5.0f, 5.0f) * mShakeMag;
 
 		if (mShakeEasingt == 1.0f) {
 			mIsShakeActive = false;

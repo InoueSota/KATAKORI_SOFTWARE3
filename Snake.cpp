@@ -74,6 +74,9 @@ void Snake::Make(int mTimeLeft, Vec2 PlayerPos) {
 	{
 		mIsClearAnimation = false;
 
+		mHeadPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+		mHeadPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+
 		while ((mHeadPosition.x >= PlayerPos.x - 1280) && (mHeadPosition.x <= PlayerPos.x + 1280)) {
 			mHeadPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
 		}
@@ -244,6 +247,9 @@ void Snake::Follow() {
 	//‘Ìi‚S‚Â–Új
 	mBodyPosition[3] = mOldHeadPosition[79];
 	mBodyAngle[3] = mOldHeadAngle[79];
+	//‘Ìi‚T‚Â–Új
+	mBodyPosition[4] = mOldHeadPosition[99];
+	mBodyAngle[4] = mOldHeadAngle[99];
 
 }
 
