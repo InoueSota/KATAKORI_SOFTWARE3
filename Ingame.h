@@ -156,8 +156,8 @@ public:
 	float mBackGroundEasingt;
 
 	//デバッグ用
-	static constexpr int kAxisLength = 66;
-	static constexpr int kLineInterval = 150;
+	static constexpr int kAxisLength = 33;
+	static constexpr int kLineInterval = 300;
 	unsigned int mBackLineColor;
 	Vec2 mXaxisStartPosition[kAxisLength];
 	Vec2 mXaxisEndPosition[kAxisLength];

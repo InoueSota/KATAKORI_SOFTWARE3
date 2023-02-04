@@ -44,6 +44,7 @@ public:
 	//¶¬ˆ—
 	bool mIsActive;
 	bool mIsDeath;
+	void FirstMake();
 	void Make(Vec2 playerPosition, int mTimeLeft);
 
 

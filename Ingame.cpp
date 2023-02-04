@@ -491,21 +491,21 @@ void Map::Init() {
 	}
 
 	mIsBackGroundColorChange = false;
-	mBackGroundColor = 0xEAEAEAFF;
+	mBackGroundColor = 0xDADADAFF;
 	mBackLineColor = 0x202020FF;
 }
 void Map::Update(bool isFever, bool isOldFever) {
 
 	if (isFever && !isOldFever) {
 		mBackGroundEasingt = 0.0f;
-		mBackGroundStartColor = 0xEAEAEAFF;
+		mBackGroundStartColor = 0xDADADAFF;
 		mBackGroundEndColor = 0x202020FF;
 		mIsBackGroundColorChange = true;
 	}
 	else if (!isFever && isOldFever) {
 		mBackGroundEasingt = 0.0f;
 		mBackGroundStartColor = 0x202020FF;
-		mBackGroundEndColor = 0xEAEAEAFF;
+		mBackGroundEndColor = 0xDADADAFF;
 		mIsBackGroundColorChange = true;
 	}
 
@@ -518,20 +518,6 @@ void Map::Update(bool isFever, bool isOldFever) {
 			mIsBackGroundColorChange = false;
 		}
 	}
-
-	//for (int i = 0; i < kAxisLength; i++)
-	//{
-	//	if (XaxisNearPlayer(mYaxisStartPosition[i], mYaxisEndPosition[i], player))
-	//	{
-	//		mYaxisStartPosition[i].y = player.mPosition.y + (Screen::kWindowHeight / 2);
-	//		mYaxisEndPosition[i].y   = player.mPosition.y - (Screen::kWindowHeight / 2);
-	//	}
-	//	if (YaxisNearPlayer(mXaxisStartPosition[i], mXaxisEndPosition[i], player))
-	//	{
-	//		mXaxisStartPosition[i].x = player.mPosition.x + (Screen::kWindowWidth / 2);
-	//		mXaxisEndPosition[i].x   = player.mPosition.x - (Screen::kWindowWidth / 2);
-	//	}
-	//}
 
 }
 bool Map::XaxisNearPlayer(Vec2 startposition, Vec2 endposition, Player& player) {

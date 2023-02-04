@@ -66,6 +66,41 @@ void Snake::Update(int mTimeLeft, Vec2 PlayerPos, int LockonCount) {
 		Follow();
 	}
 }
+void Snake::FirstMake() {
+
+	if (!mIsActive || mIsDeath)
+	{
+		mIsClearAnimation = false;
+
+		mHeadPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+		mHeadPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+
+		while ((mHeadPosition.x >= -1280) && (mHeadPosition.x <= 1280)) {
+			mHeadPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+		}
+		while ((mHeadPosition.y >= -720) && (mHeadPosition.y <= 720)) {
+			mHeadPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+		}
+		for (int i = 0; i < kMaxSpawnParticle; i++) {
+			spawnParticle[i].Pos = mHeadPosition;
+			spawnParticle[i].EndPos = mHeadPosition;
+			float angle = Degree(RAND(1, 360));
+			spawnParticle[i].StartPos.x = spawnParticle[i].Pos.x + cosf(angle) * 200;
+			spawnParticle[i].StartPos.y = spawnParticle[i].Pos.y + sinf(angle) * 200;
+			spawnParticle[i].IsUse = 1;
+		}
+
+		mHeadPositionStart = mHeadPosition;
+		mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+		mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+		for (int i = 0; i < kMaxFrame; i++) {
+			mOldHeadPosition[i] = mHeadPosition;
+		}
+		mIsDeath = false;
+		mIsActive = true;
+		mShakeTimer = -1;
+	}
+}
 void Snake::Make(int mTimeLeft, Vec2 PlayerPos) {
 
 	int SuperRand = RAND(1, 100);

@@ -107,13 +107,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 				//ゲーム開始時に初期化する
 				if (!ui.mIsOldReady && ui.mIsReady) {
-					player.Init();
 					for (int i = 0; i < Enemy::kEnemyMax; i++) {
 						snake[i].Init();
 						tsuchinoko[i].Init();
+						snake[i].FirstMake();
+						tsuchinoko[i].FirstMake();
 						snake[i].Update(ui.mTimeLeft, player.mPosition, player.LockonCount);
 						tsuchinoko[i].Update(player.mPosition, ui.mTimeLeft, player.LockonCount);
 					}
+					player.Init();
 				}
 
 

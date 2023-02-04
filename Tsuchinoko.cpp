@@ -85,6 +85,39 @@ void Tsuchinoko::Update(Vec2 playerposition, int mTimeLeft, int LockonCount) {
 		Follow();
 	}
 }
+void Tsuchinoko::FirstMake() {
+
+	if (!mIsActive || mIsDeath)
+	{
+		mIsClearAnimation = false;
+
+		mCenterPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+		mCenterPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+
+		while ((mCenterPosition.x >= -1280) && (mCenterPosition.x <= 1280)) {
+			mCenterPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+		}
+		while ((mCenterPosition.y >= -720) && (mCenterPosition.y <= 720)) {
+			mCenterPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+		}
+		for (int i = 0; i < kMaxSpawnParticle; i++) {
+			spawnParticle[i].Pos = mCenterPosition;
+			spawnParticle[i].EndPos = mCenterPosition;
+			float angle = Degree(RAND(1, 360));
+			spawnParticle[i].StartPos.x = spawnParticle[i].Pos.x + cosf(angle) * 200;
+			spawnParticle[i].StartPos.y = spawnParticle[i].Pos.y + sinf(angle) * 200;
+			spawnParticle[i].IsUse = 1;
+		}
+
+
+		mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
+		mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+		mIsDeath = false;
+		mIsActive = true;
+		mShakeTimer = -1;
+	}
+
+}
 void Tsuchinoko::Make(Vec2 PlayerPos, int mTimeLeft) {
 
 	int SuperRand = RAND(1, 100);
