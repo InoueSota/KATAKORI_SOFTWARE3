@@ -52,11 +52,21 @@ public:
 	}
 
 	void Init();
-	void Update();
+	void Update(float score);
 	void Draw(Screen& screen);
 
 
-	//タイトル
+	//スコア
+	bool mIsScoreInit;
+	bool mIsDarkScore;
+	Vec2 mScorePosition[7];
+	unsigned int mScoreColor[7];
+	int mScoreSize;
+	float mStartScore;
+	float mEndScore;
+	float mScore;
+	float mScoreEasingt;
+
 	Vec2 mCenterPosition{ Screen::kWindowWidth / 2, Screen::kWindowHeight / 2 };
 	unsigned int mXScaleColor;
 	Vec2 mXScale;
@@ -64,6 +74,7 @@ public:
 
 	//画像
 	int mResult;
+	int mNumber;
 	int mX;
 	void LoadTexture();
 

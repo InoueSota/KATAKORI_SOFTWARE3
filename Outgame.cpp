@@ -94,10 +94,27 @@ void Title::LoadTexture() {
 
 void Result::Init() {
 
+	mIsScoreInit = false;
+	mScoreEasingt = 0.0f;
+	mScoreSize = 96;
+	for (int i = 0; i < 7; i++) {
+		mScorePosition[i].x = (Screen::kWindowWidth - 15.0f - mScoreSize / 2.0) - mScoreSize * i;
+		mScorePosition[i].y = 200.0f;
+	}
 	mXEasingt = 0.0f;
-
 }
-void Result::Update() {
+void Result::Update(float score) {
+
+	//スコアのアニメーション
+	if (!mIsScoreInit) {
+		mStartScore = 0.0f;
+		mEndScore = score;
+		mScoreEasingt = 0.0f;
+		mIsScoreInit = true;
+	} else {
+		mScoreEasingt = EasingClamp(0.008f, mScoreEasingt);
+		mScore = EasingMove(mStartScore, mEndScore, easeOutCirc(mScoreEasingt));
+	}
 
 	//Xボタンのアニメーション
 	mXEasingt = EasingClamp(0.02f, mXEasingt);
@@ -114,9 +131,32 @@ void Result::Draw(Screen& screen) {
 	screen.DrawUI({ mCenterPosition.x, Screen::kWindowHeight - 75 }, 75, 75, 0, 160, 160, mX, mXScaleColor, mXScale);
 	screen.DrawUI({ mCenterPosition.x, Screen::kWindowHeight - 75 }, 75, 75, 0, 160, 160, mX, WHITE);
 
+	//スコア描画
+
+	mIsDarkScore = false;
+	for (int i = 0; i < 7; i++) {
+		mScoreColor[i] = 0xFFFFFF50;
+	}
+
+	int Result[7];
+	int tmpScore = mScore;
+	for (int i = 6; i > -1; i--) {
+		Result[i] = tmpScore / powf(10, i);
+		tmpScore = tmpScore % (int)powf(10, i);
+		if ((int)Result[i] != 0) {
+			mIsDarkScore = true;
+		}
+		if (mIsDarkScore) {
+			mScoreColor[i] = WHITE;
+		} else {
+			mScoreColor[i] = 0xFFFFFF50;
+		}
+		screen.DrawUI(mScorePosition[i], mScoreSize, 32 * Result[i], 32, 32, mNumber, mScoreColor[i]);
+	}
 }
 void Result::LoadTexture() {
 
 	mResult = Novice::LoadTexture("./Resources/Outgame/End/end.png");
+	mNumber = Novice::LoadTexture("./Resources/UI/Time/number.png");
 	mX = Novice::LoadTexture("./Resources/UI/Explanation/x.png");
 }

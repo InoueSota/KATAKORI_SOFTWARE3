@@ -201,7 +201,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 									//準備フェーズはスコアを加算しない処理
 									if (ui.mIsReady) {
-										ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
+										ui.SnakeScore(player.mIsStrikeActive, snake[i].mHeadPosition);
 										ui.AddKillCount();
 										fever.mSnakeDefeat++;
 										fever.mSnakeDefeatStrike++;
@@ -244,7 +244,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 									//準備フェーズはスコアを加算しない処理
 									if (ui.mIsReady) {
-										ui.SnakeScore(player.mIsStrikeActive, player.mSize, snake[i].mHeadPosition);
+										ui.SnakeScore(player.mIsStrikeActive, snake[i].mHeadPosition);
 										ui.AddKillCount();
 									}
 									screen.SetHitStop();
@@ -284,7 +284,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 									//準備フェーズはスコアを加算しない処理
 									if (ui.mIsReady) {
-										ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
+										ui.TsuchinokoScore(player.mIsStrikeActive, tsuchinoko[i].mCenterPosition);
 										ui.AddKillCount();
 										fever.mTsuchinokoDefeat++;
 										fever.mTsuchinokoDefeatStrike++;
@@ -328,7 +328,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 									//準備フェーズはスコアを加算しない処理
 									if (ui.mIsReady) {
-										ui.TsuchinokoScore(player.mIsStrikeActive, player.mSize, tsuchinoko[i].mCenterPosition);
+										ui.TsuchinokoScore(player.mIsStrikeActive, tsuchinoko[i].mCenterPosition);
 										ui.AddKillCount();
 									}
 									screen.SetHitStop();
@@ -430,7 +430,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			break;
 		case OUTGAME:
 
-			result.Update();
+			result.Update(ui.mScore);
 
 			//Aボタン押下時にタイトル（初期化を行う）
 			if (Controller::IsTriggerButton(0, Controller::bX)) {
@@ -521,14 +521,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//リザルト画面描画
 			result.Draw(screen);
 
-			//スコア描画
-			int Result[7];
-			int tmpScore = ui.mScore;
-			for (int i = 6; i > -1; i--) {
-				Result[i] = tmpScore / powf(10, i);
-				tmpScore = tmpScore % (int)powf(10, i);
-				screen.DrawUI(ui.mScorePosition[i], ui.mTimeUISize, 32 * Result[i], 32, 32, ui.mNumber, ui.mScoreColor[i], ui.mKillCountScale);
-			}
 			break;
 		}
 

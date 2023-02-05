@@ -104,6 +104,12 @@ public:
 	void Strike(bool isFever, bool isOldFever, Screen& screen);
 
 
+	//スロー
+	bool mIsSlowActive;
+	float mSlowMag;
+	float mSlowEasingt;
+	float mLeftStickMag;
+
 	//ストライク演出
 	static constexpr int kStrikeBoxMax = 10;
 	bool mIsStrikeBoxActive;

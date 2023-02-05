@@ -49,6 +49,12 @@ void Player::Init() {
 	mStrikeModeScaleActive = false;
 	strikeMode = STRAIGHT;
 
+	//スロー
+	mIsSlowActive = false;
+	mSlowMag = 1.0f;
+	mSlowEasingt = 0.0f;
+	mLeftStickMag = 1.0f;
+
 	mDushTimer = 0;
 
 	//ストライク演出
@@ -346,8 +352,22 @@ void Player::Strike(bool isFever, bool isOldFever, Screen& screen) {
 
 			mStrikeDirection = (mMarkPosition - mPosition).Normalized();
 
+			//Aを押したらスローかける
+			if (Controller::IsTriggerButton(0,Controller::bA) && !mIsSlowActive) {
+				mLeftStickMag = 0.5f;
+				mSlowEasingt = 0.0f;
+				mStrikeSpeed = 0.0f;
+				mIsSlowActive = true;
+			}
+
+			if (mIsSlowActive) {
+				mSlowEasingt = EasingClamp(0.005f, mSlowEasingt);
+				mSlowMag = EasingMove(0.2f, 1.0f, easeInSine(mSlowEasingt));
+				mLeftStickMag = EasingMove(0.5f, 1.0f, easeInSine(mSlowEasingt));
+			}
+
 			mStrikeVelocity.setZero();
-			mStrikeVelocity = mStrikeDirection * mStrikeSpeed + LeftStickVelocity(30.0f);
+			mStrikeVelocity = mStrikeDirection * (mStrikeSpeed * mSlowMag) + LeftStickVelocity(30.0f * mLeftStickMag);
 			mStrikeSpeed += 0.8f;
 
 			mPosition += mStrikeVelocity;
@@ -395,9 +415,13 @@ void Player::Strike(bool isFever, bool isOldFever, Screen& screen) {
 			mPosition.y = Clamp(mPosition.y, mStrikeClampMin.y, mStrikeClampMax.y);
 
 			//移動が終了したら
-			if ((mPosition.x == mMarkPosition.x && mPosition.y == mMarkPosition.y) || mIsStraightStrikeFinish == true) {
+			if ((mPosition.x == mMarkPosition.x && mPosition.y == mMarkPosition.y) || mIsStraightStrikeFinish) {
 				mIsMarkActive = false;
 				mIsStrikeActive = false;
+				mSlowMag = 1.0f;
+				mLeftStickMag = 1.0f;
+				mSlowEasingt = 0.0f;
+				mIsSlowActive = false;
 				StrikeBoxInit(screen);
 			}
 		}
@@ -655,7 +679,8 @@ void Player::DrawStrikeUI(Screen& screen, bool isFever, unsigned int feverGaugeC
 	}
 	screen.DrawUI({ 175.0f + mMarkShake.x, 112.5f + mMarkShake.y }, 250, 25, 0, 1000, 100, lengthflame, WHITE);
 
-
+	Novice::ScreenPrintf(0,  0, "x : %f", mSlowMag);
+	Novice::ScreenPrintf(0, 20, "y : %f", mStrikeVelocity.y);
 }
 void Player::LoadTexture() {
 

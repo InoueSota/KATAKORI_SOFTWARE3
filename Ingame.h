@@ -76,10 +76,12 @@ public:
 	Vec2 mEnemyScorePosition[kEnemyScoreMax];
 	int mEnemyScoreLife[kEnemyScoreMax];
 	float mEnemyScore[kEnemyScoreMax];
-	void SnakeScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition);
-	void MissSnakeScore();
-	void TsuchinokoScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition);
-	void MissTsuchinokoScore();
+	void SnakeScore(bool isStrikeActive, Vec2 enemyPosition);
+	void TsuchinokoScore(bool isStrikeActive, Vec2 enemyPosition);
+	float mStartScore;
+	float mEndScore;
+	float mScoreAnimationEasingt;
+	void ScoreAnimation();
 
 
 	//“ª‚©”ö‚É“–‚½‚Á‚Ä‚µ‚Ü‚Á‚½‚Æ‚«

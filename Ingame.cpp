@@ -58,6 +58,9 @@ void UI::Init() {
 	for (int i = 0; i < kEnemyScoreMax; i++) {
 		mIsEnemyScoreActive[i] = false;
 	}
+	mScoreAnimationEasingt = 0.0f;
+	mStartScore = 0.0f;
+	mEndScore = 0.0f;
 
 	//頭か尾に当たってしまったとき
 	mIsWarning = false;
@@ -85,6 +88,9 @@ void UI::Update() {
 
 	//コンボ
 	KillCount();
+
+	//スコアのアニメーション
+	ScoreAnimation();
 
 	//頭か尾に当たってしまったとき
 	Warning();
@@ -262,13 +268,15 @@ void UI::AddKillCount() {
 	mKillCountScale.y = 1.8f;
 	mIsKillCountScaleAnimation = true;
 }
-void UI::SnakeScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition) {
+void UI::SnakeScore(bool isStrikeActive, Vec2 enemyPosition) {
 
 	if (isStrikeActive) {
 		for (int i = 0; i < kEnemyScoreMax; i++) {
 			if (!mIsEnemyScoreActive[i]) {
 				mEnemyScore[i] = (kSnakeScore * 2.5) * (1.0f + (float)mKillCount / 10);
-				mScore += mEnemyScore[i];
+				mEndScore += mEnemyScore[i];
+				mStartScore = mScore;
+				mScoreAnimationEasingt = 0.0f;
 				mEnemyScorePosition[i] = enemyPosition;
 				mEnemyScoreLife[i] = 180;
 				mIsEnemyScoreActive[i] = true;
@@ -280,7 +288,9 @@ void UI::SnakeScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition
 		for (int i = 0; i < kEnemyScoreMax; i++) {
 			if (!mIsEnemyScoreActive[i]) {
 				mEnemyScore[i] = kSnakeScore * (1.0f + (float)mKillCount / 10);;
-				mScore += mEnemyScore[i];
+				mEndScore += mEnemyScore[i];
+				mStartScore = mScore;
+				mScoreAnimationEasingt = 0.0f;
 				mEnemyScorePosition[i] = enemyPosition;
 				mEnemyScoreLife[i] = 180;
 				mIsEnemyScoreActive[i] = true;
@@ -289,15 +299,14 @@ void UI::SnakeScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition
 		}
 	}
 }
-void UI::MissSnakeScore() {
-		mScore -= 100;
-}
-void UI::TsuchinokoScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPosition) {
+void UI::TsuchinokoScore(bool isStrikeActive, Vec2 enemyPosition) {
 	if (isStrikeActive) {
 		for (int i = 0; i < kEnemyScoreMax; i++) {
 			if (!mIsEnemyScoreActive[i]) {
 				mEnemyScore[i] = (kTsuchinokoScore * 2.5) * (1.0f + (float)mKillCount / 10);
-				mScore += mEnemyScore[i];
+				mEndScore += mEnemyScore[i];
+				mStartScore = mScore;
+				mScoreAnimationEasingt = 0.0f;
 				mEnemyScorePosition[i] = enemyPosition;
 				mEnemyScoreLife[i] = 180;
 				mIsEnemyScoreActive[i] = true;
@@ -309,7 +318,9 @@ void UI::TsuchinokoScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPos
 		for (int i = 0; i < kEnemyScoreMax; i++) {
 			if (!mIsEnemyScoreActive[i]) {
 				mEnemyScore[i] = kTsuchinokoScore * (1.0f + (float)mKillCount / 10);;
-				mScore += mEnemyScore[i];
+				mEndScore += mEnemyScore[i];
+				mStartScore = mScore;
+				mScoreAnimationEasingt = 0.0f;
 				mEnemyScorePosition[i] = enemyPosition;
 				mEnemyScoreLife[i] = 180;
 				mIsEnemyScoreActive[i] = true;
@@ -318,8 +329,11 @@ void UI::TsuchinokoScore(bool isStrikeActive, float playerSizeMax, Vec2 enemyPos
 		}
 	}
 }
-void UI::MissTsuchinokoScore() {
-	mScore -= 100;
+void UI::ScoreAnimation() {
+
+	mScoreAnimationEasingt = EasingClamp(0.1f, mScoreAnimationEasingt);
+	mScore = EasingMove(mStartScore, mEndScore, easeInSine(mScoreAnimationEasingt));
+
 }
 void UI::Warning() {
 
