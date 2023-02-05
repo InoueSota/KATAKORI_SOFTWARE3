@@ -18,7 +18,7 @@ void Player::Init() {
 	mColor = WHITE;
 
 	//’ÊíˆÚ“®
-	mNormalMag = 6.0f;
+	mNormalMag = 5.0f;
 	mNormalMagLockon = 12.0f;
 
 	//ƒ_ƒbƒVƒ…
