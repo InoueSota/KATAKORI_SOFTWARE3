@@ -44,10 +44,10 @@ public:
 	void Angle();
 
 	//速度
-	const float mSpeed = 5;
-	const float mSuperSpeed = 7;
-	const float mLockonSpeed = 10;
-	const float mLockonSuperSpeed = 12;
+	const float mSpeed = 6;
+	const float mSuperSpeed = 8;
+	const float mLockonSpeed = 11;
+	const float mLockonSuperSpeed = 13;
 
 	//追尾
 	bool IsPlayerLockon = false;//プレイヤーを補足しているかどうか

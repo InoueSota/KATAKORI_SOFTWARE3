@@ -14,6 +14,7 @@ public:
 
 	bool mIsLoadTexture;
 	int PlayerFeverParticleTexture;
+	int FeverUITexture;;
 
 	int mSnakeDefeat = 0;			//ƒwƒr‚ğ“|‚µ‚½”
 	int mTsuchinokoDefeat = 0;		//ƒcƒ`ƒmƒR‚ğ“|‚µ‚½”

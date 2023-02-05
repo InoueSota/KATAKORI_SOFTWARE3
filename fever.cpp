@@ -241,6 +241,7 @@ void Fever::Draw(Screen& screen) {
 
 	if (!mIsLoadTexture) {
 		PlayerFeverParticleTexture = Novice::LoadTexture("./Resources/Player/playerfeverparticle.png");
+		FeverUITexture = Novice::LoadTexture("./Resources/UI/Fever/fever.png");
 		mIsLoadTexture = true;
 	}
 	
@@ -250,10 +251,14 @@ void Fever::Draw(Screen& screen) {
 	if (!(feverGauge.Pos.x <= 50)) {
 		if (mIsFever) {
 			screen.DrawBox({ 50,15 }, feverGauge.Pos.x - 50, 20, 0, feverGauge.color, kFillModeSolid, false);
+			Novice::SetBlendMode(kBlendModeAdd);
+			Novice::DrawQuad(30, 0, feverGauge.Pos.x + 20, 0, 30, 50, feverGauge.Pos.x + 20, 50, 0, 0, 100, 100, PlayerFeverParticleTexture, feverGauge.color);
+			Novice::SetBlendMode(kBlendModeNormal);
 		} else {
 			screen.DrawBox({ 50,15 }, feverGauge.Pos.x - 50, 20, 0, 0xFF000080, kFillModeSolid, false);
 		}
 	}
+	Novice::DrawSprite(55, 15, FeverUITexture, 1, 1, 0, WHITE);
 
 	if (mIsFever) {
 		for (int i = 0; i < kMaxPlayerFeverParticle; i++) {
