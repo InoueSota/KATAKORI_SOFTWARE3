@@ -361,9 +361,9 @@ void Player::Strike(bool isFever, bool isOldFever, Screen& screen) {
 			}
 
 			if (mIsSlowActive) {
-				mSlowEasingt = EasingClamp(0.005f, mSlowEasingt);
+				mSlowEasingt = EasingClamp(0.006f, mSlowEasingt);
 				mSlowMag = EasingMove(0.2f, 1.0f, easeInSine(mSlowEasingt));
-				mLeftStickMag = EasingMove(0.5f, 1.0f, easeInSine(mSlowEasingt));
+				mLeftStickMag = EasingMove(0.6f, 1.0f, easeInCirc(mSlowEasingt));
 			}
 
 			mStrikeVelocity.setZero();

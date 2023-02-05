@@ -507,8 +507,13 @@ void Map::Init() {
 	mIsBackGroundColorChange = false;
 	mBackGroundColor = 0xDADADAFF;
 	mBackLineColor = 0x202020FF;
+
+	for (int i = 0; i < kBackBoxMax; i++) {
+		mIsBackBoxActive[i] = false;
+	}
+	mBackBoxFrame = 0;
 }
-void Map::Update(bool isFever, bool isOldFever) {
+void Map::Update(bool isFever, bool isOldFever, unsigned int feverColor) {
 
 	if (isFever && !isOldFever) {
 		mBackGroundEasingt = 0.0f;
@@ -530,6 +535,54 @@ void Map::Update(bool isFever, bool isOldFever) {
 
 		if (mBackGroundEasingt == 1.0f) {
 			mIsBackGroundColorChange = false;
+		}
+	}
+
+	//”wŒi‹éŒ`ƒtƒŒ[ƒ€‚Ì‰ÁŽZ
+	mBackBoxFrame++;
+
+	for (int i = 0; i < kBackBoxMax; i++) {
+
+		//”wŒi‹éŒ`¶¬
+		if (!mIsBackBoxActive[i] && mBackBoxFrame % 2 == 0) {
+			mBackBoxPosition[i].x = RAND(kMapLeft + 200, kMapRight - 200);
+			mBackBoxPosition[i].y = RAND(kMapBottom + 200, kMapTop - 200);
+			mBackBoxAngle[i] = RAND(Degree(0), Degree(360));
+			mBackBoxEndSize[i] = RAND(6, 10) * 20;
+			mBackBoxEasingt[i] = 0.0f;
+			mIsBackBoxEasingClear[i] = false;
+			mIsBackBoxActive[i] = true;
+			break;
+		}
+
+		//”wŒi‹éŒ`ˆ—
+		if (mIsBackBoxActive[i]) {
+			mBackBoxAngle[i] += Degree(2);
+			if (!mIsBackBoxEasingClear[i]) {
+				mBackBoxEasingt[i] = EasingClamp(0.02f, mBackBoxEasingt[i]);
+				mBackBoxSize[i] = EasingMove(0.0f, mBackBoxEndSize[i], easeOutSine(mBackBoxEasingt[i]));
+				if (mBackBoxEasingt[i] == 1.0f) {
+					mBackBoxEasingt[i] = 0.0f;
+					mIsBackBoxEasingClear[i] = true;
+				}
+			} else {
+				mBackBoxEasingt[i] = EasingClamp(0.1f, mBackBoxEasingt[i]);
+				mBackBoxSize[i] = EasingMove(mBackBoxEndSize[i], 0.0f, easeInSine(mBackBoxEasingt[i]));
+				if (mBackBoxEasingt[i] == 1.0f) {
+					mIsBackBoxActive[i] = false;
+				}
+			}
+		}
+	}
+
+	//”wŒi‹éŒ`‚ÌF‚ð•Ï‚¦‚é
+	if (isFever) {
+		for (int i = 0; i < kBackBoxMax; i++) {
+			mBackBoxColor = feverColor;
+		}
+	} else {
+		for (int i = 0; i < kBackBoxMax; i++) {
+			mBackBoxColor = BLACK;
 		}
 	}
 
@@ -557,10 +610,8 @@ void Map::Draw(Screen& screen) {
 	//”wŒi•`‰æ
 	Novice::DrawBox(0, 0, Screen::kWindowWidth, Screen::kWindowHeight, 0.0, mBackGroundColor, kFillModeSolid);
 
-	for (int i = 0; i < kAxisLength; i++)
-	{
-		screen.DrawLine(mXaxisStartPosition[i], mXaxisEndPosition[i], mBackLineColor);
-		screen.DrawLine(mYaxisStartPosition[i], mYaxisEndPosition[i], mBackLineColor);
+	for (int i = 0; i < kBackBoxMax; i++) {
+		screen.DrawRectAngle(mBackBoxPosition[i], mBackBoxSize[i], mBackBoxSize[i], mBackBoxAngle[i], mBackBoxColor, kFillModeWireFrame, true);
 	}
 
 	screen.DrawLine({ kMapLeft, kMapTop }, { kMapRight, kMapTop }, BLACK);

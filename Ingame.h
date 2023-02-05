@@ -140,7 +140,7 @@ public:
 	}
 
 	void Init();
-	void Update(bool isFever, bool isOldFever);
+	void Update(bool isFever, bool isOldFever, unsigned int feverColor);
 	void Draw(Screen& screen);
 
 	//マップ端定数
@@ -156,6 +156,18 @@ public:
 	unsigned int mBackGroundEndColor;
 	unsigned int mBackGroundColor;
 	float mBackGroundEasingt;
+
+	//背景に四角形をランダムに
+	static constexpr int kBackBoxMax = 200;
+	bool mIsBackBoxActive[kBackBoxMax];
+	bool mIsBackBoxEasingClear[kBackBoxMax];
+	Vec2 mBackBoxPosition[kBackBoxMax];
+	float mBackBoxAngle[kBackBoxMax];
+	float mBackBoxEasingt[kBackBoxMax];
+	int mBackBoxFrame;
+	int mBackBoxSize[kBackBoxMax];
+	int mBackBoxEndSize[kBackBoxMax];
+	unsigned int mBackBoxColor;
 
 	//デバッグ用
 	static constexpr int kAxisLength = 33;
