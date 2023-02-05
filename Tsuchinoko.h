@@ -12,7 +12,7 @@ public:
 
 	void Init();
 	void Update(Vec2 playerposition, int mTimeLeft, int LockonCount);
-	void Draw(Screen& screen);
+	void Draw(Screen& screen, int HitStop);
 
 	Vec2 mCenterPositionStart;//スタート地点
 	Vec2 mTargetPoint;//目標地点

@@ -528,8 +528,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//敵描画
 			for (int i = 0; i < Enemy::kEnemyMax; i++) {
-				snake[i].Draw(screen);
-				tsuchinoko[i].Draw(screen);
+				snake[i].Draw(screen, screen.GetHitStop());
+				tsuchinoko[i].Draw(screen, screen.GetHitStop());
 			}
 
 

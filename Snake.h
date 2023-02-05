@@ -17,7 +17,7 @@ public:
 
 	void Init();
 	void Update(int mTimeLeft, Vec2 PlayerPos, int LockonCount);
-	void Draw(Screen& screen);
+	void Draw(Screen& screen, int HitStop);
 
 	static constexpr int kMaxLength = 10;
 
