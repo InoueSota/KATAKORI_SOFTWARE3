@@ -127,10 +127,10 @@ void Tsuchinoko::Make(Vec2 PlayerPos, int mTimeLeft) {
 		mCenterPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
 		mCenterPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 
-		while ((mCenterPosition.x >= PlayerPos.x - 1280) && (mCenterPosition.x <= PlayerPos.x + 1280)) {
+		while ((mCenterPosition.x >= PlayerPos.x - 1780) && (mCenterPosition.x <= PlayerPos.x + 1780)) {
 			mCenterPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
 		}
-		while ((mCenterPosition.y >= PlayerPos.y - 720) && (mCenterPosition.y <= PlayerPos.y + 720)) {
+		while ((mCenterPosition.y >= PlayerPos.y - 1320) && (mCenterPosition.y <= PlayerPos.y + 1320)) {
 			mCenterPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 		}
 		for (int i = 0; i < kMaxSpawnParticle; i++) {

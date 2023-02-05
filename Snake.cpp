@@ -112,10 +112,10 @@ void Snake::Make(int mTimeLeft, Vec2 PlayerPos) {
 		mHeadPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
 		mHeadPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 
-		while ((mHeadPosition.x >= PlayerPos.x - 1280) && (mHeadPosition.x <= PlayerPos.x + 1280)) {
+		while ((mHeadPosition.x >= PlayerPos.x - 1780) && (mHeadPosition.x <= PlayerPos.x + 1780)) {
 			mHeadPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
 		}
-		while ((mHeadPosition.y >= PlayerPos.y - 720) && (mHeadPosition.y <= PlayerPos.y + 720)) {
+		while ((mHeadPosition.y >= PlayerPos.y - 1320) && (mHeadPosition.y <= PlayerPos.y + 1320)) {
 			mHeadPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
 		}
 		for (int i = 0; i < kMaxSpawnParticle; i++) {
