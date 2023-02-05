@@ -10,8 +10,6 @@
 
 void Tsuchinoko::Init() {
 
-	mCenterSpeed = 5.0f;
-	mSuperCenterSpeed = 7.0f;
 	mVelocity.setZero();
 	
 	//ê∂ê¨

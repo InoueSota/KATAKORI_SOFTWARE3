@@ -388,12 +388,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					}
 				}
 
-				//追尾している敵の数が多いほど敵の速度が上がる
-				for (int i = 0; i < Enemy::kEnemyMax; i++) {
-					snake[i].mSpeed = 5 + player.LockonCount * 0.5;
-					tsuchinoko[i].mCenterSpeed = 5 + player.LockonCount * 0.3;
-				}
-
 				//フィーバー
 				fever.Update(screen, player.mPosition, player.mIsStrikeActive);
 
