@@ -531,7 +531,6 @@ void Map::Update(bool isFever, bool isOldFever, unsigned int feverColor) {
 	if (mIsBackGroundColorChange) {
 		mBackGroundEasingt = EasingClamp(0.01f, mBackGroundEasingt);
 		mBackGroundColor = ColorEasingMove(mBackGroundStartColor, mBackGroundEndColor, easeOutSine(mBackGroundEasingt));
-		mBackLineColor = ColorEasingMove(mBackGroundEndColor, mBackGroundStartColor, easeOutSine(mBackGroundEasingt));
 
 		if (mBackGroundEasingt == 1.0f) {
 			mIsBackGroundColorChange = false;
@@ -577,10 +576,12 @@ void Map::Update(bool isFever, bool isOldFever, unsigned int feverColor) {
 
 	//îwåiãÈå`ÇÃêFÇïœÇ¶ÇÈ
 	if (isFever) {
+		mBackLineColor = feverColor;
 		for (int i = 0; i < kBackBoxMax; i++) {
 			mBackBoxColor = feverColor;
 		}
 	} else {
+		mBackLineColor = BLACK;
 		for (int i = 0; i < kBackBoxMax; i++) {
 			mBackBoxColor = BLACK;
 		}

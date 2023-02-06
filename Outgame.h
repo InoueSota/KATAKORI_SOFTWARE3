@@ -16,11 +16,13 @@ public:
 	void Draw(Screen& screen);
 
 
+	//中心座標
+	Vec2 mCenterPosition{ Screen::kWindowWidth / 2, Screen::kWindowHeight / 2 };
+
 	//"KATAKORI SOFTWARE"の描画
 	bool mIsKatakoriClear = true;
 	bool mIsKatakoriAlphaClear = true;
 	bool mIsKatakoriScaleStart = true;
-	Vec2 mKatakoriPosition{ Screen::kWindowWidth / 2, Screen::kWindowHeight / 2 };
 	Vec2 mKatakoriScale{ 0.75f, 0.75f };
 	float mKatakoriAlphaT = 0.0f;
 	unsigned int mKatakoriColor = 0xFFFFFF00;
@@ -28,17 +30,40 @@ public:
 	void Katakori();
 
 	//タイトル
-	Vec2 mTitlePosition{ Screen::kWindowWidth / 2, Screen::kWindowHeight / 2 };
-	float mTitleAlphaT;
-	unsigned int mTitleColor;
+	enum TitleWord
+	{
+		TO,
+		GE,
+		SU,
+		MA,
+		LTU,
+		SI,
+		LYU,
+		WORDMAX
+	};
+	Vec2 mTitleWordPosition[WORDMAX];
+	float mTitleWordAlphat;
+	unsigned int mTitleWordColor;
+	unsigned int mTitleBackGroundColor;
 	unsigned int mAScaleColor;
 	Vec2 mAScale;
 	float mAEasingt;
 
+	//背景に四角形をランダムに
+	static constexpr int kBackBoxMax = 50;
+	bool mIsBackBoxActive[kBackBoxMax];
+	bool mIsBackBoxEasingClear[kBackBoxMax];
+	Vec2 mBackBoxPosition[kBackBoxMax];
+	float mBackBoxAngle[kBackBoxMax];
+	float mBackBoxEasingt[kBackBoxMax];
+	int mBackBoxFrame;
+	int mBackBoxSize[kBackBoxMax];
+	int mBackBoxEndSize[kBackBoxMax];
+
 	//画像
 	bool mIsLoadTexture = false;
 	int mKatakori;
-	int mTitle;
+	int mTitleWord[WORDMAX];
 	int mA;
 	void LoadTexture();
 

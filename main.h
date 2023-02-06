@@ -33,4 +33,4 @@ enum Scene
 	INGAME,
 	OUTGAME
 };
-Scene scene = INGAME;
+Scene scene = TITLE;

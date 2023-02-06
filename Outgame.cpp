@@ -6,9 +6,29 @@
 
 void Title::Init() {
 
-	mTitleAlphaT = 0.0f;
-	mTitleColor = 0xFFFFFF00;
+	mTitleWordPosition[TO].x = mCenterPosition.x - 100.0f;
+	mTitleWordPosition[TO].y = mCenterPosition.y - 100.0f;
+	mTitleWordPosition[GE].x = mCenterPosition.x + 100.0f;
+	mTitleWordPosition[GE].y = mTitleWordPosition[TO].y;
+	mTitleWordPosition[SU].x = mCenterPosition.x - 250.0f;
+	mTitleWordPosition[SU].y = mCenterPosition.y + 100.0f;
+	mTitleWordPosition[MA].x = mCenterPosition.x - 125.0f;
+	mTitleWordPosition[MA].y = mTitleWordPosition[SU].y;
+	mTitleWordPosition[LTU].x = mCenterPosition.x;
+	mTitleWordPosition[LTU].y = mTitleWordPosition[SU].y;
+	mTitleWordPosition[SI].x = mCenterPosition.x + 125.0f;
+	mTitleWordPosition[SI].y = mTitleWordPosition[SU].y;
+	mTitleWordPosition[LYU].x = mCenterPosition.x + 250.0f;
+	mTitleWordPosition[LYU].y = mTitleWordPosition[SU].y;
+	mTitleWordAlphat = 0.0f;
+	mTitleWordColor = 0xFFFFFF00;
+	mTitleBackGroundColor = 0xDADADA00;
 	mAEasingt = 0.0f;
+
+	for (int i = 0; i < kBackBoxMax; i++) {
+		mIsBackBoxActive[i] = false;
+	}
+	mBackBoxFrame = 0;
 }
 void Title::Update() {
 
@@ -17,8 +37,9 @@ void Title::Update() {
 		Katakori();
 	}
 	else {
-		mTitleAlphaT = EasingClamp(0.02f, mTitleAlphaT);
-		mTitleColor = ColorEasingMove(0xFFFFFF00, WHITE, easeOutSine(mTitleAlphaT));
+		mTitleWordAlphat = EasingClamp(0.02f, mTitleWordAlphat);
+		mTitleWordColor = ColorEasingMove(0xFFFFFF00, WHITE, easeOutSine(mTitleWordAlphat));
+		mTitleBackGroundColor = ColorEasingMove(0xFFFFFF00, 0xDADADAFF, easeOutSine(mTitleWordAlphat));
 
 		//Aƒ{ƒ^ƒ“‚ÌƒAƒjƒ[ƒVƒ‡ƒ“
 		mAEasingt = EasingClamp(0.02f, mAEasingt);
@@ -26,6 +47,44 @@ void Title::Update() {
 		mAScale = EasingMove({ 1.0f,1.0f }, { 1.5f, 1.5f }, easeOutSine(mAEasingt));
 		if (mAEasingt == 1.0f) {
 			mAEasingt = 0.0f;
+		}
+	}
+
+	//”wŒi‹éŒ`ƒtƒŒ[ƒ€‚Ì‰ÁŽZ
+	mBackBoxFrame++;
+
+	for (int i = 0; i < kBackBoxMax; i++) {
+
+		//”wŒi‹éŒ`¶¬
+		if (!mIsBackBoxActive[i] && mBackBoxFrame % 4 == 0) {
+			mBackBoxPosition[i].x = RAND(0, Screen::kWindowWidth);
+			mBackBoxPosition[i].y = RAND(0, Screen::kWindowHeight);
+			mBackBoxAngle[i] = RAND(Degree(0), Degree(360));
+			mBackBoxEndSize[i] = RAND(8, 12) * 10;
+			mBackBoxEasingt[i] = 0.0f;
+			mIsBackBoxEasingClear[i] = false;
+			mIsBackBoxActive[i] = true;
+			break;
+		}
+
+		//”wŒi‹éŒ`ˆ—
+		if (mIsBackBoxActive[i]) {
+			mBackBoxAngle[i] += Degree(2);
+			if (!mIsBackBoxEasingClear[i]) {
+				mBackBoxEasingt[i] = EasingClamp(0.02f, mBackBoxEasingt[i]);
+				mBackBoxSize[i] = EasingMove(0.0f, mBackBoxEndSize[i], easeOutSine(mBackBoxEasingt[i]));
+				if (mBackBoxEasingt[i] == 1.0f) {
+					mBackBoxEasingt[i] = 0.0f;
+					mIsBackBoxEasingClear[i] = true;
+				}
+			}
+			else {
+				mBackBoxEasingt[i] = EasingClamp(0.1f, mBackBoxEasingt[i]);
+				mBackBoxSize[i] = EasingMove(mBackBoxEndSize[i], 0.0f, easeInSine(mBackBoxEasingt[i]));
+				if (mBackBoxEasingt[i] == 1.0f) {
+					mIsBackBoxActive[i] = false;
+				}
+			}
 		}
 	}
 }
@@ -68,24 +127,38 @@ void Title::Draw(Screen& screen) {
 
 	//"KATAKORI SOFTWARE"‚Ì•`‰æ
 	if (!mIsKatakoriClear) {
-		screen.DrawRectAngle(mKatakoriPosition, Screen::kWindowWidth, Screen::kWindowHeight, BLACK, kFillModeSolid, false);
-		screen.DrawUI(mKatakoriPosition, Screen::kWindowWidth, Screen::kWindowHeight, 0, 3440, 1935, mKatakori, mKatakoriColor, mKatakoriScale);
+		screen.DrawRectAngle(mCenterPosition, Screen::kWindowWidth, Screen::kWindowHeight, BLACK, kFillModeSolid, false);
+		screen.DrawUI(mCenterPosition, Screen::kWindowWidth, Screen::kWindowHeight, 0, 3440, 1935, mKatakori, mKatakoriColor, mKatakoriScale);
 	}
 
 	//ƒ^ƒCƒgƒ‹‰æ–Ê‚Ì•`‰æ
 	if (mIsKatakoriClear) {
-		screen.DrawRectAngle(mKatakoriPosition, Screen::kWindowWidth, Screen::kWindowHeight, BLACK, kFillModeSolid, false);
-		screen.DrawUI(mTitlePosition, Screen::kWindowWidth, Screen::kWindowHeight, 0, 1920, 1080, mTitle, mTitleColor);
-		screen.DrawUI({ mTitlePosition.x, Screen::kWindowHeight - 75 }, 75, 75, 0, 160, 160, mA, mAScaleColor, mAScale);
-		screen.DrawUI({ mTitlePosition.x, Screen::kWindowHeight - 75 }, 75, 75, 0, 160, 160, mA, mTitleColor);
+		screen.DrawRectAngle(mCenterPosition, Screen::kWindowWidth, Screen::kWindowHeight, BLACK, kFillModeSolid, false);
+		screen.DrawRectAngle(mCenterPosition, Screen::kWindowWidth, Screen::kWindowHeight, mTitleBackGroundColor, kFillModeSolid, false);
+		for (int i = 0; i < kBackBoxMax; i++) {
+			screen.DrawRectAngle(mBackBoxPosition[i], mBackBoxSize[i], mBackBoxSize[i], mBackBoxAngle[i], BLACK, kFillModeWireFrame, false);
+		}
+		for (int i = 0; i < WORDMAX; i++) {
+			screen.DrawUI(mTitleWordPosition[i], 300, 0, 400, 400, mTitleWord[i], mTitleWordColor);
+		}
+		screen.DrawUI({ mCenterPosition.x, Screen::kWindowHeight - 50 }, 75, 75, 0, 160, 160, mA, mAScaleColor, mAScale);
+		screen.DrawUI({ mCenterPosition.x, Screen::kWindowHeight - 50 }, 75, 75, 0, 160, 160, mA, mTitleWordColor);
 	}
+
+	
 
 }
 void Title::LoadTexture() {
 
 	if (!mIsLoadTexture) {
 		mKatakori = Novice::LoadTexture("./Resources/Outgame/Title/katakorisoftware.png");
-		mTitle = Novice::LoadTexture("./Resources/Outgame/Title/title.png");
+		mTitleWord[TO] = Novice::LoadTexture("./Resources/Outgame/Title/To.png");
+		mTitleWord[GE] = Novice::LoadTexture("./Resources/Outgame/Title/Ge.png");
+		mTitleWord[SU] = Novice::LoadTexture("./Resources/Outgame/Title/Su.png");
+		mTitleWord[MA] = Novice::LoadTexture("./Resources/Outgame/Title/Ma.png");
+		mTitleWord[LTU] = Novice::LoadTexture("./Resources/Outgame/Title/Ltu.png");
+		mTitleWord[SI] = Novice::LoadTexture("./Resources/Outgame/Title/Si.png");
+		mTitleWord[LYU] = Novice::LoadTexture("./Resources/Outgame/Title/Lyu.png");
 		mA = Novice::LoadTexture("./Resources/UI/Explanation/a.png");
 		mIsLoadTexture = true;
 	}

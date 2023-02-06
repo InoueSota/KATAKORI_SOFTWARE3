@@ -213,7 +213,7 @@ void Screen::DrawRectAngle(Vec2 position, float width, float height, float angle
 	}
 	else {
 		OriginalPosition = RectAssign(width, height);
-		Rect = Transform(OriginalPosition, MakeAffineMatrix({ 1.0f, 1.0f }, 0.0f, position));
+		Rect = Transform(OriginalPosition, MakeAffineMatrix({ 1.0f, 1.0f }, angle, position));
 	}
 	if (fillMode == kFillModeSolid) {
 		Novice::DrawQuad((int)Rect.LeftTop.x, (int)Rect.LeftTop.y, (int)Rect.RightTop.x, (int)Rect.RightTop.y, (int)Rect.LeftBottom.x, (int)Rect.LeftBottom.y, (int)Rect.RightBottom.x, (int)Rect.RightBottom.y, 0, 0, 0, 0, 192, color);
