@@ -153,6 +153,12 @@ public:
 
 
 	//タイトル画面専用
+	bool mIsControll;
+	Vec2 mTargetPoint;
+	Vec2 mDirectionPoint;
+	float mSpeed;
+	int mControllIntervalFrame;
+	void AutoMove();
 	void TitleUpdate();
 	void TitleShadow();
 	void TitleDraw(Screen& screen);

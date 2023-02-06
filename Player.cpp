@@ -66,6 +66,14 @@ void Player::Init() {
 		mIsShadowActive[i] = false;
 	}
 
+	//タイトル画面専用
+	mIsControll = false;
+	mTargetPoint.x = RAND(100, Screen::kWindowWidth - 100);
+	mTargetPoint.y = RAND(100, Screen::kWindowHeight - 100);
+	mDirectionPoint.setZero();
+	mSpeed = 5.0f;
+	mControllIntervalFrame = 0;
+
 	//ノックバック
 	mKnockbackSet = false;
 	mKnockbackActive = false;
@@ -705,11 +713,29 @@ void Player::TitleUpdate() {
 	//速度を初期化する
 	mVelocity.setZero();
 
-	//通常移動
-	NormalMove();
+	if (Controller::IsTriggerButton(0,Controller::bA) || 0.0f < LeftStickVelocity(3.0f).x || 0.0f < LeftStickVelocity(3.0f).y) {
+		mControllIntervalFrame = 0;
+		mIsControll = true;
+	} else if (mIsControll) {
+		mControllIntervalFrame++;
+		if (120 <= mControllIntervalFrame) {
+			mControllIntervalFrame = 0;
+			mIsControll = false;
+		}
+	}
 
-	//ダッシュ
-	Dush(0.5f);
+	if (mIsControll) {
+		//通常移動
+		NormalMove();
+
+		//ダッシュ
+		Dush(0.5f);
+
+	} else {
+
+		AutoMove();
+	}
+
 
 	//速度を代入する
 	mPosition.x += mVelocity.x;
@@ -721,6 +747,22 @@ void Player::TitleUpdate() {
 
 	//残像
 	TitleShadow();
+}
+void Player::AutoMove() {
+
+	//徐々に向きを変える
+	mDirectionPoint += (mTargetPoint - mPosition) * 0.0002f;
+
+	if (Collision(mPosition, mSize / 2.0, mTargetPoint, 50.0f)) {
+		mTargetPoint.x = RAND(100, Screen::kWindowWidth - 100);
+		mTargetPoint.y = RAND(100, Screen::kWindowHeight - 100);
+	}
+	else {
+		mDirectionPoint = mDirectionPoint.Normalized();
+		mVelocity.x += mDirectionPoint.x * mSpeed;
+		mVelocity.y -= mDirectionPoint.y * mSpeed;
+	}
+
 }
 void Player::TitleShadow() {
 
@@ -799,4 +841,5 @@ void Player::TitleDraw(Screen& screen) {
 
 	//プレイヤー本体描画
 	screen.DrawPicture(mPosition, mSize / 2.0, 0, 100, 100, toge, mColor, { 1.0f, 1.0f }, false);
+
 }
