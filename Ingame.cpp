@@ -544,11 +544,11 @@ void Map::Update(bool isFever, bool isOldFever, unsigned int feverColor) {
 	for (int i = 0; i < kBackBoxMax; i++) {
 
 		//”wŒi‹éŒ`¶¬
-		if (!mIsBackBoxActive[i] && mBackBoxFrame % 2 == 0) {
+		if (!mIsBackBoxActive[i] && (mBackBoxFrame % 3 == 0 || mBackBoxFrame % 3 == 1)) {
 			mBackBoxPosition[i].x = RAND(kMapLeft + 200, kMapRight - 200);
 			mBackBoxPosition[i].y = RAND(kMapBottom + 200, kMapTop - 200);
 			mBackBoxAngle[i] = RAND(Degree(0), Degree(360));
-			mBackBoxEndSize[i] = RAND(6, 10) * 20;
+			mBackBoxEndSize[i] = RAND(8, 12) * 20;
 			mBackBoxEasingt[i] = 0.0f;
 			mIsBackBoxEasingClear[i] = false;
 			mIsBackBoxActive[i] = true;
@@ -614,8 +614,9 @@ void Map::Draw(Screen& screen) {
 		screen.DrawRectAngle(mBackBoxPosition[i], mBackBoxSize[i], mBackBoxSize[i], mBackBoxAngle[i], mBackBoxColor, kFillModeWireFrame, true);
 	}
 
-	screen.DrawLine({ kMapLeft, kMapTop }, { kMapRight, kMapTop }, BLACK);
-	screen.DrawLine({ kMapLeft, kMapTop }, { kMapLeft, kMapBottom }, BLACK);
-	screen.DrawLine({ kMapLeft, kMapBottom }, { kMapRight, kMapBottom }, BLACK);
-	screen.DrawLine({ kMapRight, kMapTop }, { kMapRight, kMapBottom }, BLACK);
+	screen.DrawRectAngle({ kMapLeft, 0 }, 10, kMapTop * 2, 0.0f, mBackLineColor);
+	screen.DrawRectAngle({ kMapRight, 0 }, 10, kMapTop * 2, 0.0f, mBackLineColor);
+	screen.DrawRectAngle({ 0, kMapTop }, kMapLeft * 2, 10, 0.0f, mBackLineColor);
+	screen.DrawRectAngle({ 0, kMapBottom }, kMapLeft * 2, 10, 0.0f, mBackLineColor);
+
 }

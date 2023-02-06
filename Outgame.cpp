@@ -118,7 +118,7 @@ void Result::Update(float score) {
 
 	//Xボタンのアニメーション
 	mXEasingt = EasingClamp(0.02f, mXEasingt);
-	mXScaleColor = ColorEasingMove(0xFFFFFF80, 0xFFFFFF00, easeOutSine(mXEasingt));
+	mXScaleColor = ColorEasingMove(0x00000080, 0x00000000, easeOutSine(mXEasingt));
 	mXScale = EasingMove({ 1.0f,1.0f }, { 1.5f, 1.5f }, easeOutSine(mXEasingt));
 	if (mXEasingt == 1.0f) {
 		mXEasingt = 0.0f;
@@ -128,11 +128,10 @@ void Result::Update(float score) {
 void Result::Draw(Screen& screen) {
 
 	screen.DrawUI(mCenterPosition, Screen::kWindowWidth, Screen::kWindowHeight, 0, 1280, 720, mResult, WHITE);
-	screen.DrawUI({ mCenterPosition.x, Screen::kWindowHeight - 75 }, 75, 75, 0, 160, 160, mX, mXScaleColor, mXScale);
+	screen.DrawEllipse({ mCenterPosition.x, Screen::kWindowHeight - 75 }, 100, 100, 0.0f, mXScaleColor, kFillModeSolid, mXScale, false);
 	screen.DrawUI({ mCenterPosition.x, Screen::kWindowHeight - 75 }, 75, 75, 0, 160, 160, mX, WHITE);
 
 	//スコア描画
-
 	mIsDarkScore = false;
 	for (int i = 0; i < 7; i++) {
 		mScoreColor[i] = 0xFFFFFF50;

@@ -191,9 +191,11 @@ void Screen::DrawBox(Vec2 Position, float w, float h, float angle, unsigned int 
 }
 
 
-void Screen::DrawEllipse(Vec2 Position, float radiusX, float radiusY, float angle, unsigned int color, FillMode fillMode) {
-	Position = ScreenTransform(Position);
-	Novice::DrawEllipse((int)Position.x, (int)Position.y, radiusX * mZoom, radiusY * mZoom, angle, color, fillMode);
+void Screen::DrawEllipse(Vec2 Position, float radiusX, float radiusY, float angle, unsigned int color, FillMode fillMode, Vec2 scale, bool isScroll) {
+	if (isScroll) {
+		Position = ScreenTransform(Position);
+	}
+	Novice::DrawEllipse((int)Position.x, (int)Position.y, radiusX * (mZoom * scale.x), radiusY * (mZoom * scale.y), angle, color, fillMode);
 }
 
 

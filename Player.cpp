@@ -363,7 +363,7 @@ void Player::Strike(bool isFever, bool isOldFever, Screen& screen) {
 			if (mIsSlowActive) {
 				mSlowEasingt = EasingClamp(0.006f, mSlowEasingt);
 				mSlowMag = EasingMove(0.2f, 1.0f, easeInSine(mSlowEasingt));
-				mLeftStickMag = EasingMove(0.6f, 1.0f, easeInCirc(mSlowEasingt));
+				mLeftStickMag = EasingMove(0.6f, 1.0f, easeInSine(mSlowEasingt));
 			}
 
 			mStrikeVelocity.setZero();
@@ -381,7 +381,7 @@ void Player::Strike(bool isFever, bool isOldFever, Screen& screen) {
 				mStraightStrikeOldTheta += Degree(360);
 			}
 
-			if (90 > Radian(abs(mStraightStrikeTheta - mStraightStrikeOldTheta))) {
+			if (170.0f > Radian(abs(mStraightStrikeTheta - mStraightStrikeOldTheta))) {
 				if (0 <= Radian(mStraightStrikeTheta) && Radian(mStraightStrikeTheta) <= 90) {
 					mStrikeClampMin.x = Map::kMapLeft;
 					mStrikeClampMin.y = mMarkPosition.y;
@@ -679,8 +679,6 @@ void Player::DrawStrikeUI(Screen& screen, bool isFever, unsigned int feverGaugeC
 	}
 	screen.DrawUI({ 175.0f + mMarkShake.x, 112.5f + mMarkShake.y }, 250, 25, 0, 1000, 100, lengthflame, WHITE);
 
-	Novice::ScreenPrintf(0,  0, "x : %f", mSlowMag);
-	Novice::ScreenPrintf(0, 20, "y : %f", mStrikeVelocity.y);
 }
 void Player::LoadTexture() {
 

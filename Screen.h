@@ -137,7 +137,7 @@ public:
 	/// <param name="radiusY">‘È‰~‚Ì”¼Œa (Y•ûŒü) </param>
 	/// <param name="angle">‘È‰~‚Ì‰ñ“]Šp(rad)</param>
 	/// <param name="color">‘È‰~‚ÌF</param>
-	void DrawEllipse(Vec2 position, float radiusX, float radiusY, float angle = 0.0f, unsigned int color = WHITE, FillMode fillMode = kFillModeSolid);
+	void DrawEllipse(Vec2 position, float radiusX, float radiusY, float angle = 0.0f, unsigned int color = WHITE, FillMode fillMode = kFillModeSolid, Vec2 scale = { 1.0f, 1.0f }, bool isScroll = true);
 
 	/// <summary>
 	/// ‰~‚ğ•`‰æ‚·‚é
