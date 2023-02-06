@@ -289,7 +289,7 @@ void Snake::Follow() {
 }
 
 
-void Snake::Draw(Screen& screen) {
+void Snake::Draw(Screen& screen, int HitStop) {
 
 	if (!mIsLoadTexture) {
 		head = Novice::LoadTexture("./Resources/Debugs/head.png");
@@ -310,7 +310,7 @@ void Snake::Draw(Screen& screen) {
 	{
 		//‘Ì•`‰æ
 		for (int i = 0; i < kBodyMax; i++){
-			if (mShakeTimer > 0) {
+			if (mShakeTimer > 0 && !HitStop) {
 				if (mIsSuper) {
 					screen.DrawPicture(mBodyPosition[i] + ShakeRand, mBodyRadius, mBodyAngle[i], 100, 100, superbody, WHITE);
 				} else {

@@ -256,7 +256,7 @@ void Tsuchinoko::LockOn(Vec2 playerposition, float radius) {
 }
 
 
-void Tsuchinoko::Draw(Screen& screen) {
+void Tsuchinoko::Draw(Screen& screen, int HitStop) {
 
 	if (!mIsLoadTexture) {
 		tsuchinoko = Novice::LoadTexture("./Resources/Debugs/tsuchinoko.png");
@@ -276,7 +276,7 @@ void Tsuchinoko::Draw(Screen& screen) {
 	if (mIsActive && !mIsDeath)
 	{
 		//“ª‚Æ”ö‚Ì•`‰æ
-		if (mShakeTimer > 0) {
+		if (mShakeTimer > 0 && !HitStop) {
 			if (mIsSuper) {
 				screen.DrawPicture(mHeadPosition + ShakeRand, mSize, mCenterAngle, 100, 100, supertsuchinoko, WHITE);
 				screen.DrawPicture(mTailPosition + ShakeRand, mSize, mCenterAngle, 100, 100, supertsuchinoko, WHITE);

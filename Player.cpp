@@ -123,10 +123,10 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 		//マークとの距離に制限をかける
 		MarkLimitLength(isFever);
 	}
-	if (Controller::IsTriggerButton(0, Controller::bA)) {
-		//ダッシュ判定のタイマーセット
-		mDushTimer = kMaxDushTimer;
-	}
+	//if (Controller::IsTriggerButton(0, Controller::bA)) {
+	//	//ダッシュ判定のタイマーセット
+	//	mDushTimer = kMaxDushTimer;
+	//}
 	if (mDushTimer > 0) {
 		mDushTimer--;
 	}
