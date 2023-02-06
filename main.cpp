@@ -37,7 +37,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		case TITLE:
 
 			title.Update();
-			player.TitleUpdate();
+			player.TitleUpdate(map.mBackBoxColor);
 
 			//タイトルの文字とプレイヤーが当たったらタイトルの文字を跳ねさせる
 			for (int i = 0; i < title.WORDMAX; i++) {
@@ -92,7 +92,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					if ((ui.mIsStart || !ui.mIsReady) && 0 < ui.mTimeLeft) {
 
 						//プレイヤーアップデート
-						player.Update(screen, fever.mIsFever, fever.mIsOldFever);
+						player.Update(screen, fever.mIsFever, fever.mIsOldFever, map.mBackBoxColor);
 
 						//ストライクしてないとき
 						if (!player.mIsStrikeActive) {

@@ -27,6 +27,11 @@ void Player::Init() {
 	mUseDushFrame = 0;
 	mUseDushCount = 0;
 
+	//ダッシュ演出
+	for (int i = 0; i < kDushBoxMax; i++) {
+		mIsDushBoxActive[i] = false;
+	}
+
 	//マーキング
 	mIsMarkActive = false;
 	mMarkFrame = 0;
@@ -80,7 +85,7 @@ void Player::Init() {
 }
 
 
-void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
+void Player::Update(Screen& screen, bool isFever, bool isOldFever, unsigned int BackBoxColor) {
 
 	//前回ポジションを取得する
 	mOldPosition = mPosition;
@@ -127,6 +132,13 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 
 		//速度を代入する
 		mPosition += (mVelocity / screen.GetZoom() * 0.4f);
+
+		//マップ内に収める
+		mPosition.x = Clamp(mPosition.x, Map::kMapLeft + (mSize / 2), Map::kMapRight - (mSize / 2));
+		mPosition.y = Clamp(mPosition.y, Map::kMapBottom + (mSize / 2), Map::kMapTop - (mSize / 2));
+
+		//ダッシュ演出
+		DushBox(BackBoxColor);
 
 		//マークとの距離に制限をかける
 		MarkLimitLength(isFever);
@@ -190,6 +202,35 @@ void Player::Dush(float mag) {
 		//速度を代入する
 		mVelocity += mDushVelocity;
 		
+	}
+}
+void Player::DushBox(unsigned int BackBoxColor) {
+
+	//Aボタン押下時
+	if (Controller::IsTriggerButton(0, Controller::bA)) {
+
+		//ダッシュ演出フラグ
+		for (int i = 0; i < kDushBoxMax; i++) {
+			if (!mIsDushBoxActive[i]) {
+				mDushBoxPosition[i] = mPosition;
+				mDushBoxEasingt[i] = 0.0f;
+				mIsDushBoxActive[i] = true;
+				break;
+			}
+		}
+	}
+
+	//ダッシュ演出処理
+	for (int i = 0; i < kDushBoxMax; i++) {
+		if (mIsDushBoxActive[i]) {
+			mDushBoxEasingt[i] = EasingClamp(0.02f, mDushBoxEasingt[i]);
+			mDushBoxAngle[i] = EasingMove(Degree(0), Degree(135), easeLinear(mDushBoxEasingt[i]));
+			mDushBoxSize[i] = EasingMove(0, 400, easeOutSine(mDushBoxEasingt[i]));
+			mDushBoxColor[i] = ColorEasingMove(BackBoxColor, BackBoxColor ^ 0x000000FF, easeInSine(mDushBoxEasingt[i]));
+			if (mDushBoxEasingt[i] == 1.0f) {
+				mIsDushBoxActive[i] = false;
+			}
+		}
 	}
 }
 void Player::Mark() {
@@ -487,10 +528,6 @@ void Player::StrikeBox() {
 }
 void Player::Shadow(bool isHitStop, bool isStart, bool isReady) {
 
-	//マップ内に収める
-	mPosition.x = Clamp(mPosition.x, Map::kMapLeft + (mSize / 2), Map::kMapRight - (mSize / 2));
-	mPosition.y = Clamp(mPosition.y, Map::kMapBottom + (mSize / 2), Map::kMapTop - (mSize / 2));
-
 	mShadowFrame++;
 
 	for (int i = 0; i < kShadowMax; i++)
@@ -631,6 +668,13 @@ void Player::Draw(Screen& screen, bool isReady, bool isFever, unsigned int fever
 			screen.DrawRectAngle(mStrikeBoxPosition[i], mStrikeBoxSize, mStrikeBoxSize, mStrikeBoxAngle[i], backLineColor, kFillModeWireFrame, true);
 		}
 	}
+
+	//ダッシュ演出
+	for (int i = 0; i < kDushBoxMax; i++) {
+		if (mIsDushBoxActive[i]) {
+			screen.DrawRectAngle(mDushBoxPosition[i], mDushBoxSize[i], mDushBoxSize[i], mDushBoxAngle[i], mDushBoxColor[i], kFillModeWireFrame, true);
+		}
+	}
 	
 	//マーク描画
 	if (mIsMarkActive){
@@ -705,7 +749,7 @@ void Player::LoadTexture() {
 }
 
 
-void Player::TitleUpdate() {
+void Player::TitleUpdate(unsigned int BackBoxColor) {
 
 	//前回ポジションを取得する
 	mOldPosition = mPosition;
@@ -744,6 +788,9 @@ void Player::TitleUpdate() {
 	//画面外に出さない
 	mPosition.x = Clamp(mPosition.x, 0, Screen::kWindowWidth);
 	mPosition.y = Clamp(mPosition.y, 0, Screen::kWindowHeight);
+
+	//ダッシュ演出
+	DushBox(BackBoxColor);
 
 	//残像
 	TitleShadow();
@@ -836,6 +883,13 @@ void Player::TitleDraw(Screen& screen) {
 	if (mIsDushShadowActive) {
 		for (int i = 0; i < 4; i++) {
 			screen.DrawPicture(mDushShadowPosition[i], mSize / 2.0, 0, 100, 100, toge, mDushShadowColor, { 1.0f, 1.0f }, false);
+		}
+	}
+
+	//ダッシュ演出
+	for (int i = 0; i < kDushBoxMax; i++) {
+		if (mIsDushBoxActive[i]) {
+			screen.DrawRectAngle(mDushBoxPosition[i], mDushBoxSize[i] / 2.0, mDushBoxSize[i] / 2.0, mDushBoxAngle[i], mDushBoxColor[i], kFillModeWireFrame, false);
 		}
 	}
 

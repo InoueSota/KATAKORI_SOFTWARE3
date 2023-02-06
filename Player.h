@@ -11,7 +11,7 @@ public:
 	}
 
 	void Init();
-	void Update(Screen& screen, bool isFever, bool isOldFever);
+	void Update(Screen& screen, bool isFever, bool isOldFever, unsigned int BackBoxColor);
 	void Draw(Screen& screen, bool isReady, bool isFever, unsigned int feverGaugeColor, unsigned int backLineColor);
 
 
@@ -42,6 +42,17 @@ public:
 	int mUseDushFrame;
 	int mUseDushCount;
 	void Dush(float mag);
+
+
+	//ダッシュしたとき背景矩形大きいverを描画
+	static constexpr int kDushBoxMax = 10;
+	bool mIsDushBoxActive[kDushBoxMax];
+	Vec2 mDushBoxPosition[kDushBoxMax];
+	float mDushBoxEasingt[kDushBoxMax];
+	float mDushBoxAngle[kDushBoxMax];
+	int mDushBoxSize[kDushBoxMax];
+	unsigned int mDushBoxColor[kDushBoxMax];
+	void DushBox(unsigned int BackBoxColor);
 
 
 	//マーキング = Mark
@@ -159,7 +170,7 @@ public:
 	float mSpeed;
 	int mControllIntervalFrame;
 	void AutoMove();
-	void TitleUpdate();
+	void TitleUpdate(unsigned int BackBoxColor);
 	void TitleShadow();
 	void TitleDraw(Screen& screen);
 
