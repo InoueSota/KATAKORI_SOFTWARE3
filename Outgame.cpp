@@ -6,6 +6,7 @@
 
 void Title::Init() {
 
+	mTitleWordBoundY = 20.0f;
 	mTitleWordPosition[TO].x = mCenterPosition.x - 100.0f;
 	mTitleWordPosition[TO].y = mCenterPosition.y - 100.0f;
 	mTitleWordPosition[GE].x = mCenterPosition.x + 100.0f;
@@ -20,10 +21,31 @@ void Title::Init() {
 	mTitleWordPosition[SI].y = mTitleWordPosition[SU].y;
 	mTitleWordPosition[LYU].x = mCenterPosition.x + 250.0f;
 	mTitleWordPosition[LYU].y = mTitleWordPosition[SU].y;
+	mTitleWordJudgePosition[TO].y = mTitleWordPosition[TO].y;
+	mTitleWordJudgePosition[GE].y = mTitleWordPosition[GE].y;
+	mTitleWordJudgePosition[SU].y = mTitleWordPosition[SU].y + 40.0f;
+	mTitleWordJudgePosition[MA].y = mTitleWordPosition[MA].y + 50.0f;
+	mTitleWordJudgePosition[LTU].y = mTitleWordPosition[LTU].y + 80.0f;
+	mTitleWordJudgePosition[SI].y = mTitleWordPosition[SI].y + 40.0f;
+	mTitleWordJudgePosition[LYU].y = mTitleWordPosition[LYU].y + 80.0f;
+	mTitleWordJudgeSize[TO] = 75.0f;
+	mTitleWordJudgeSize[GE] = 75.0f;
+	mTitleWordJudgeSize[SU] = 60.0f;
+	mTitleWordJudgeSize[MA] = 50.0f;
+	mTitleWordJudgeSize[LTU] = 30.0f;
+	mTitleWordJudgeSize[SI] = 60.0f;
+	mTitleWordJudgeSize[LYU] = 30.0f;
 	mTitleWordAlphat = 0.0f;
 	mTitleWordColor = 0xFFFFFF00;
+	for (int i = 0; i < WORDMAX; i++) {
+		mIsHitTitleWord[i] = false;
+		mTitleWordJudgePosition[i].x = mTitleWordPosition[i].x;
+		mTitleWordBasePositionY[i] = mTitleWordPosition[i].y;
+		mTitleWordGravityY[i] = 0.0f;
+		mTitleWordBoundIntervalFrame[i] = 0;
+	}
 	mTitleBackGroundColor = 0xDADADA00;
-	mAEasingt = 0.0f;
+	mXEasingt = 0.0f;
 
 	for (int i = 0; i < kBackBoxMax; i++) {
 		mIsBackBoxActive[i] = false;
@@ -41,52 +63,70 @@ void Title::Update() {
 		mTitleWordColor = ColorEasingMove(0xFFFFFF00, WHITE, easeOutSine(mTitleWordAlphat));
 		mTitleBackGroundColor = ColorEasingMove(0xFFFFFF00, 0xDADADAFF, easeOutSine(mTitleWordAlphat));
 
-		//Aƒ{ƒ^ƒ“‚ÌƒAƒjƒ[ƒVƒ‡ƒ“
-		mAEasingt = EasingClamp(0.02f, mAEasingt);
-		mAScaleColor = ColorEasingMove(0xFFFFFF80, 0xFFFFFF00, easeOutSine(mAEasingt));
-		mAScale = EasingMove({ 1.0f,1.0f }, { 1.5f, 1.5f }, easeOutSine(mAEasingt));
-		if (mAEasingt == 1.0f) {
-			mAEasingt = 0.0f;
-		}
-	}
-
-	//”wŒi‹éŒ`ƒtƒŒ[ƒ€‚Ì‰ÁŽZ
-	mBackBoxFrame++;
-
-	for (int i = 0; i < kBackBoxMax; i++) {
-
-		//”wŒi‹éŒ`¶¬
-		if (!mIsBackBoxActive[i] && mBackBoxFrame % 4 == 0) {
-			mBackBoxPosition[i].x = RAND(0, Screen::kWindowWidth);
-			mBackBoxPosition[i].y = RAND(0, Screen::kWindowHeight);
-			mBackBoxAngle[i] = RAND(Degree(0), Degree(360));
-			mBackBoxEndSize[i] = RAND(8, 12) * 10;
-			mBackBoxEasingt[i] = 0.0f;
-			mIsBackBoxEasingClear[i] = false;
-			mIsBackBoxActive[i] = true;
-			break;
-		}
-
-		//”wŒi‹éŒ`ˆ—
-		if (mIsBackBoxActive[i]) {
-			mBackBoxAngle[i] += Degree(2);
-			if (!mIsBackBoxEasingClear[i]) {
-				mBackBoxEasingt[i] = EasingClamp(0.02f, mBackBoxEasingt[i]);
-				mBackBoxSize[i] = EasingMove(0.0f, mBackBoxEndSize[i], easeOutSine(mBackBoxEasingt[i]));
-				if (mBackBoxEasingt[i] == 1.0f) {
-					mBackBoxEasingt[i] = 0.0f;
-					mIsBackBoxEasingClear[i] = true;
-				}
-			}
-			else {
-				mBackBoxEasingt[i] = EasingClamp(0.1f, mBackBoxEasingt[i]);
-				mBackBoxSize[i] = EasingMove(mBackBoxEndSize[i], 0.0f, easeInSine(mBackBoxEasingt[i]));
-				if (mBackBoxEasingt[i] == 1.0f) {
-					mIsBackBoxActive[i] = false;
+		//ƒ^ƒCƒgƒ‹•¶Žš‚ª“–‚½‚Á‚½Žž‚Ìˆ—i’µ‚Ë‚éj
+		for (int i = 0; i < WORDMAX; i++) {
+			if (mIsHitTitleWord[i]) {
+				mTitleWordPosition[i].y -= mTitleWordBoundY - mTitleWordGravityY[i];
+				mTitleWordGravityY[i] += 1.5f;
+				mTitleWordPosition[i].y = Clamp(mTitleWordPosition[i].y, 0.0f, mTitleWordBasePositionY[i]);
+				if (mTitleWordPosition[i].y == mTitleWordBasePositionY[i]) {
+					mTitleWordBoundIntervalFrame[i]++;
+					if (60 <= mTitleWordBoundIntervalFrame[i]) {
+						mTitleWordGravityY[i] = 0.0f;
+						mTitleWordBoundIntervalFrame[i] = 0;
+						mIsHitTitleWord[i] = false;
+					}
 				}
 			}
 		}
+
+		//Xƒ{ƒ^ƒ“‚ÌƒAƒjƒ[ƒVƒ‡ƒ“
+		mXEasingt = EasingClamp(0.02f, mXEasingt);
+		mXScaleColor = ColorEasingMove(0xFFFFFF80, 0xFFFFFF00, easeOutSine(mXEasingt));
+		mXScale = EasingMove({ 1.0f,1.0f }, { 1.5f, 1.5f }, easeOutSine(mXEasingt));
+		if (mXEasingt == 1.0f) {
+			mXEasingt = 0.0f;
+		}
+
+		//”wŒi‹éŒ`ƒtƒŒ[ƒ€‚Ì‰ÁŽZ
+		mBackBoxFrame++;
+
+		for (int i = 0; i < kBackBoxMax; i++) {
+
+			//”wŒi‹éŒ`¶¬
+			if (!mIsBackBoxActive[i] && mBackBoxFrame % 4 == 0) {
+				mBackBoxPosition[i].x = RAND(0, Screen::kWindowWidth);
+				mBackBoxPosition[i].y = RAND(0, Screen::kWindowHeight);
+				mBackBoxAngle[i] = RAND(Degree(0), Degree(360));
+				mBackBoxEndSize[i] = RAND(8, 12) * 10;
+				mBackBoxEasingt[i] = 0.0f;
+				mIsBackBoxEasingClear[i] = false;
+				mIsBackBoxActive[i] = true;
+				break;
+			}
+
+			//”wŒi‹éŒ`ˆ—
+			if (mIsBackBoxActive[i]) {
+				mBackBoxAngle[i] += Degree(2);
+				if (!mIsBackBoxEasingClear[i]) {
+					mBackBoxEasingt[i] = EasingClamp(0.02f, mBackBoxEasingt[i]);
+					mBackBoxSize[i] = EasingMove(0.0f, mBackBoxEndSize[i], easeOutSine(mBackBoxEasingt[i]));
+					if (mBackBoxEasingt[i] == 1.0f) {
+						mBackBoxEasingt[i] = 0.0f;
+						mIsBackBoxEasingClear[i] = true;
+					}
+				}
+				else {
+					mBackBoxEasingt[i] = EasingClamp(0.1f, mBackBoxEasingt[i]);
+					mBackBoxSize[i] = EasingMove(mBackBoxEndSize[i], 0.0f, easeInSine(mBackBoxEasingt[i]));
+					if (mBackBoxEasingt[i] == 1.0f) {
+						mIsBackBoxActive[i] = false;
+					}
+				}
+			}
+		}
 	}
+
 }
 void Title::Katakori() {
 
@@ -138,15 +178,21 @@ void Title::Draw(Screen& screen) {
 		for (int i = 0; i < kBackBoxMax; i++) {
 			screen.DrawRectAngle(mBackBoxPosition[i], mBackBoxSize[i], mBackBoxSize[i], mBackBoxAngle[i], BLACK, kFillModeWireFrame, false);
 		}
-		for (int i = 0; i < WORDMAX; i++) {
-			screen.DrawUI(mTitleWordPosition[i], 300, 0, 400, 400, mTitleWord[i], mTitleWordColor);
-		}
-		screen.DrawUI({ mCenterPosition.x, Screen::kWindowHeight - 50 }, 75, 75, 0, 160, 160, mA, mAScaleColor, mAScale);
-		screen.DrawUI({ mCenterPosition.x, Screen::kWindowHeight - 50 }, 75, 75, 0, 160, 160, mA, mTitleWordColor);
 	}
 
 	
 
+}
+void Title::FrontDraw(Screen& screen) {
+
+	//ƒ^ƒCƒgƒ‹‰æ–Ê‚Ì•`‰æ
+	if (mIsKatakoriClear) {
+		for (int i = 0; i < WORDMAX; i++) {
+			screen.DrawUI(mTitleWordPosition[i], 300, 0, 400, 400, mTitleWord[i], mTitleWordColor);
+		}
+		screen.DrawUI({ mCenterPosition.x, Screen::kWindowHeight - 50 }, 75, 75, 0, 160, 160, mX, mXScaleColor, mXScale);
+		screen.DrawUI({ mCenterPosition.x, Screen::kWindowHeight - 50 }, 75, 75, 0, 160, 160, mX, mTitleWordColor);
+	}
 }
 void Title::LoadTexture() {
 
@@ -159,7 +205,7 @@ void Title::LoadTexture() {
 		mTitleWord[LTU] = Novice::LoadTexture("./Resources/Outgame/Title/Ltu.png");
 		mTitleWord[SI] = Novice::LoadTexture("./Resources/Outgame/Title/Si.png");
 		mTitleWord[LYU] = Novice::LoadTexture("./Resources/Outgame/Title/Lyu.png");
-		mA = Novice::LoadTexture("./Resources/UI/Explanation/a.png");
+		mX = Novice::LoadTexture("./Resources/UI/Explanation/x.png");
 		mIsLoadTexture = true;
 	}
 }

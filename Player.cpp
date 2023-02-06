@@ -108,11 +108,11 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 
 		//通常移動
 		if (!mKnockbackActive) {
-			NormalMove(screen);
+			NormalMove();
 		}
 		
 		//ダッシュ
-		Dush();
+		Dush(1.0f);
 
 		//マーキング
 		Mark();
@@ -132,7 +132,7 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever) {
 	}
 		
 }
-void Player::NormalMove(Screen& screen) {
+void Player::NormalMove() {
 
 	//スティックの方向を取得する
 	int tmpX, tmpY;
@@ -156,7 +156,7 @@ void Player::NormalMove(Screen& screen) {
 	mVelocity += mNormalVelocity;
 
 }
-void Player::Dush() {
+void Player::Dush(float mag) {
 
 	//スティックの方向を取得する
 	int tmpX, tmpY;
@@ -173,7 +173,7 @@ void Player::Dush() {
 		mDushVelocity = mDushVelocity.Normalized();
 
 		//ｎ倍する
-		mDushVelocity *= mDushMag;
+		mDushVelocity *= mDushMag * mag;
 	}
 
 	//Aボタン押下時
@@ -694,4 +694,109 @@ void Player::LoadTexture() {
 	toge = Novice::LoadTexture("./Resources/Player/toge.png");
 	mark = Novice::LoadTexture("./Resources/Player/mark.png");
 	areyouready = Novice::LoadTexture("./Resources/UI/Explanation/areyouready.png");
+}
+
+
+void Player::TitleUpdate() {
+
+	//前回ポジションを取得する
+	mOldPosition = mPosition;
+
+	//速度を初期化する
+	mVelocity.setZero();
+
+	//通常移動
+	NormalMove();
+
+	//ダッシュ
+	Dush(0.5f);
+
+	//速度を代入する
+	mPosition.x += mVelocity.x;
+	mPosition.y -= mVelocity.y;
+
+	//画面外に出さない
+	mPosition.x = Clamp(mPosition.x, 0, Screen::kWindowWidth);
+	mPosition.y = Clamp(mPosition.y, 0, Screen::kWindowHeight);
+
+	//残像
+	TitleShadow();
+}
+void Player::TitleShadow() {
+
+	mShadowFrame++;
+
+	for (int i = 0; i < kShadowMax; i++)
+	{
+		if (!mIsShadowActive[i] && mShadowFrame % 3 == 0) {
+			mShadowPosition[i] = mPosition;
+			mShadowAlphat[i] = 0.0f;
+			mShadowColor[i] = 0x606060A0;
+			mIsShadowActive[i] = true;
+			break;
+		}
+
+		if (mIsShadowActive[i]) {
+			mShadowAlphat[i] = EasingClamp(0.05f, mShadowAlphat[i]);
+			mShadowColor[i] = ColorEasingMove(0x606060A0, 0x60606000, easeLinear(mShadowAlphat[i]));
+
+			if (mShadowAlphat[i] == 1.0f) {
+				mIsShadowActive[i] = false;
+			}
+		}
+	}
+
+	//Aボタン押下時
+	if (Controller::IsTriggerButton(0, Controller::bA)) {
+
+		float distanceX = mPosition.x - mOldPosition.x;
+		float distanceY = mPosition.y - mOldPosition.y;
+
+		float intervalX = distanceX / 4;
+		float intervalY = distanceY / 4;
+
+		for (int i = 0; i < 4; i++) {
+
+			mDushShadowPosition[i].x = mOldPosition.x + (intervalX * i);
+			mDushShadowPosition[i].y = mOldPosition.y + (intervalY * i);
+		}
+
+		mDushShadowAlphat = 0.0f;
+		mDushShadowColor = 0x60606060;
+		mIsDushShadowActive = true;
+
+		for (int i = 0; i < kShadowMax; i++) {
+
+			mShadowAlphat[i] = 0.0f;
+			mShadowColor[i] = 0x60606000;
+			mIsShadowActive[i] = false;
+		}
+	}
+
+	if (mIsDushShadowActive) {
+
+		mDushShadowAlphat = EasingClamp(0.05f, mDushShadowAlphat);
+		mDushShadowColor = ColorEasingMove(0x60606060, 0x60606000, easeLinear(mDushShadowAlphat));
+
+		if (mDushShadowAlphat == 1.0f) {
+			mIsDushShadowActive = false;
+		}
+	}
+}
+void Player::TitleDraw(Screen& screen) {
+
+	//残像描画
+	for (int i = 0; i < kShadowMax; i++) {
+		if (mIsShadowActive[i]) {
+			screen.DrawPicture(mShadowPosition[i], mSize / 2.0, 0, 100, 100, toge, mShadowColor[i], { 1.0f, 1.0f }, false);
+		}
+	}
+	if (mIsDushShadowActive) {
+		for (int i = 0; i < 4; i++) {
+			screen.DrawPicture(mDushShadowPosition[i], mSize / 2.0, 0, 100, 100, toge, mDushShadowColor, { 1.0f, 1.0f }, false);
+		}
+	}
+
+	//プレイヤー本体描画
+	screen.DrawPicture(mPosition, mSize / 2.0, 0, 100, 100, toge, mColor, { 1.0f, 1.0f }, false);
 }

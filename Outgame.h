@@ -14,6 +14,7 @@ public:
 	void Init();
 	void Update();
 	void Draw(Screen& screen);
+	void FrontDraw(Screen& screen);
 
 
 	//中心座標
@@ -41,13 +42,20 @@ public:
 		LYU,
 		WORDMAX
 	};
+	bool mIsHitTitleWord[WORDMAX];
 	Vec2 mTitleWordPosition[WORDMAX];
+	Vec2 mTitleWordJudgePosition[WORDMAX];
+	float mTitleWordJudgeSize[WORDMAX];
+	float mTitleWordBasePositionY[WORDMAX];
+	float mTitleWordBoundY;
+	float mTitleWordGravityY[WORDMAX];
 	float mTitleWordAlphat;
+	int mTitleWordBoundIntervalFrame[WORDMAX];
 	unsigned int mTitleWordColor;
 	unsigned int mTitleBackGroundColor;
-	unsigned int mAScaleColor;
-	Vec2 mAScale;
-	float mAEasingt;
+	unsigned int mXScaleColor;
+	Vec2 mXScale;
+	float mXEasingt;
 
 	//背景に四角形をランダムに
 	static constexpr int kBackBoxMax = 50;
@@ -64,7 +72,7 @@ public:
 	bool mIsLoadTexture = false;
 	int mKatakori;
 	int mTitleWord[WORDMAX];
-	int mA;
+	int mX;
 	void LoadTexture();
 
 };

@@ -37,9 +37,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		case TITLE:
 
 			title.Update();
+			player.TitleUpdate();
 
-			//Aボタン押下時ゲームシーン（初期化を行う）
-			if (title.mIsKatakoriClear && Controller::IsTriggerButton(0, Controller::bA)) {
+			//タイトルの文字とプレイヤーが当たったらタイトルの文字を跳ねさせる
+			for (int i = 0; i < title.WORDMAX; i++) {
+				if (!title.mIsHitTitleWord[i] && CircleCapsuleCollsion(player, title.mTitleWordJudgePosition[i], title.mTitleWordJudgeSize[i])) {
+					title.mIsHitTitleWord[i] = true;
+				}
+			}
+
+			//Xボタン押下時ゲームシーン（初期化を行う）
+			if (title.mIsKatakoriClear && Controller::IsTriggerButton(0, Controller::bX)) {
 				result.Init();
 				screen.Init();
 				player.Init();
@@ -514,6 +522,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//タイトル画面描画
 			title.Draw(screen);
+
+			//プレイヤー描画
+			player.TitleDraw(screen);
+
+			//タイトル文字描画
+			title.FrontDraw(screen);
 
 			break;
 		case INGAME:

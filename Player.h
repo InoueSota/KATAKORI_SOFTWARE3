@@ -29,7 +29,7 @@ public:
 	Vec2 mNormalVelocity;
 	float mNormalMag;
 	float mNormalMagLockon;
-	void NormalMove(Screen& screen);
+	void NormalMove();
 
 
 	//ダッシュ = Dush
@@ -41,7 +41,7 @@ public:
 	bool mIsOldUseDushOutOfRange;
 	int mUseDushFrame;
 	int mUseDushCount;
-	void Dush();
+	void Dush(float mag);
 
 
 	//マーキング = Mark
@@ -150,6 +150,12 @@ public:
 	float mKnockBackT;
 	void Knockback();
 	void SetKnockbackPosition(Vec2 enemyPosition, float enemyRadius);
+
+
+	//タイトル画面専用
+	void TitleUpdate();
+	void TitleShadow();
+	void TitleDraw(Screen& screen);
 
 
 	//画像
