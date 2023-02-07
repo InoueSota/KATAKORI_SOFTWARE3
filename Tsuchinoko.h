@@ -11,11 +11,12 @@ public:
 	}
 
 	void Init();
-	void Update(Vec2 playerposition, int mTimeLeft, int LockonCount);
+	void Update(int mTimeLeft, Vec2 playerposition, int LockonCount, bool isReady);
 	void Draw(Screen& screen, int HitStop);
 
 	Vec2 mCenterPositionStart;//スタート地点
 	Vec2 mTargetPoint;//目標地点
+	Vec2 mTargetPlayer;//目標地点（プレイヤー版）
 	Vec2 mDirectionPoint;
 	int mIsSuper;
 
@@ -45,7 +46,7 @@ public:
 	//生成処理
 	bool mIsActive;
 	bool mIsDeath;
-	void FirstMake();
+	bool mIsOldDeath;
 	void Make(Vec2 playerPosition, int mTimeLeft);
 
 

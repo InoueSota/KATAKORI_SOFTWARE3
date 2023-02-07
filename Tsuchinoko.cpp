@@ -10,6 +10,7 @@
 
 void Tsuchinoko::Init() {
 
+	mCenterPosition.setZero();
 	mVelocity.setZero();
 	
 	//生成
@@ -35,17 +36,14 @@ void Tsuchinoko::Init() {
 }
 
 
-void Tsuchinoko::Update(Vec2 playerposition, int mTimeLeft, int LockonCount) {
+void Tsuchinoko::Update(int mTimeLeft, Vec2 playerposition, int LockonCount, bool isReady) {
 
 	//速度を初期化する
 	mVelocity.setZero();
 
 	//生成処理
-	Make(playerposition, mTimeLeft);
-
-	//死亡エフェクトが完了したらフラグを初期化する
-	if (mIsClearAnimation) {
-		mIsClearAnimation = false;
+	if (!isReady) {
+		Make(playerposition, mTimeLeft);
 	}
 
 	for (int i = 0; i < kMaxSpawnParticle; i++) {
@@ -82,39 +80,6 @@ void Tsuchinoko::Update(Vec2 playerposition, int mTimeLeft, int LockonCount) {
 		//本体
 		Follow();
 	}
-}
-void Tsuchinoko::FirstMake() {
-
-	if (!mIsActive || mIsDeath)
-	{
-		mIsClearAnimation = false;
-
-		mCenterPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
-		mCenterPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
-
-		while ((mCenterPosition.x >= -1280) && (mCenterPosition.x <= 1280)) {
-			mCenterPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
-		}
-		while ((mCenterPosition.y >= -720) && (mCenterPosition.y <= 720)) {
-			mCenterPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
-		}
-		for (int i = 0; i < kMaxSpawnParticle; i++) {
-			spawnParticle[i].Pos = mCenterPosition;
-			spawnParticle[i].EndPos = mCenterPosition;
-			float angle = Degree(RAND(1, 360));
-			spawnParticle[i].StartPos.x = spawnParticle[i].Pos.x + cosf(angle) * 200;
-			spawnParticle[i].StartPos.y = spawnParticle[i].Pos.y + sinf(angle) * 200;
-			spawnParticle[i].IsUse = 1;
-		}
-
-
-		mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
-		mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
-		mIsDeath = false;
-		mIsActive = true;
-		mShakeTimer = -1;
-	}
-
 }
 void Tsuchinoko::Make(Vec2 PlayerPos, int mTimeLeft) {
 
@@ -165,31 +130,22 @@ void Tsuchinoko::Move(Vec2 playerPosition, int LockonCount) {
 				mVelocity += mDirectionPoint * mCenterSpeed;
 			}
 			LockOnMoveTimer--;
-			if (!LockOnMoveTimer) {
-				mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
-				mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
-			}
 		} else {
 
 			//徐々に向きを変える
 			mDirectionPoint += (mTargetPoint - mCenterPosition) * 0.00001f;
 
-			if (Collision(mCenterPosition, mRadius, mTargetPoint, 30.0f)) {
-				mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
-				mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+			mDirectionPoint = mDirectionPoint.Normalized();
+			if (mIsSuper) {
+				mVelocity += mDirectionPoint * mSuperCenterSpeed;
 			} else {
-				mDirectionPoint = mDirectionPoint.Normalized();
-				if (mIsSuper) {
-					mVelocity += mDirectionPoint * mSuperCenterSpeed;
-				} else {
-					mVelocity += mDirectionPoint * mCenterSpeed;
-				}
+				mVelocity += mDirectionPoint * mCenterSpeed;
 			}
 		}
 	}
 	//プレイヤーを追いかけて"いる"
 	else {
-		mDirectionPoint += (mTargetPoint - mCenterPosition) * 0.001f;
+		mDirectionPoint += (mTargetPlayer - mCenterPosition) * 0.001f;
 		mDirectionPoint = mDirectionPoint.Normalized();
 		if (mIsSuper) {
 			mVelocity += mDirectionPoint * (mLockonSuperCenterSpeed + (LockonCount * 1));
@@ -199,15 +155,8 @@ void Tsuchinoko::Move(Vec2 playerPosition, int LockonCount) {
 		LockOnMoveTimer = kMaxLockOnMoveTimer;
 	}
 
-	if (!(mCenterPosition.x >= Map::kMapLeft + kEnemyMapLimit && mCenterPosition.x <= Map::kMapRight - kEnemyMapLimit && mCenterPosition.y <= Map::kMapTop - kEnemyMapLimit && mCenterPosition.y >= Map::kMapBottom + kEnemyMapLimit)) {
-		if (!mMapLimitFlag && !IsPlayerLockon) {
-			LockOnMoveTimer = 0;
-			mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
-			mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
-			mMapLimitFlag = true;
-		} 
-	} else {
-		mMapLimitFlag = false;
+	if (!(mCenterPosition.x >= Map::kMapLeft && mCenterPosition.x <= Map::kMapRight && mCenterPosition.y <= Map::kMapTop && mCenterPosition.y >= Map::kMapBottom) && !mIsDeath) {
+		mIsDeath = true;
 	}
 }
 void Tsuchinoko::SetAngle() {
@@ -248,7 +197,7 @@ void Tsuchinoko::LockOn(Vec2 playerposition, float radius) {
 	float cp = mVelocity.Cross(toPlayer);
 	if (-Degree(30) < atan2(cp, dp) && atan2(cp, dp) < Degree(30)) {
 		IsPlayerLockon = true;
-		mTargetPoint = playerposition;
+		mTargetPlayer = playerposition;
 	}
 	else {
 		IsPlayerLockon = false;

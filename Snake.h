@@ -16,7 +16,7 @@ public:
 	}
 
 	void Init();
-	void Update(int mTimeLeft, Vec2 PlayerPos, int LockonCount);
+	void Update(int mTimeLeft, Vec2 PlayerPos, int LockonCount, bool isReady);
 	void Draw(Screen& screen, int HitStop);
 
 	static constexpr int kMaxLength = 10;
@@ -24,12 +24,12 @@ public:
 	//パラメータ
 	bool mIsActive;
 	bool mIsDeath;
+	bool mIsOldDeath;
 	bool mIsAnimation;
 	bool mIsClearAnimation;
 	int mIsSuper;
 	int mDeadFlame;
-	void FirstMake();
-	void Make(int mTimeLeft, Vec2 PlayerPos);
+	void TutorialMake(int mTimeLeft, Vec2 PlayerPos);
 	//頭部分
 	Vec2 mHeadPosition;
 	Vec2 mHeadDeadPosition;
@@ -38,6 +38,7 @@ public:
 	float mDeadAngle;
 	Vec2 mHeadPositionStart;//スタート地点
 	Vec2 mTargetPoint;//目標地点
+	Vec2 mTargetPlayer;//目標地点（プレイヤー版）
 	Vec2 mDirectionPoint;
 	Vec2 mVelocity;//速度
 	void Move(int LockonCount);

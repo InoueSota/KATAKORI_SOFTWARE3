@@ -3,13 +3,16 @@
 #include "Ingame.h"
 #include "Collision.h"
 #include <Easing.h>
+#include <stdio.h>
 
 
 
 void Snake::Init() {
 	//生成
+	mHeadPosition.setZero();
 	mIsActive = false;
 	mIsDeath = false;
+	mIsOldDeath = false;
 	mIsClearAnimation = false;
 	mHeadRadius = 80;
 	mBodyRadius = 60;
@@ -20,17 +23,14 @@ void Snake::Init() {
 }
 
 
-void Snake::Update(int mTimeLeft, Vec2 PlayerPos, int LockonCount) {
+void Snake::Update(int mTimeLeft, Vec2 PlayerPos, int LockonCount, bool isReady) {
 
 	//速度の初期化
 	mVelocity.setZero();
 
 	//生成処理
-	Make(mTimeLeft, PlayerPos);
-
-	//死亡エフェクトが完了したらフラグを初期化する
-	if (mIsClearAnimation) {
-		mIsClearAnimation = false;
+	if (!isReady) {
+		TutorialMake(mTimeLeft, PlayerPos);
 	}
 
 	for (int i = 0; i < kMaxSpawnParticle; i++) {
@@ -66,42 +66,7 @@ void Snake::Update(int mTimeLeft, Vec2 PlayerPos, int LockonCount) {
 		Follow();
 	}
 }
-void Snake::FirstMake() {
-
-	if (!mIsActive || mIsDeath)
-	{
-		mIsClearAnimation = false;
-
-		mHeadPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
-		mHeadPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
-
-		while ((mHeadPosition.x >= -1280) && (mHeadPosition.x <= 1280)) {
-			mHeadPosition.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
-		}
-		while ((mHeadPosition.y >= -720) && (mHeadPosition.y <= 720)) {
-			mHeadPosition.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
-		}
-		for (int i = 0; i < kMaxSpawnParticle; i++) {
-			spawnParticle[i].Pos = mHeadPosition;
-			spawnParticle[i].EndPos = mHeadPosition;
-			float angle = Degree(RAND(1, 360));
-			spawnParticle[i].StartPos.x = spawnParticle[i].Pos.x + cosf(angle) * 200;
-			spawnParticle[i].StartPos.y = spawnParticle[i].Pos.y + sinf(angle) * 200;
-			spawnParticle[i].IsUse = 1;
-		}
-
-		mHeadPositionStart = mHeadPosition;
-		mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
-		mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
-		for (int i = 0; i < kMaxFrame; i++) {
-			mOldHeadPosition[i] = mHeadPosition;
-		}
-		mIsDeath = false;
-		mIsActive = true;
-		mShakeTimer = -1;
-	}
-}
-void Snake::Make(int mTimeLeft, Vec2 PlayerPos) {
+void Snake::TutorialMake(int mTimeLeft, Vec2 PlayerPos) {
 
 	int SuperRand = RAND(1, 100);
 
@@ -153,34 +118,23 @@ void Snake::Move(int LockonCount) {
 				mVelocity += mDirectionPoint * mSpeed;
 			}
 			LockOnMoveTimer--;
-			if (!LockOnMoveTimer) {
-				mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
-				mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
-			}
 		} else {
+
 			//徐々に向きを変える
 			mDirectionPoint += (mTargetPoint - mHeadPosition) * 0.00001f;
 
-			if (Collision(mHeadPosition, mHeadRadius, mTargetPoint, 50.0f)) {
-				mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
-				mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
+			mDirectionPoint = mDirectionPoint.Normalized();
+			if (mIsSuper) {
+				mVelocity += mDirectionPoint * mSuperSpeed;
 			} else {
-				mDirectionPoint = mDirectionPoint.Normalized();
-				if (mIsSuper) {
-					mVelocity += mDirectionPoint * mSuperSpeed;
-				} else {
-					mVelocity += mDirectionPoint * mSpeed;
-				}
+				mVelocity += mDirectionPoint * mSpeed;
 			}
 		}
 	}
 	//プレイヤーを追いかけて"いる"
 	else {
-
-		mDirectionPoint += (mTargetPoint - mHeadPosition) * 0.001f;
-
+		mDirectionPoint += (mTargetPlayer - mHeadPosition) * 0.001f;
 		mDirectionPoint = mDirectionPoint.Normalized();
-
 		if (mIsSuper) {
 			mVelocity += mDirectionPoint * (mLockonSuperSpeed + (LockonCount * 1));
 		} else {
@@ -190,15 +144,8 @@ void Snake::Move(int LockonCount) {
 		LockOnMoveTimer = kMaxLockOnMoveTimer;
 	}
 
-	if (!(mHeadPosition.x >= Map::kMapLeft + kEnemyMapLimit && mHeadPosition.x <= Map::kMapRight - kEnemyMapLimit && mHeadPosition.y <= Map::kMapTop - kEnemyMapLimit && mHeadPosition.y >= Map::kMapBottom + kEnemyMapLimit)) {
-		if (!mMapLimitFlag && !IsPlayerLockon) {
-			LockOnMoveTimer = 0;
-			mTargetPoint.x = RAND(Map::kMapLeft + 100.0f, Map::kMapRight - 100.0f);
-			mTargetPoint.y = RAND(Map::kMapBottom + 100.0f, Map::kMapTop - 100.0f);
-			mMapLimitFlag = true;
-		}
-	} else {
-		mMapLimitFlag = false;
+	if (!(mHeadPosition.x >= Map::kMapLeft && mHeadPosition.x <= Map::kMapRight && mHeadPosition.y <= Map::kMapTop && mHeadPosition.y >= Map::kMapBottom)) {
+		mIsDeath = true;
 	}
 }
 void Snake::Angle() {
@@ -225,7 +172,7 @@ void Snake::LockOn(Vec2 playerposition, float radius) {
 	float cp = mVelocity.Cross(toPlayer);
 	if (-Degree(30) < atan2(cp, dp) && atan2(cp, dp) < Degree(30)) {
 		IsPlayerLockon = true;
-		mTargetPoint = playerposition;
+		mTargetPlayer = playerposition;
 	}
 	else {
 		IsPlayerLockon = false;

@@ -22,8 +22,7 @@ Result result;
 UI ui;
 Map map;
 Player player;
-Snake snake[Enemy::kEnemyMax];
-Tsuchinoko tsuchinoko[Enemy::kEnemyMax];
+Enemy enemy;
 Fever fever;
 
 //スイッチ文で main.cpp を分けるやつ
@@ -33,4 +32,4 @@ enum Scene
 	INGAME,
 	OUTGAME
 };
-Scene scene = TITLE;
+Scene scene = INGAME;
