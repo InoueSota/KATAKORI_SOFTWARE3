@@ -73,9 +73,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			if (isStop) {
 
-
+				
 				//UIアップデート
-				ui.Update(player.mStrikeTutorial);
+				ui.Update(player.mStrikeTutorial, player.mIsStrikeActive);
 
 
 				//初期化

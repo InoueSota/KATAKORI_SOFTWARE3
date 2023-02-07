@@ -76,7 +76,7 @@ void UI::Init() {
 	mAScale = { 1.0f, 1.0f };
 	mAScaleActive = false;
 }
-void UI::Update(int mStrikeTutorial) {
+void UI::Update(int mStrikeTutorial, int mIsStrikeActive) {
 
 	//‘O‰ñ€”õŠ®—¹ƒtƒ‰ƒO‚Ì•Û‘¶
 	mIsOldReady = mIsReady;
@@ -112,10 +112,24 @@ void UI::Update(int mStrikeTutorial) {
 				}
 				break;
 			case 3:
-				if (Controller::IsTriggerButton(0, Controller::bY)) {
-					mIsReady = true;
+				if (Controller::IsTriggerButton(0, Controller::bA) && mIsStrikeActive) {
+					if (!mSlowTutorialFlag) {
+						mSlowTutorialFlag = true;
+						mTutorialControl++;
+					}
 				}
+				if (mStrikeTutorial == 1 && mSlowTutorialFlag == true) {
+					mSlowTutorialFlag = false;
+				}
+				if (mTutorialControl >= 3) {
+					mTutorialScene = 4;
+					mTutorialControl = 0;
+				}
+				
 				break;
+		}
+		if (Controller::IsTriggerButton(0, Controller::bY)) {
+			mIsReady = true;
 		}
 	}
 
@@ -509,20 +523,29 @@ void UI::Draw(Screen& screen, bool mIsReady) {
 		switch (mTutorialScene) {
 			case 0:
 				Novice::DrawSprite(880, 64, Tutorial2, 1, 1, 0, WHITE);
+				Novice::DrawSprite(920, 296, TutorialSkip, 1, 1, 0, WHITE);
 				screen.DrawBox({ 904,252 }, 32.8 * 10 + 2, 21, 0.0f, BLACK, kFillModeWireFrame, false);
 				screen.DrawBox({ 904,252 }, 32.8 * mTutorialControl, 20, 0.0f, BLUE, kFillModeSolid, false);
 				break;
 			case 1:
 				Novice::DrawSprite(880, 64, Tutorial4, 1, 1, 0, WHITE);
+				Novice::DrawSprite(920, 296, TutorialSkip, 1, 1, 0, WHITE);
 				screen.DrawBox({ 904,252 }, 109 * 3 + 2, 21, 0.0f, BLACK, kFillModeWireFrame, false);
 				screen.DrawBox({ 904,252 }, 109 * mTutorialControl, 20, 0.0f, BLUE, kFillModeSolid, false);
 				break;
 			case 2:
 				Novice::DrawSprite(880, 64, Tutorial3, 1, 1, 0, WHITE);
+				Novice::DrawSprite(920, 296, TutorialSkip, 1, 1, 0, WHITE);
 				screen.DrawBox({ 904,252 }, 109 * 3 + 2, 21, 0.0f, BLACK, kFillModeWireFrame, false);
 				screen.DrawBox({ 904,252 }, 109 * mTutorialControl, 20, 0.0f, BLUE, kFillModeSolid, false);
 				break;
 			case 3:
+				Novice::DrawSprite(880, 64, Tutorial5, 1, 1, 0, WHITE);
+				Novice::DrawSprite(920, 296, TutorialSkip, 1, 1, 0, WHITE);
+				screen.DrawBox({ 904,252 }, 109 * 3 + 2, 21, 0.0f, BLACK, kFillModeWireFrame, false);
+				screen.DrawBox({ 904,252 }, 109 * mTutorialControl, 20, 0.0f, BLUE, kFillModeSolid, false);
+				break;
+			case 4:
 				Novice::DrawSprite(880, 64, Tutorial1, 1, 1, 0, WHITE);
 				screen.DrawUI({ Screen::kWindowWidth / 2.0, 100 }, 400, 100, 0.0f, 400, 100, areyouready, WHITE);
 				break;
@@ -548,6 +571,8 @@ void UI::LoadTexture() {
 	Tutorial2 = Novice::LoadTexture("./Resources/UI/Explanation/2.png");
 	Tutorial3 = Novice::LoadTexture("./Resources/UI/Explanation/3.png");
 	Tutorial4 = Novice::LoadTexture("./Resources/UI/Explanation/4.png");
+	Tutorial5 = Novice::LoadTexture("./Resources/UI/Explanation/5.png");
+	TutorialSkip = Novice::LoadTexture("./Resources/UI/Explanation/tutorialskip.png");
 	areyouready = Novice::LoadTexture("./Resources/UI/Explanation/areyouready.png");
 
 }
