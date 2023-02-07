@@ -29,7 +29,7 @@ public:
 	bool mIsClearAnimation;
 	int mIsSuper;
 	int mDeadFlame;
-	void TutorialMake(int mTimeLeft, Vec2 PlayerPos);
+	void Make(int mTimeLeft, Vec2 PlayerPos);
 	//“ª•”•ª
 	Vec2 mHeadPosition;
 	Vec2 mHeadDeadPosition;

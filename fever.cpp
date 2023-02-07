@@ -2,6 +2,7 @@
 #include "Novice.h"
 #include "Easing.h"
 #include "Function.h"
+#include "Key.h"
 
 
 
@@ -36,8 +37,8 @@ void Fever::Update(Screen& screen, Vec2 PlayerPos, bool isStrikeActive) {
 		}
 	} else {
 		if (mSnakeDefeat || mTsuchinokoDefeat) {
-			mFeverGauge += mSnakeDefeat * 50;
-			mFeverGauge += mTsuchinokoDefeat * 50;
+			mFeverGauge += mSnakeDefeat * 30;
+			mFeverGauge += mTsuchinokoDefeat * 30;
 			feverGauge.Flag = 1;
 			feverGauge.Timer = kfeverGaugeDelayTime;
 		}
@@ -45,7 +46,7 @@ void Fever::Update(Screen& screen, Vec2 PlayerPos, bool isStrikeActive) {
 		if (mFeverGaugeStrikeEndFlag == 2) {
 			int DefeatStrike = mTsuchinokoDefeatStrike + mSnakeDefeatStrike;
 			if (!(DefeatStrike < 2)) {
-				mFeverGauge += DefeatStrike * 50 * (1 + (DefeatStrike * 0.2));
+				mFeverGauge += DefeatStrike * 30 * (1 + (DefeatStrike * 0.2));
 			}
 			mSnakeDefeatStrike = 0;
 			mTsuchinokoDefeatStrike = 0;
@@ -54,7 +55,7 @@ void Fever::Update(Screen& screen, Vec2 PlayerPos, bool isStrikeActive) {
 		}
 	}
 
-	if (mFeverGauge >= 1000) {
+	if (mFeverGauge >= 1000 || Key::IsTrigger(DIK_F)) {
 		mFeverGauge = 1000;
 		mIsFever = true;
 	}

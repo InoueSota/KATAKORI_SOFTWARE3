@@ -188,6 +188,7 @@ public:
 	int nopower;
 	int toge;
 	int mark;
+	int senden;
 	void LoadTexture();
 
 };

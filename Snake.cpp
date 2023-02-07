@@ -30,7 +30,7 @@ void Snake::Update(int mTimeLeft, Vec2 PlayerPos, int LockonCount, bool isReady)
 
 	//¶¬ˆ—
 	if (!isReady) {
-		TutorialMake(mTimeLeft, PlayerPos);
+		Make(mTimeLeft, PlayerPos);
 	}
 
 	for (int i = 0; i < kMaxSpawnParticle; i++) {
@@ -76,7 +76,7 @@ void Snake::Update(int mTimeLeft, Vec2 PlayerPos, int LockonCount, bool isReady)
 		Follow();
 	}
 }
-void Snake::TutorialMake(int mTimeLeft, Vec2 PlayerPos) {
+void Snake::Make(int mTimeLeft, Vec2 PlayerPos) {
 
 	int SuperRand = RAND(1, 100);
 
@@ -111,9 +111,9 @@ void Snake::TutorialMake(int mTimeLeft, Vec2 PlayerPos) {
 		mIsDeath = false;
 		mIsActive = true;
 		mShakeTimer = -1;
-		if (mTimeLeft < 30 && mTimeLeft > 0 && SuperRand <= 30) {
-			mIsSuper = 1;
-		}
+		//if (mTimeLeft < 30 && mTimeLeft > 0 && SuperRand <= 30) {
+		//	mIsSuper = 1;
+		//}
 	}
 
 }

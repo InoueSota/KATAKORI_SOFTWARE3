@@ -124,9 +124,9 @@ void Tsuchinoko::Make(Vec2 PlayerPos, int mTimeLeft) {
 		mIsDeath = false;
 		mIsActive = true;
 		mShakeTimer = -1;
-		if (mTimeLeft < 30 && mTimeLeft > 0 && SuperRand <= 30) {
-			mIsSuper = 1;
-		}
+		//if (mTimeLeft < 30 && mTimeLeft > 0 && SuperRand <= 30) {
+		//	mIsSuper = 1;
+		//}
 	}
 
 }

@@ -747,7 +747,9 @@ void Player::LoadTexture() {
 	rb = Novice::LoadTexture("./Resources/Player/rb.png");
 	nopower = Novice::LoadTexture("./Resources/Player/nopower.png");
 	toge = Novice::LoadTexture("./Resources/Player/toge.png");
-	mark = Novice::LoadTexture("./Resources/Player/mark.png");}
+	mark = Novice::LoadTexture("./Resources/Player/mark.png");
+	senden = Novice::LoadTexture("./Resources/Outgame/Title/senden.png");
+}
 
 
 void Player::TitleUpdate(unsigned int BackBoxColor) {
@@ -801,7 +803,7 @@ void Player::AutoMove() {
 	//徐々に向きを変える
 	mDirectionPoint += (mTargetPoint - mPosition) * 0.0002f;
 
-	if (Collision(mPosition, mSize / 2.0, mTargetPoint, 50.0f)) {
+	if (Collision(mPosition, mSize * 0.8f, mTargetPoint, 50.0f)) {
 		mTargetPoint.x = RAND(100, Screen::kWindowWidth - 100);
 		mTargetPoint.y = RAND(100, Screen::kWindowHeight - 100);
 	}
@@ -896,5 +898,8 @@ void Player::TitleDraw(Screen& screen) {
 
 	//プレイヤー本体描画
 	screen.DrawPicture(mPosition, mSize / 2.0, 0, 100, 100, toge, mColor, { 1.0f, 1.0f }, false);
+
+	//宣伝描画
+	//screen.DrawPicture(mPosition, 400, 300, 0.0f, 1000, 800, senden, WHITE, { 1.0f,1.0f }, false);
 
 }
