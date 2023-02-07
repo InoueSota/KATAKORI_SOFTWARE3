@@ -56,6 +56,16 @@ void Snake::Update(int mTimeLeft, Vec2 PlayerPos, int LockonCount, bool isReady)
 			Move(LockonCount);
 		}
 
+		if (IsPlayerLockon && !mBikkuriFlag) {
+			mBikkuriTimer = kMaxBikkuriTimer;
+			mBikkuriFlag = true;
+		}
+		if (!IsPlayerLockon) {
+			mBikkuriFlag = false;
+		}
+		if (mBikkuriTimer) {
+			mBikkuriTimer--;
+		}
 		//向きを変える処理
 		Angle();
 
@@ -245,6 +255,9 @@ void Snake::Draw(Screen& screen, int HitStop) {
 		superbody = Novice::LoadTexture("./Resources/Debugs/superbody.png");
 		fov = Novice::LoadTexture("./Resources/Enemy/fov.png");
 		hiteffect = Novice::LoadTexture("./Resources/Enemy/hiteffect.png");
+		enemyspawnparticleTexture = Novice::LoadTexture("./Resources/Enemy/enemyspawnparticle.png");
+		enemybikkuritexture = Novice::LoadTexture("./Resources/Enemy/bikkuri.png");
+		speedTexture = Novice::LoadTexture("./Resources/Enemy/speed.png");
 		mIsLoadTexture = true;
 	}
 
@@ -296,13 +309,20 @@ void Snake::Draw(Screen& screen, int HitStop) {
 			screen.DrawPicture({ mHeadPosition.x + mLockonRadius / 2 * cosf(mHeadAngle), mHeadPosition.y + mLockonRadius / 2 * -sinf(mHeadAngle) }, mLockonRadius, mHeadAngle, 500, 500, fov, 0x0000FF80);
 		}
 		
+		if (mBikkuriTimer) {
+			screen.DrawPicture({ mHeadPosition.x, mHeadPosition.y + 100 }, 100, 0, 50, 50, enemybikkuritexture, WHITE);
+			screen.DrawPicture({ mHeadPosition.x + 100, mHeadPosition.y + 30 }, 120, 0, 50, 50, speedTexture, WHITE);
+		}
 		
 	}
 
 	//スポーンパーティクル
 	for (int i = 0; i < kMaxSpawnParticle; i++) {
 		if (spawnParticle[i].IsUse) {
-			screen.DrawBox(spawnParticle[i].Pos, 50, 50, 0, WHITE, kFillModeSolid);
+			Novice::SetBlendMode(kBlendModeAdd);
+			screen.DrawPicture(spawnParticle[i].Pos, 100, 0, 100, 100, enemyspawnparticleTexture, WHITE);
+			Novice::SetBlendMode(kBlendModeNormal);
+			//screen.DrawBox(spawnParticle[i].Pos, 50, 50, 0, WHITE, kFillModeSolid);
 		}
 	}
 

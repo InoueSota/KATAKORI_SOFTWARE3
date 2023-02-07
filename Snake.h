@@ -65,6 +65,11 @@ public:
 	static constexpr int kMaxShakeTimer = 8;
 	int mShakeTimer = -1;
 
+	//ビックリマーク出すタイマー
+	static constexpr int kMaxBikkuriTimer = 60;
+	int mBikkuriTimer;
+	bool mBikkuriFlag = false;
+
 	//体部分共通
 	static constexpr int kMaxFrame = 120;
 	static constexpr int kBodyMax = 5;
@@ -106,4 +111,7 @@ public:
 	int superbody;
 	int fov;
 	int hiteffect;
+	int enemyspawnparticleTexture;
+	int enemybikkuritexture;
+	int speedTexture;
 };

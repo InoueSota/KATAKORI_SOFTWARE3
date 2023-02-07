@@ -65,11 +65,22 @@ void Tsuchinoko::Update(int mTimeLeft, Vec2 playerposition, int LockonCount, boo
 
 	if (mIsActive && !mIsDeath)
 	{
+
 		//移動処理
 		if (mShakeTimer == -1) {
 			Move(playerposition, LockonCount);
 		}
 		
+		if (IsPlayerLockon && !mBikkuriFlag) {
+			mBikkuriTimer = kMaxBikkuriTimer;
+			mBikkuriFlag = true;
+		} 
+		if(!IsPlayerLockon) {
+			mBikkuriFlag = false;
+		}
+		if (mBikkuriTimer) {
+			mBikkuriTimer--;
+		}
 
 		//角度処理
 		SetAngle();
@@ -214,6 +225,9 @@ void Tsuchinoko::Draw(Screen& screen, int HitStop) {
 		supertsuchinokobody = Novice::LoadTexture("./Resources/Debugs/supertsuchinokobody.png");
 		fov = Novice::LoadTexture("./Resources/Enemy/fov.png");
 		hiteffect = Novice::LoadTexture("./Resources/Enemy/hiteffect.png");
+		enemyspawnparticleTexture = Novice::LoadTexture("./Resources/Enemy/enemyspawnparticle.png");
+		enemybikkuritexture = Novice::LoadTexture("./Resources/Enemy/bikkuri.png");
+		speedTexture = Novice::LoadTexture("./Resources/Enemy/speed.png");
 		mIsLoadTexture = true;
 	}
 
@@ -268,13 +282,21 @@ void Tsuchinoko::Draw(Screen& screen, int HitStop) {
 		} else {
 			screen.DrawPicture({ mCenterPosition.x + mLockonRadius / 2 * cosf(mCenterAngle), mCenterPosition.y + mLockonRadius / 2 * -sinf(mCenterAngle) }, mLockonRadius, mCenterAngle, 500, 500, fov, 0x0000FF80);
 		}
+
+		if (mBikkuriTimer) {
+			screen.DrawPicture({ mCenterPosition.x, mCenterPosition.y + 100 }, 100, 0, 50, 50, enemybikkuritexture, WHITE);
+			screen.DrawPicture({ mCenterPosition.x + 100, mCenterPosition.y + 30 }, 120, 0, 50, 50, speedTexture, WHITE);
+		}
 		
 	}
 
 	//スポーンパーティクル
 	for (int i = 0; i < kMaxSpawnParticle; i++) {
 		if (spawnParticle[i].IsUse) {
-			screen.DrawBox(spawnParticle[i].Pos, 50, 50, 0, WHITE, kFillModeSolid);
+			Novice::SetBlendMode(kBlendModeAdd);
+			screen.DrawPicture(spawnParticle[i].Pos, 100, 0, 100, 100, enemyspawnparticleTexture, WHITE);
+			Novice::SetBlendMode(kBlendModeNormal);
+			//screen.DrawBox(spawnParticle[i].Pos, 50, 50, 0, WHITE, kFillModeSolid);
 		}
 	}
 

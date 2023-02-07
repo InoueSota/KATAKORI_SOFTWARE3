@@ -12,10 +12,6 @@ public:
 		Init();
 	}
 
-	bool mIsLoadTexture;
-	int PlayerFeverParticleTexture;
-	int FeverUITexture;;
-
 	int mSnakeDefeat = 0;			//ヘビを倒した数
 	int mTsuchinokoDefeat = 0;		//ツチノコを倒した数
 	int mSnakeDefeatStrike = 0;		//ストライク中にヘビを倒した数
@@ -77,6 +73,17 @@ public:
 		unsigned int color = 0xFFFFFF00;
 	};
 	FeverGauge feverGauge;
+
+	//画像変数
+	bool mIsLoadTexture;
+	int PlayerFeverParticleTexture;
+	int FeverUITexture;;
+	int FeverEndWarning;
+
+	//UIイージング
+	int mWarningAlphat;
+	int mWarningColor = 0xFFFFFF00;
+	bool mIsWarningRed;
 
 };
 

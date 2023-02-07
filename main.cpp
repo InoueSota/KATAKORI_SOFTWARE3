@@ -71,7 +71,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			if (isStop) {
 
 				//UIアップデート
-				ui.Update();
+				ui.Update(player.mStrikeTutorial, player.mIsStrikeActive);
 
 				//初期化
 				if (Key::IsTrigger(DIK_R) || Controller::IsTriggerButton(0,Controller::bSTART)) {
