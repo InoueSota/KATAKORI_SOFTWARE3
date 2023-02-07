@@ -246,7 +246,7 @@ void Fever::Draw(Screen& screen) {
 		mIsLoadTexture = true;
 	}
 
-	if (mIsFever && mFeverGauge < 100) {
+	/*if (mIsFever && mFeverGauge < 100) {
 		mWarningAlphat = EasingClamp(0.5f, mWarningAlphat);
 		mWarningColor = ColorEasingMove(0xFFFFFF00, WHITE, easeOutCirc(mWarningAlphat));
 		if (mWarningAlphat == 1.0f) {
@@ -257,11 +257,11 @@ void Fever::Draw(Screen& screen) {
 	} else {
 		mWarningAlphat = 0.0f;
 		mWarningColor = 0xFFFFFF00;
-	}
+	}*/
 	
 	mFeverGauge = Clamp(mFeverGauge, 0, 1000);
 	screen.DrawBox({ 49,14 }, 1.18 * 1000, 22, 0.0f, BLACK, kFillModeWireFrame, false);
-	screen.DrawBox({ 50,15 }, 1.18 * mFeverGauge, 20, 0.0f, WHITE, kFillModeSolid, false);
+	screen.DrawBox({ 50,15 }, 1.18 * mFeverGauge, 20, 0.0f, 0xFFCFCFFF, kFillModeSolid, false);
 	if (!(feverGauge.Pos.x <= 50)) {
 		if (mIsFever) {
 			screen.DrawBox({ 50,15 }, feverGauge.Pos.x - 50, 20, 0, feverGauge.color, kFillModeSolid, false);
@@ -269,7 +269,7 @@ void Fever::Draw(Screen& screen) {
 			Novice::DrawQuad(30, 0, feverGauge.Pos.x + 20, 0, 30, 50, feverGauge.Pos.x + 20, 50, 0, 0, 100, 100, PlayerFeverParticleTexture, feverGauge.color);
 			Novice::SetBlendMode(kBlendModeNormal);
 		} else {
-			screen.DrawBox({ 50,15 }, feverGauge.Pos.x - 50, 20, 0, 0xFF000080, kFillModeSolid, false);
+			screen.DrawBox({ 50,15 }, feverGauge.Pos.x - 50, 20, 0, 0xFF000099, kFillModeSolid, false);
 		}
 	}
 	Novice::DrawSprite(55, 15, FeverUITexture, 1, 1, 0, WHITE);
