@@ -75,7 +75,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 				//UIアップデート
-				ui.Update();
+				ui.Update(player.mStrikeTutorial);
 
 
 				//初期化

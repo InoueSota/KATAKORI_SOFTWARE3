@@ -14,6 +14,8 @@ void UI::Init() {
 	mIsStart = false;
 	mIsOldStart = true;
 	mStartPosition = { -Screen::kWindowWidth / 2.0 + 200,Screen::kWindowHeight / 2.0 };
+	mTutorialScene = 0;
+	mTutorialControl = 0;
 
 	//画面の中心
 	mCenterPosition.x = Screen::kWindowWidth / 2.0;
@@ -74,15 +76,46 @@ void UI::Init() {
 	mAScale = { 1.0f, 1.0f };
 	mAScaleActive = false;
 }
-void UI::Update() {
+void UI::Update(int mStrikeTutorial) {
 
 	//前回準備完了フラグの保存
 	mIsOldReady = mIsReady;
 
 	//操作確認フェーズを終了するか
 	if (!mIsReady) {
-		if (Controller::IsTriggerButton(0, Controller::bY)) {
-			mIsReady = true;
+		switch (mTutorialScene) {
+			case 0:
+				if (Controller::IsTriggerButton(0, Controller::bA)) {
+					mTutorialControl++;
+					if (mTutorialControl >= 10) {
+						mTutorialScene = 1;
+						mTutorialControl = 0;
+					}
+				}
+				break;
+			case 1:
+				if (Controller::IsTriggerButton(0, Controller::bX)) {
+					mTutorialControl++;
+					if (mTutorialControl >= 3) {
+						mTutorialScene = 2;
+						mTutorialControl = 0;
+					}
+				}
+				break;
+			case 2:
+				if (mStrikeTutorial == 1) {
+					mTutorialControl++;
+				}
+				if (mTutorialControl >= 3) {
+					mTutorialScene = 3;
+					mTutorialControl = 0;
+				}
+				break;
+			case 3:
+				if (Controller::IsTriggerButton(0, Controller::bY)) {
+					mIsReady = true;
+				}
+				break;
 		}
 	}
 
@@ -471,6 +504,31 @@ void UI::Draw(Screen& screen, bool mIsReady) {
 	screen.DrawUI({ mStickPosition.x + LeftStickVelocity(15.0f).x, mStickPosition.y - LeftStickVelocity(15.0f).y}, 50, 0, 160, 160, mLStick, mLStickColor);
 	screen.DrawUI({ mStickPosition.x, mStickPosition.y - 55 }, 50, 0, 160, 160, mX, mXColor, mXScale);
 	screen.DrawUI({ mStickPosition.x, mStickPosition.y - 110 }, 50, 0, 160, 160, mA, mAColor, mAScale);
+
+	if (!mIsReady) {
+		switch (mTutorialScene) {
+			case 0:
+				Novice::DrawSprite(880, 64, Tutorial2, 1, 1, 0, WHITE);
+				screen.DrawBox({ 904,252 }, 32.8 * 10 + 2, 21, 0.0f, BLACK, kFillModeWireFrame, false);
+				screen.DrawBox({ 904,252 }, 32.8 * mTutorialControl, 20, 0.0f, BLUE, kFillModeSolid, false);
+				break;
+			case 1:
+				Novice::DrawSprite(880, 64, Tutorial4, 1, 1, 0, WHITE);
+				screen.DrawBox({ 904,252 }, 109 * 3 + 2, 21, 0.0f, BLACK, kFillModeWireFrame, false);
+				screen.DrawBox({ 904,252 }, 109 * mTutorialControl, 20, 0.0f, BLUE, kFillModeSolid, false);
+				break;
+			case 2:
+				Novice::DrawSprite(880, 64, Tutorial3, 1, 1, 0, WHITE);
+				screen.DrawBox({ 904,252 }, 109 * 3 + 2, 21, 0.0f, BLACK, kFillModeWireFrame, false);
+				screen.DrawBox({ 904,252 }, 109 * mTutorialControl, 20, 0.0f, BLUE, kFillModeSolid, false);
+				break;
+			case 3:
+				Novice::DrawSprite(880, 64, Tutorial1, 1, 1, 0, WHITE);
+				screen.DrawUI({ Screen::kWindowWidth / 2.0, 100 }, 400, 100, 0.0f, 400, 100, areyouready, WHITE);
+				break;
+		}
+		
+	}
 }
 void UI::LoadTexture() {
 
@@ -486,6 +544,12 @@ void UI::LoadTexture() {
 	mLStick = Novice::LoadTexture("./Resources/UI/Explanation/lstick.png");
 	mX = Novice::LoadTexture("./Resources/UI/Explanation/x.png");
 	mA = Novice::LoadTexture("./Resources/UI/Explanation/a.png");
+	Tutorial1 = Novice::LoadTexture("./Resources/UI/Explanation/1.png");
+	Tutorial2 = Novice::LoadTexture("./Resources/UI/Explanation/2.png");
+	Tutorial3 = Novice::LoadTexture("./Resources/UI/Explanation/3.png");
+	Tutorial4 = Novice::LoadTexture("./Resources/UI/Explanation/4.png");
+	areyouready = Novice::LoadTexture("./Resources/UI/Explanation/areyouready.png");
+
 }
 
 

@@ -242,7 +242,21 @@ void Fever::Draw(Screen& screen) {
 	if (!mIsLoadTexture) {
 		PlayerFeverParticleTexture = Novice::LoadTexture("./Resources/Player/playerfeverparticle.png");
 		FeverUITexture = Novice::LoadTexture("./Resources/UI/Fever/fever.png");
+		FeverEndWarning = Novice::LoadTexture("./Resources/UI/Fever/feverendwarning.png");
 		mIsLoadTexture = true;
+	}
+
+	if (mIsFever && mFeverGauge < 100) {
+		mWarningAlphat = EasingClamp(0.5f, mWarningAlphat);
+		mWarningColor = ColorEasingMove(0xFFFFFF00, WHITE, easeOutCirc(mWarningAlphat));
+		if (mWarningAlphat == 1.0f) {
+			mWarningAlphat = 0.0f;
+			mIsWarningRed = true;
+		}
+		screen.DrawUI({ 640, 360 }, Screen::kWindowWidth, Screen::kWindowHeight, 0, Screen::kWindowWidth, Screen::kWindowHeight, FeverEndWarning, mWarningColor);
+	} else {
+		mWarningAlphat = 0.0f;
+		mWarningColor = 0xFFFFFF00;
 	}
 	
 	mFeverGauge = Clamp(mFeverGauge, 0, 1000);

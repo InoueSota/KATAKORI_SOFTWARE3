@@ -12,7 +12,7 @@ public:
 	}
 
 	void Init();
-	void Update();
+	void Update(int mStrikeTutorial);
 	void Draw(Screen& screen, bool mIsReady);
 
 	//始めるかフラグ
@@ -23,6 +23,8 @@ public:
 	bool mIsOldStart;
 	int mCountDownTime;
 	Vec2 mStartPosition;
+	int mTutorialScene;
+	int mTutorialControl;
 
 
 	//画面の中心
@@ -124,6 +126,11 @@ public:
 	int mLStick;
 	int mX;
 	int mA;
+	int Tutorial1;
+	int Tutorial2;
+	int Tutorial3;
+	int Tutorial4;
+	int areyouready;
 	void LoadTexture();
 
 };

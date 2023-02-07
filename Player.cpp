@@ -53,6 +53,7 @@ void Player::Init() {
 	mStrikeModeBScale = { 1.0f, 1.0f };
 	mStrikeModeScaleActive = false;
 	strikeMode = STRAIGHT;
+	mStrikeTutorial = 0;
 
 	//スロー
 	mIsSlowActive = false;
@@ -393,6 +394,10 @@ void Player::Strike(bool isFever, bool isOldFever, Screen& screen) {
 		}
 	}
 
+	if (mStrikeTutorial) {
+		mStrikeTutorial = 0;
+	}
+
 	if (mIsStrikeActive) {
 
 		if (mIsStraightStrikeActive)
@@ -472,6 +477,7 @@ void Player::Strike(bool isFever, bool isOldFever, Screen& screen) {
 				mSlowEasingt = 0.0f;
 				mIsSlowActive = false;
 				StrikeBoxInit(screen);
+				mStrikeTutorial = 1;
 			}
 		}
 		else {
@@ -490,6 +496,7 @@ void Player::Strike(bool isFever, bool isOldFever, Screen& screen) {
 				mIsStrikeActive = false;
 			}
 		}
+
 	}
 }
 void Player::StrikeBoxInit(Screen& screen) {
@@ -691,10 +698,6 @@ void Player::Draw(Screen& screen, bool isReady, bool isFever, unsigned int fever
 	//プレイヤー本体描画
 	screen.DrawPicture(mPosition, mSize, 0, 100, 100, toge, mColor);
 
-	if (!isReady) {
-		screen.DrawUI({ Screen::kWindowWidth / 2.0, 100 }, 400, 100, 0.0f, 400, 100, areyouready, WHITE);
-	}
-
 	//ストライクしろ(圧)描画
 	if (mIsMarkActive && !mIsStrikeActive) {
 		if (0 < mStrikePower) {
@@ -744,9 +747,7 @@ void Player::LoadTexture() {
 	rb = Novice::LoadTexture("./Resources/Player/rb.png");
 	nopower = Novice::LoadTexture("./Resources/Player/nopower.png");
 	toge = Novice::LoadTexture("./Resources/Player/toge.png");
-	mark = Novice::LoadTexture("./Resources/Player/mark.png");
-	areyouready = Novice::LoadTexture("./Resources/UI/Explanation/areyouready.png");
-}
+	mark = Novice::LoadTexture("./Resources/Player/mark.png");}
 
 
 void Player::TitleUpdate(unsigned int BackBoxColor) {
