@@ -62,6 +62,11 @@ public:
 	static constexpr int kMaxShakeTimer = 8;
 	int mShakeTimer = -1;
 
+	//ビックリマーク出すタイマー
+	static constexpr int kMaxBikkuriTimer = 60;
+	int mBikkuriTimer;
+	bool mBikkuriFlag = false;
+
 
 	//頭と尾
 	Vec2 mHeadPosition;
@@ -109,6 +114,9 @@ public:
 	int supertsuchinokobody;
 	int fov;
 	int hiteffect;
+	int enemyspawnparticleTexture;
+	int enemybikkuritexture;
+	int speedTexture;
 
 	bool mIsAnimation;
 	bool mIsClearAnimation;
