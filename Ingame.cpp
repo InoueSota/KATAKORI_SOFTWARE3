@@ -376,6 +376,24 @@ void UI::TsuchinokoScore(bool isStrikeActive, Vec2 enemyPosition) {
 		}
 	}
 }
+void UI::StrikeEndScore(bool isStrikeActive, int mTsuchinokoDefeatStrike, int mSnakeDefeatStrike) {
+
+	int DefeatStrike = mTsuchinokoDefeatStrike + mSnakeDefeatStrike;
+
+	if (DefeatStrike >= 4) {
+		//スーパーキル
+		mEndScore += 8000;
+	} else if (DefeatStrike == 3) {
+		//トリプルキル
+		mEndScore += 4000;
+	} else if (DefeatStrike == 2) {
+		//ダブルキル
+		mEndScore += 2000;
+	}
+	mStartScore = mScore;
+	mScoreAnimationEasingt = 0.0f;
+
+}
 void UI::ScoreAnimation() {
 
 	mScoreAnimationEasingt = EasingClamp(0.1f, mScoreAnimationEasingt);

@@ -403,12 +403,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					}
 				}
 
-
+				//複数キルのスコア
+				ui.mTsuchinokoDefeatStrike = fever.mTsuchinokoDefeatStrike;
+				ui.mSnakeDefeatStrike = fever.mSnakeDefeatStrike;
+				if (player.mIsStrikeActive && ui.StrikeEndFlag == 0) {
+					ui.StrikeEndFlag = 1;
+				} else if (ui.StrikeEndFlag == 1 && !player.mIsStrikeActive) {
+					ui.StrikeEndScore(player.mIsStrikeActive, ui.mTsuchinokoDefeatStrike, ui.mSnakeDefeatStrike);
+					ui.StrikeEndFlag = 0;
+				}
+				
+				
 
 				if (fever.mIsFever) {
 					fever.mFeverGaugeStrikeEndFlag = 0;
-					fever.mSnakeDefeatStrike = 0;
-					fever.mTsuchinokoDefeatStrike = 0;
 				} else {
 					if (player.mIsStrikeActive && fever.mFeverGaugeStrikeEndFlag == 0) {
 						fever.mFeverGaugeStrikeEndFlag = 1;
@@ -416,6 +424,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						fever.mFeverGaugeStrikeEndFlag = 2;
 					}
 				}
+
+
 
 				if (0 >= ui.mTimeLeft) {
 					fever.mFeverStop = true;
