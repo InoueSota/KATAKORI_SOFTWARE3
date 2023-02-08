@@ -12,7 +12,7 @@ public:
 	static constexpr int kEnemyMax = 20;
 
 	void Init();
-	void Update(int timeLeft, Vec2 playerPos, int lockOnCount, bool isReady, bool isFever);
+	void Update(int timeLeft, Vec2 playerPos, int lockOnCount, bool isReady, bool isFever, Screen& screen);
 	void Draw(Screen& screen, int hitStop);
 
 	enum WAVE
@@ -51,6 +51,23 @@ public:
 	bool MakeTsuchinoko(const char* csv);
 	void NextWave(WAVE nextWave);
 
+	//敵を倒したらパーティクルをUIに飛ばす
+	static constexpr int kPowerToUIMax = 10;
+	static constexpr int kPowerParticleMax = 30;
+	typedef struct PowerParticle {
+		bool mIsActive[kPowerParticleMax];
+		Vec2 mPosition[kPowerParticleMax];
+		Vec2 mStartPosition;
+		Vec2 mEndPosition[kPowerParticleMax];
+		float mDiffusionEasingt[kPowerParticleMax];
+		float mToUIEasingt[kPowerParticleMax];
+		int mSize;
+		int mPower;
+		unsigned int mColor;
+	};
+	bool mIsToUIActive[kPowerToUIMax];
+	PowerParticle powerParticle[kPowerToUIMax];
+
 	//音
 	bool mIsPlayHitSound;
 	bool mIsPlayStrikeHitSound;
@@ -69,7 +86,7 @@ public:
 	};
 	int strikeenemyhit[MusicalScaleMax];
 	int mDeadCount;
-	void HitSound();
+	void HitSound(bool isFever, unsigned int FeverColor, int power, Vec2 enemyPosition);
 	void StrikeHitSound();
 	void LoadTexture();
 };

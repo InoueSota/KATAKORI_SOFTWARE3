@@ -107,7 +107,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						if (!player.mIsStrikeActive) {
 
 							//敵アップデート
-							enemy.Update(ui.mTimeLeft, player.mPosition, player.LockonCount, ui.mIsReady, fever.mIsFever);
+							enemy.Update(ui.mTimeLeft, player.mPosition, player.LockonCount, ui.mIsReady, fever.mIsFever, screen);
 						}
 					}
 				}
@@ -125,7 +125,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					screen.Init();
 					map.Init();
 					enemy.Init();
-					enemy.Update(ui.mTimeLeft, player.mPosition, player.LockonCount, ui.mIsReady, fever.mIsFever);
+					enemy.Update(ui.mTimeLeft, player.mPosition, player.LockonCount, ui.mIsReady, fever.mIsFever, screen);
 					player.Init();
 				}
 
@@ -215,7 +215,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 										fever.mSnakeDefeatStrike++;
 										screen.SetHitStop();
 										if (!player.mIsStrikeActive) {
-											enemy.HitSound();
+											enemy.HitSound(fever.mIsFever, fever.feverGauge.color, player.mStrikePower, enemy.snake[i].mHeadPosition);
 										} else {
 											enemy.StrikeHitSound();
 										}
@@ -244,7 +244,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 											fever.mSnakeDefeatStrike++;
 											screen.SetHitStop();
 											if (!player.mIsStrikeActive) {
-												enemy.HitSound();
+												enemy.HitSound(fever.mIsFever, fever.feverGauge.color, player.mStrikePower, enemy.snake[i].mHeadPosition);
 											} else {
 												enemy.StrikeHitSound();
 											}
@@ -292,7 +292,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 										}
 										screen.SetHitStop();
 										if (!player.mIsStrikeActive) {
-											enemy.HitSound();
+											enemy.HitSound(fever.mIsFever, fever.feverGauge.color, player.mStrikePower, enemy.snake[i].mHeadPosition);
 										} else {
 											enemy.StrikeHitSound();
 										}
@@ -339,7 +339,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 										fever.mTsuchinokoDefeatStrike++;
 										screen.SetHitStop();
 										if (!player.mIsStrikeActive) {
-											enemy.HitSound();
+											enemy.HitSound(fever.mIsFever, fever.feverGauge.color, player.mStrikePower, enemy.tsuchinoko[i].mCenterPosition);
 										} else {
 											enemy.StrikeHitSound();
 										}
@@ -378,7 +378,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 											fever.mTsuchinokoDefeatStrike++;
 											screen.SetHitStop();
 											if (!player.mIsStrikeActive) {
-												enemy.HitSound();
+												enemy.HitSound(fever.mIsFever, fever.feverGauge.color, player.mStrikePower, enemy.tsuchinoko[i].mCenterPosition);
 											} else {
 												enemy.StrikeHitSound();
 											}
@@ -426,7 +426,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 										}
 										screen.SetHitStop();
 										if (!player.mIsStrikeActive) {
-											enemy.HitSound();
+											enemy.HitSound(fever.mIsFever, fever.feverGauge.color, player.mStrikePower, enemy.tsuchinoko[i].mCenterPosition);
 										} else {
 											enemy.StrikeHitSound();
 										}

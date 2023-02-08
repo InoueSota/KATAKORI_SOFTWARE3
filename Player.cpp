@@ -54,6 +54,7 @@ void Player::Init() {
 	mIsStrikeActive = false;
 	mIsStrikeBoxShakeActive = false;
 	mStrikePower = 0;
+	mDrawStrikePower = 0;
 	mStrikeModeScale = { 1.0f, 1.0f };
 	mStrikeModeBScale = { 1.0f, 1.0f };
 	mStrikeModeScaleActive = false;
@@ -796,14 +797,15 @@ void Player::DrawStrikeUI(Screen& screen, bool isFever, unsigned int feverGaugeC
 
 	//ストライクパワーを収める
 	mStrikePower = Clamp(mStrikePower, 0, kStrikePowerMax);
+	mDrawStrikePower += (mStrikePower - mDrawStrikePower) * 0.02f;
 	if (!isFever) {
 		if (mStrikePower != kStrikePowerMax) {
-			screen.DrawBox({ 50.0f, 62.5f }, 50 * mStrikePower, 25, 0.0f, WHITE, kFillModeSolid, false);
+			screen.DrawBox({ 50.0f, 62.5f }, 50 * mDrawStrikePower, 25, 0.0f, WHITE, kFillModeSolid, false);
 		} else {
-			screen.DrawBox({ 50.0f, 62.5f }, 50 * mStrikePower, 25, 0.0f, RED, kFillModeSolid, false);
+			screen.DrawBox({ 50.0f, 62.5f }, 50 * mDrawStrikePower, 25, 0.0f, RED, kFillModeSolid, false);
 		}
 	} else {
-		screen.DrawBox({ 50.0f, 62.5f }, 50 * mStrikePower, 25, 0.0f, feverGaugeColor, kFillModeSolid, false);
+		screen.DrawBox({ 50.0f, 62.5f }, 50 * mDrawStrikePower, 25, 0.0f, feverGaugeColor, kFillModeSolid, false);
 	}
 
 	for (int i = 0; i < kStrikePowerMax; i++) {
@@ -813,9 +815,6 @@ void Player::DrawStrikeUI(Screen& screen, bool isFever, unsigned int feverGaugeC
 			screen.DrawUI({ 25.0f + (i + 1) * 50, 75.0f }, 50, 25, 0, 200, 100, flame, WHITE);
 		}
 	}
-
-	Novice::ScreenPrintf(0,  0, "mPowerParticleEasingt[0] : %f", mPowerParticleEasingt[0]);
-	Novice::ScreenPrintf(0, 20, "mPowerParticleSize[0] : %d", mPowerParticleSize[0]);
 
 }
 void Player::LoadTexture() {

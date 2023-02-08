@@ -106,6 +106,7 @@ public:
 	bool mStrikeModeScaleActive;
 	float mStrikeModeScaleEasingt;
 	int mStrikePower;
+	float mDrawStrikePower;
 	void DrawStrikeUI(Screen& screen, bool isFever, unsigned int feverGaugeColor);
 	int mStrikeTutorial;//チュートリアル用の変数
 	//フィーバーストライク

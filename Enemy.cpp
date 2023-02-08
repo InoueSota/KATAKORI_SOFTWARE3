@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "Key.h"
 #include <stdio.h>
+#include "Easing.h"
 
 
 
@@ -42,10 +43,18 @@ void Enemy::Init() {
 		snake[i].Init();
 		tsuchinoko[i].Init();
 	}
+
+	for (int i = 0; i < kPowerToUIMax; i++) {
+		for (int j = 0; j < kPowerParticleMax; j++) {
+			powerParticle[i].mIsActive[j] = false;
+			powerParticle[i].mSize = 10.0f;
+		}
+		mIsToUIActive[i] = false;
+	}
 }
 
 
-void Enemy::Update(int timeLeft, Vec2 playerPos, int lockOnCount, bool isReady, bool isFever) {
+void Enemy::Update(int timeLeft, Vec2 playerPos, int lockOnCount, bool isReady, bool isFever, Screen& screen) {
 
 	if (isReady)
 	{
@@ -267,6 +276,25 @@ void Enemy::Update(int timeLeft, Vec2 playerPos, int lockOnCount, bool isReady, 
 		snake[i].Update(timeLeft, playerPos, lockOnCount, isReady);
 		tsuchinoko[i].Update(timeLeft, playerPos, lockOnCount, isReady);
 	}
+
+	for (int i = 0; i < kPowerToUIMax; i++) {
+		for (int j = 0; j < kPowerParticleMax; j++) {
+			if (powerParticle[i].mIsActive[j]) {
+				powerParticle[i].mDiffusionEasingt[j] = EasingClamp(0.03f, powerParticle[i].mDiffusionEasingt[j]);
+				powerParticle[i].mPosition[j] = EasingMove(powerParticle[i].mStartPosition, powerParticle[i].mEndPosition[j], easeInSine(powerParticle[i].mDiffusionEasingt[j]));
+				
+				if (powerParticle[i].mDiffusionEasingt[j] == 1.0f) {
+					powerParticle[i].mToUIEasingt[j] = EasingClamp(0.03f, powerParticle[i].mToUIEasingt[j]);
+					powerParticle[i].mPosition[j] = EasingMove(screen.WorldTransform(powerParticle[i].mEndPosition[j]), {50.0f + (25 * powerParticle[i].mPower), 75.0f}, easeInSine(powerParticle[i].mToUIEasingt[j]));
+
+					if (powerParticle[i].mToUIEasingt[j] == 1.0f) {
+						powerParticle[i].mIsActive[j] = false;
+						mIsToUIActive[i] = false;
+					}
+				}
+			}
+		}
+	}
 }
 
 bool Enemy::MakeSnake(const char* csv) {
@@ -395,8 +423,19 @@ void Enemy::Draw(Screen& screen, int hitStop) {
 		snake[i].Draw(screen, hitStop);
 		tsuchinoko[i].Draw(screen, hitStop);
 	}
+	for (int i = 0; i < kPowerToUIMax; i++) {
+		for (int j = 0; j < kPowerParticleMax; j++) {
+			if (powerParticle[i].mIsActive[j]) {
+				if (powerParticle[i].mDiffusionEasingt[j] == 1.0f) {
+					screen.DrawSquare(powerParticle[i].mPosition[j], powerParticle[i].mSize, powerParticle[i].mColor, kFillModeSolid, false);
+				} else{
+					screen.DrawSquare(powerParticle[i].mPosition[j], powerParticle[i].mSize, powerParticle[i].mColor, kFillModeSolid, true);
+				}
+			}
+		}
+	}
 }
-void Enemy::HitSound() {
+void Enemy::HitSound(bool isFever, unsigned int FeverColor, int power, Vec2 enemyPosition) {
 
 	if (!mIsPlayHitSound) {
 
@@ -408,6 +447,32 @@ void Enemy::HitSound() {
 		mIsPlayHitSound = true;
 	}
 
+	for (int i = 0; i < kPowerToUIMax; i++) {
+		if (!mIsToUIActive[i]){
+			for (int j = 0; j < kPowerParticleMax; j++) {
+				if (!powerParticle[i].mIsActive[j] && power != 6) {
+					float tmpRandTheta = Degree(RAND(0, 360));
+					powerParticle[i].mStartPosition = enemyPosition;
+					powerParticle[i].mEndPosition[j].x = (cosf(tmpRandTheta) * 100) + enemyPosition.x;
+					powerParticle[i].mEndPosition[j].y = (sinf(tmpRandTheta) * 100) + enemyPosition.y;
+					powerParticle[i].mDiffusionEasingt[j] = 0.0f;
+					powerParticle[i].mToUIEasingt[j] = 0.0f;
+					powerParticle[i].mPower = power;
+					if (isFever) {
+						powerParticle[i].mColor = FeverColor;
+					}
+					else if (power != 5) {
+						powerParticle[i].mColor = WHITE;
+					} else {
+						powerParticle[i].mColor = RED;
+					}
+					powerParticle[i].mIsActive[j] = true;
+					mIsToUIActive[i] = true;
+				}
+			}
+			break;
+		}
+	}
 }
 void Enemy::StrikeHitSound() {
 
