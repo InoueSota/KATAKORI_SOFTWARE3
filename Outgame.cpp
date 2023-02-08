@@ -278,6 +278,7 @@ void Result::Init() {
 	mDoubleKillCount = 0;
 	mTripleKillCount = 0;
 	mSuperKillCount = 0;
+	mIsBlackActive = false;
 }
 void Result::Update(float score) {
 
@@ -298,6 +299,15 @@ void Result::Update(float score) {
 	mXScale = EasingMove({ 1.0f,1.0f }, { 1.5f, 1.5f }, easeOutSine(mXEasingt));
 	if (mXEasingt == 1.0f) {
 		mXEasingt = 0.0f;
+	}
+
+	//âÊñ ëJà⁄ópçï
+	if (mIsBlackActive) {
+		mBlackAlpht = EasingClamp(0.02f, mBlackAlpht);
+		mBlackColor = ColorEasingMove(0x00000000, BLACK, easeOutSine(mBlackAlpht));
+	}
+	else {
+		mBlackAlpht = 0.0f;
 	}
 
 }
@@ -395,6 +405,8 @@ void Result::Draw(Screen& screen) {
 		}
 		screen.DrawUI(mScorePosition[i], mScoreSize, 32 * Result[i], 32, 32, mNumber, mScoreColor[i]);
 	}
+
+	screen.DrawRectAngle(mCenterPosition, Screen::kWindowWidth, Screen::kWindowHeight, mBlackColor, kFillModeSolid, false);
 }
 void Result::LoadTexture() {
 

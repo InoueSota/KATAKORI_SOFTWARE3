@@ -570,6 +570,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 				//タイムアップの文字が出てしばらくしたらスコア画面に移行する
 				if (ui.mIsTimeUpFinish) {
+					result.Init();
 					scene = OUTGAME;
 				}
 			}
@@ -587,11 +588,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				Novice::StopAudio(bgm.resulthandle);
 				bgm.Init();
 				change.Init();
+				result.mIsBlackActive = true;
+			}
+			if (result.mBlackAlpht == 1.0f){
 				scene = TITLE;
 			}
 			break;
 		}
-
 		//画面遷移
 		change.Update();
 

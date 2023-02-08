@@ -136,6 +136,11 @@ public:
 	Vec2 mXScale;
 	float mXEasingt;
 
+	//‰æ–Ê‘JˆÚ—p•
+	bool mIsBlackActive;
+	float mBlackAlpht;
+	unsigned int mBlackColor;
+
 	//‰æ‘œ
 	int mResult;
 	int mNumber;
