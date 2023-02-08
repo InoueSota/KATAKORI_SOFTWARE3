@@ -520,8 +520,9 @@ void UI::Draw(Screen& screen, bool mIsReady) {
 
 	//制限時間
 	if (10 <= mTimeLeft && mIsStart) {
-		screen.DrawUI(mTimePosition[1], mTimeUISize, 288 * (mTimeLeft / 10), 288, 288, mTimeLimitNumber, WHITE, mTimeScale);
-		screen.DrawUI(mTimePosition[0], mTimeUISize, 288 * (mTimeLeft % 10), 288, 288, mTimeLimitNumber, WHITE, mTimeScale);
+		screen.DrawRectAngle({ mCenterPosition.x, mTimePosition[0].y }, mTimeUISize * 2 + 5.0f, mTimeUISize + 5.0f, 0x00000035, kFillModeSolid, false);
+		screen.DrawUI(mTimePosition[1], mTimeUISize, 32 * (mTimeLeft / 10), 32, 32, mNumber, WHITE, mTimeScale);
+		screen.DrawUI(mTimePosition[0], mTimeUISize, 32 * (mTimeLeft % 10), 32, 32, mNumber, WHITE, mTimeScale);
 	}
 	//タイムアップ
 	if (mTimeLeft == 0) {
@@ -540,6 +541,7 @@ void UI::Draw(Screen& screen, bool mIsReady) {
 		mKillCount = Clamp(mKillCount, 0, 1000);
 		float Result[3];
 		float tmpScore = mKillCount;
+		screen.DrawRectAngle(mKillCountPosition[1], mTimeUISize * 3 + 5.0f, mTimeUISize + 5.0f, 0x00000035, kFillModeSolid, false);
 		for (int i = 2; i > -1; i--) {
 			Result[i] = tmpScore / powf(10, i);
 			tmpScore = (int)tmpScore % (int)powf(10, i);
@@ -553,6 +555,7 @@ void UI::Draw(Screen& screen, bool mIsReady) {
 			}
 			screen.DrawUI(mKillCountPosition[i], mTimeUISize, 32 * (int)Result[i], 32, 32, mNumber, mKillCountColor[i], mKillCountScale);
 		}
+		screen.DrawRectAngle({ mScorePosition[0].x - 50.0f, mKillCountPosition[0].y + 50.0f }, 205.0f, 55.0f, 0x00000035, kFillModeSolid, false);
 		screen.DrawUI({ mScorePosition[0].x - 50.0f, mKillCountPosition[0].y + 50.0f }, 200, 50, 0, 400, 100, mKillCountLetter, WHITE);
 	}
 
@@ -583,6 +586,7 @@ void UI::Draw(Screen& screen, bool mIsReady) {
 		mScore = Clamp(mScore, 0, 100000000);
 		float Result[8];
 		float tmpScore = mScore;
+		screen.DrawRectAngle({ mScorePosition[4].x + (mTimeUISize / 2), mScorePosition[0].y }, mTimeUISize * 8 + 5.0f, mTimeUISize + 5.0f, 0x00000035, kFillModeSolid, false);
 		for (int i = 7; i > -1; i--) {
 			Result[i] = tmpScore / powf(10, i);
 			tmpScore = (int)tmpScore % (int)powf(10, i);
@@ -596,6 +600,7 @@ void UI::Draw(Screen& screen, bool mIsReady) {
 			}
 			screen.DrawUI(mScorePosition[i], mTimeUISize, 32 * (int)Result[i], 32, 32, mNumber, mScoreColor[i], mKillCountScale);
 		}
+		screen.DrawRectAngle({ mScorePosition[0].x, mScorePosition[0].y + 50.0f }, 105.0f, 52.5f, 0x00000035, kFillModeSolid, false);
 		screen.DrawUI({ mScorePosition[0].x, mScorePosition[0].y + 50.0f }, 100, 50, 0, 200, 100, mScoreLetter, WHITE);
 	}
 

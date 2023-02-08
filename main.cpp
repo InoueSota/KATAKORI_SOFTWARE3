@@ -47,7 +47,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 			//Xボタン押下時ゲームシーン（初期化を行う）
-			if (title.mIsKatakoriClear && Controller::IsTriggerButton(0, Controller::bX)) {
+			if (title.mIsKatakoriClear && Controller::IsTriggerButton(0, Controller::bX) && !change.mIsChangeActive) {
 				result.Init();
 				screen.Init();
 				player.Init();
@@ -55,8 +55,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				ui.Init();
 				fever.Init();
 				map.Init();
+				result.Init();
 				change.Init();
-				change.mIsChangeActive = true;
+				change.mIsChangeActive = true;;
 				int handle = -1;
 				if (Novice::IsPlayingAudio(handle) == false || handle == -1) {
 					handle = Novice::PlayAudio(bgm.toingame, 0, 1);
@@ -570,7 +571,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 				//矩形がある程度でたらリザルトに移行
 				if ((Screen::kWindowWidth - 50.0f) <= change.mMakePosition) {
-					result.Init();
 					scene = OUTGAME;
 				}
 			}

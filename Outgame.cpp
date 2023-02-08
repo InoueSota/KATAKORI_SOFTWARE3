@@ -287,6 +287,7 @@ void Result::Init() {
 	mTripleKillCount = 0;
 	mSuperKillCount = 0;
 	mIsBlackActive = false;
+	mBlackColor = 0x00000000;
 }
 void Result::Update(float score) {
 
@@ -424,6 +425,8 @@ void Result::Draw(Screen& screen) {
 		Novice::DrawSpriteRect(33, 40, 0, 368, 264, 184, Rank, 1, 0.2, 0, WHITE);
 	} else if (mScore >= 500000) {
 		Novice::DrawSpriteRect(33, 40, 0, 552, 264, 184, Rank, 1, 0.2, 0, WHITE);
+	} else {
+		Novice::DrawSpriteRect(33, 40, 0, 920, 264, 184, Rank, 1, 0.2, 0, WHITE);
 	}
 
 	screen.DrawRectAngle(mCenterPosition, Screen::kWindowWidth, Screen::kWindowHeight, mBlackColor, kFillModeSolid, false);
