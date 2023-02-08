@@ -215,6 +215,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 										}
 										fever.mSnakeDefeat++;
 										fever.mSnakeDefeatStrike++;
+										ui.mSnakeDefeatStrike++;
 										screen.SetHitStop();
 										if (!player.mIsStrikeActive) {
 											enemy.HitSound(fever.mIsFever, fever.feverGauge.color, player.mStrikePower, enemy.snake[i].mHeadPosition);
@@ -244,6 +245,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 											}
 											fever.mSnakeDefeat++;
 											fever.mSnakeDefeatStrike++;
+											ui.mSnakeDefeatStrike++;
 											screen.SetHitStop();
 											if (!player.mIsStrikeActive) {
 												enemy.HitSound(fever.mIsFever, fever.feverGauge.color, player.mStrikePower, enemy.snake[i].mHeadPosition);
@@ -276,6 +278,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 											//準備フェーズもフィーバーゲージは増やす！！！
 											fever.mSnakeDefeat++;
 											fever.mSnakeDefeatStrike++;
+											ui.mSnakeDefeatStrike++;
 											if (!fever.mIsFever) {
 												for (int k = 0; k < Fever::kMaxEnemy; k++) {
 													if (!fever.particlecreat[k].IsUse) {
@@ -342,6 +345,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 										}
 										fever.mTsuchinokoDefeat++;
 										fever.mTsuchinokoDefeatStrike++;
+										ui.mTsuchinokoDefeatStrike++;
 										screen.SetHitStop();
 										if (!player.mIsStrikeActive) {
 											enemy.HitSound(fever.mIsFever, fever.feverGauge.color, player.mStrikePower, enemy.tsuchinoko[i].mCenterPosition);
@@ -381,6 +385,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 											}
 											fever.mTsuchinokoDefeat++;
 											fever.mTsuchinokoDefeatStrike++;
+											ui.mTsuchinokoDefeatStrike++;;
 											screen.SetHitStop();
 											if (!player.mIsStrikeActive) {
 												enemy.HitSound(fever.mIsFever, fever.feverGauge.color, player.mStrikePower, enemy.tsuchinoko[i].mCenterPosition);
@@ -413,6 +418,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 											//準備フェーズもフィーバーゲージを増やす！！！
 											fever.mTsuchinokoDefeat++;
 											fever.mTsuchinokoDefeatStrike++;
+											ui.mTsuchinokoDefeatStrike++;
 											if (!fever.mIsFever) {
 												for (int k = 0; k < Fever::kMaxEnemy; k++) {
 													if (!fever.particlecreat[k].IsUse) {
@@ -466,31 +472,31 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					}
 				}
 
-			//複数キルのスコア
-			ui.mTsuchinokoDefeatStrike = fever.mTsuchinokoDefeatStrike;
-			ui.mSnakeDefeatStrike = fever.mSnakeDefeatStrike;
-			if (player.mIsStrikeActive && ui.StrikeEndFlag == 0) {
-				ui.StrikeEndFlag = 1;
-			} else if (ui.StrikeEndFlag == 1 && !player.mIsStrikeActive) {
-				int DefeatStrike = ui.mTsuchinokoDefeatStrike + ui.mSnakeDefeatStrike;
-				if (ui.mIsReady) {
-					if (DefeatStrike >= 4) {
-						//スーパーキル
-						result.mSuperKillCount++;
-					} else if (DefeatStrike == 3) {
-						//トリプルキル
-						result.mTripleKillCount++;
-					} else if (DefeatStrike == 2) {
-						//ダブルキル
-						result.mDoubleKillCount++;
+				//複数キルのスコア
+				if (player.mIsStrikeActive && ui.StrikeEndFlag == 0) {
+					ui.StrikeEndFlag = 1;
+				} else if (ui.StrikeEndFlag == 1 && !player.mIsStrikeActive) {
+					int DefeatStrike = ui.mTsuchinokoDefeatStrike + ui.mSnakeDefeatStrike;
+					if (ui.mIsReady) {
+						if (DefeatStrike >= 4) {
+							//スーパーキル
+							result.mSuperKillCount++;
+						} else if (DefeatStrike == 3) {
+							//トリプルキル
+							result.mTripleKillCount++;
+						} else if (DefeatStrike == 2) {
+							//ダブルキル
+							result.mDoubleKillCount++;
+						}
 					}
+					ui.StrikeEndScore(player.mIsStrikeActive, ui.mTsuchinokoDefeatStrike, ui.mSnakeDefeatStrike);
+					ui.mTsuchinokoDefeatStrike = 0;
+					ui.mSnakeDefeatStrike = 0;
+					ui.StrikeEndFlag = 0;
 				}
-				ui.StrikeEndScore(player.mIsStrikeActive, ui.mTsuchinokoDefeatStrike, ui.mSnakeDefeatStrike);
-				ui.StrikeEndFlag = 0;
-			}
-			ui.StrikeEasing();
-			
-			
+				ui.StrikeEasing();
+				
+				
 
 			if (fever.mIsFever) {
 					fever.mFeverGaugeStrikeEndFlag = 0;
