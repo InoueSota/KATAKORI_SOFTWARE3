@@ -317,7 +317,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 							}
 							enemy.snake[i].mIsDeath = true;
 						}
-						Novice::ScreenPrintf(0, 60, "%d", result.mSnakeKillCount);
 
 						if (enemy.tsuchinoko[i].mShakeTimer == -1) {
 							for (int j = 0; j < Tsuchinoko::kBodyMax; j++) {
