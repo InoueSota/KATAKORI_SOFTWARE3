@@ -57,7 +57,7 @@ void Fever::Update(Screen& screen, Vec2 PlayerPos, bool isStrikeActive) {
 		}
 	}
 
-	if (mFeverGauge >= 1000 || Key::IsTrigger(DIK_F)) {
+	if (mFeverGauge >= 1000/* || Key::IsTrigger(DIK_F)*/) {
 		mFeverGauge = 1000;
 		mIsFever = true;
 	}
@@ -264,6 +264,7 @@ void Fever::Draw(Screen& screen) {
 	
 	mFeverGauge = Clamp(mFeverGauge, 0, 1000);
 	screen.DrawBox({ 49,14 }, 1.18 * 1000, 22, 0.0f, BLACK, kFillModeWireFrame, false);
+	screen.DrawBox({ 49,14 }, 1.18 * 1000, 22, 0.0f, 0x00000035, kFillModeSolid, false);
 	screen.DrawBox({ 50,15 }, 1.18 * mFeverGauge, 20, 0.0f, 0xFFCFCFFF, kFillModeSolid, false);
 	if (!(feverGauge.Pos.x <= 50)) {
 		if (mIsFever) {

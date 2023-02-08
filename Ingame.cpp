@@ -335,7 +335,7 @@ void UI::SnakeScore(bool isStrikeActive, Vec2 enemyPosition) {
 	if (isStrikeActive) {
 		for (int i = 0; i < kEnemyScoreMax; i++) {
 			if (!mIsEnemyScoreActive[i]) {
-				mEnemyScore[i] = (kSnakeScore * 2.5) * (1.0f + (float)mKillCount / 10);
+				mEnemyScore[i] = (kSnakeScore * 2.5) * (1.0f + (float)mKillCount / 2);
 				mEndScore += mEnemyScore[i];
 				mStartScore = mScore;
 				mScoreAnimationEasingt = 0.0f;
@@ -349,7 +349,7 @@ void UI::SnakeScore(bool isStrikeActive, Vec2 enemyPosition) {
 	else {
 		for (int i = 0; i < kEnemyScoreMax; i++) {
 			if (!mIsEnemyScoreActive[i]) {
-				mEnemyScore[i] = kSnakeScore * (1.0f + (float)mKillCount / 10);;
+				mEnemyScore[i] = kSnakeScore * (1.0f + (float)mKillCount / 2);;
 				mEndScore += mEnemyScore[i];
 				mStartScore = mScore;
 				mScoreAnimationEasingt = 0.0f;
@@ -365,7 +365,7 @@ void UI::TsuchinokoScore(bool isStrikeActive, Vec2 enemyPosition) {
 	if (isStrikeActive) {
 		for (int i = 0; i < kEnemyScoreMax; i++) {
 			if (!mIsEnemyScoreActive[i]) {
-				mEnemyScore[i] = (kTsuchinokoScore * 2.5) * (1.0f + (float)mKillCount / 10);
+				mEnemyScore[i] = (kTsuchinokoScore * 2.5) * (1.0f + (float)mKillCount / 2);
 				mEndScore += mEnemyScore[i];
 				mStartScore = mScore;
 				mScoreAnimationEasingt = 0.0f;
@@ -379,7 +379,7 @@ void UI::TsuchinokoScore(bool isStrikeActive, Vec2 enemyPosition) {
 	else {
 		for (int i = 0; i < kEnemyScoreMax; i++) {
 			if (!mIsEnemyScoreActive[i]) {
-				mEnemyScore[i] = kTsuchinokoScore * (1.0f + (float)mKillCount / 10);;
+				mEnemyScore[i] = kTsuchinokoScore * (1.0f + (float)mKillCount / 2);;
 				mEndScore += mEnemyScore[i];
 				mStartScore = mScore;
 				mScoreAnimationEasingt = 0.0f;
@@ -397,7 +397,7 @@ void UI::StrikeEndScore(bool isStrikeActive, int mTsuchinokoDefeatStrike, int mS
 
 	if (DefeatStrike >= 4) {
 		//スーパーキル
-		mEndScore += 8000;
+		mEndScore += 8000 * (1.0f + (float)mKillCount / 2);
 		for (int i = 0; i < 10; i++) {
 			if (!strikeEasingEffect[i].StrikeEasingFlag) {
 				strikeEasingEffect[i].StrikeEasingFlag = 3;
@@ -410,7 +410,7 @@ void UI::StrikeEndScore(bool isStrikeActive, int mTsuchinokoDefeatStrike, int mS
 		}
 	} else if (DefeatStrike == 3) {
 		//トリプルキル
-		mEndScore += 4000;
+		mEndScore += 4000 * (1.0f + (float)mKillCount / 2);
 		for (int i = 0; i < 10; i++) {
 			if (!strikeEasingEffect[i].StrikeEasingFlag) {
 				strikeEasingEffect[i].StrikeEasingFlag = 2;
@@ -423,7 +423,7 @@ void UI::StrikeEndScore(bool isStrikeActive, int mTsuchinokoDefeatStrike, int mS
 		}
 	} else if (DefeatStrike == 2) {
 		//ダブルキル
-		mEndScore += 2000;
+		mEndScore += 2000 * (1.0f + (float)mKillCount / 2);
 		for (int i = 0; i < 10; i++) {
 			if (!strikeEasingEffect[i].StrikeEasingFlag) {
 				strikeEasingEffect[i].StrikeEasingFlag = 1;

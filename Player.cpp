@@ -798,6 +798,9 @@ void Player::DrawStrikeUI(Screen& screen, bool isFever, unsigned int feverGaugeC
 	//ストライクパワーを収める
 	mStrikePower = Clamp(mStrikePower, 0, kStrikePowerMax);
 	mDrawStrikePower += (mStrikePower - mDrawStrikePower) * 0.02f;
+
+	screen.DrawBox({ 50.0f, 62.5f }, 50 * kStrikePowerMax, 25, 0.0f, 0x00000035, kFillModeSolid, false);
+
 	if (!isFever) {
 		if (mStrikePower != kStrikePowerMax) {
 			screen.DrawBox({ 50.0f, 62.5f }, 50 * mDrawStrikePower, 25, 0.0f, WHITE, kFillModeSolid, false);
@@ -892,7 +895,7 @@ void Player::AutoMove() {
 	//徐々に向きを変える
 	mDirectionPoint += (mTargetPoint - mPosition) * 0.0002f;
 
-	if (Collision(mPosition, mSize * 0.8f, mTargetPoint, 50.0f)) {
+	if (Collision(mPosition, mSize * 0.9f, mTargetPoint, 50.0f)) {
 		mTargetPoint.x = RAND(100, Screen::kWindowWidth - 100);
 		mTargetPoint.y = RAND(100, Screen::kWindowHeight - 100);
 	}

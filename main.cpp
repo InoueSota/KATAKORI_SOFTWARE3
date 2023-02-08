@@ -16,8 +16,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	enemy.LoadTexture();
 	bgm.LoadBgm();
 
-	bool isStop = true;
-
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
 		// フレームの開始
@@ -66,48 +64,39 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 			if ((Screen::kWindowWidth - 50.0f) <= change.mMakePosition) {
-				change.Init();
 				scene = INGAME;
 			}
 
 			break;
 		case INGAME:
 
-			////８を押すと画面が止まる
-			//if (Key::IsTrigger(DIK_8) && !isStop) {
-			//	isStop = true;
-			//}
-			//else if (Key::IsTrigger(DIK_8)) {
-			//	isStop = false;
-			//}
 
-			if (isStop) {
 
-				//UIアップデート
-				ui.Update(player.mStrikeTutorial, player.mIsStrikeActive);
+			//UIアップデート
+			ui.Update(player.mStrikeTutorial, player.mIsStrikeActive);
 
-				//敵の音フラグを初期化する
-				enemy.mIsPlayHitSound = false;
-				enemy.mIsPlayStrikeHitSound = false;
-				if (!player.mIsStrikeActive) {
-					enemy.mDeadCount = 0;
-				}
+			//敵の音フラグを初期化する
+			enemy.mIsPlayHitSound = false;
+			enemy.mIsPlayStrikeHitSound = false;
+			if (!player.mIsStrikeActive) {
+				enemy.mDeadCount = 0;
+			}
 
-				//初期化
-				if (Key::IsTrigger(DIK_R) || Controller::IsTriggerButton(0,Controller::bSTART)) {
-					title.Init();
-					screen.Init();
-					player.Init();
-					Novice::StopAudio(bgm.tutorialhandle);
-					Novice::StopAudio(bgm.ingamehandle);
-					Novice::StopAudio(bgm.feverhandle);
-					bgm.Init();
-					change.Init();
-					scene = TITLE;
-				}
+			//初期化
+			if (Key::IsTrigger(DIK_R) || Controller::IsTriggerButton(0,Controller::bSTART)) {
+				title.Init();
+				screen.Init();
+				player.Init();
+				Novice::StopAudio(bgm.tutorialhandle);
+				Novice::StopAudio(bgm.ingamehandle);
+				Novice::StopAudio(bgm.feverhandle);
+				bgm.Init();
+				change.Init();
+				scene = TITLE;
+			}
 
-				//ヒットストップしてないとき
-				if (!screen.GetHitStop()) {
+			//ヒットストップしてないとき
+			if (!screen.GetHitStop()) {
 
 					//ゲームを始めているとき
 					if ((ui.mIsStart || !ui.mIsReady) && 0 < ui.mTimeLeft) {
@@ -124,29 +113,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					}
 				}
 
-				//制限時間の経過
-				ui.TimeLimit();
+			//制限時間の経過
+			ui.TimeLimit();
 
-				//制限時間をフィーバーに入ったら延ばす
-				ui.ExtendTime(fever.mIsFever, fever.mIsOldFever);
-
-
-				//ゲーム開始時に初期化する
-				if (!ui.mIsOldReady && ui.mIsReady) {
-					fever.Init();
-					screen.Init();
-					map.Init();
-					enemy.Init();
-					enemy.Update(ui.mTimeLeft, player.mPosition, player.LockonCount, ui.mIsReady, fever.mIsFever, screen);
-					player.Init();
-				}
+			//制限時間をフィーバーに入ったら延ばす
+			ui.ExtendTime(fever.mIsFever, fever.mIsOldFever);
 
 
-				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			//ゲーム開始時に初期化する
+			if (!ui.mIsOldReady && ui.mIsReady) {
+				fever.Init();
+				screen.Init();
+				map.Init();
+				enemy.Init();
+				enemy.Update(ui.mTimeLeft, player.mPosition, player.LockonCount, ui.mIsReady, fever.mIsFever, screen);
+				player.Init();
+				change.Init();
+			}
 
 
-				//敵がプレイヤーを追いかけるか判定
-				for (int i = 0; i < Enemy::kEnemyMax; i++) {
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+			//敵がプレイヤーを追いかけるか判定
+			for (int i = 0; i < Enemy::kEnemyMax; i++) {
 
 					//ヘビ
 					if (!enemy.snake[i].mIsDeath && Collision(player.mPosition, 0.0f, enemy.snake[i].mHeadPosition, enemy.snake[i].mLockonRadius)) {
@@ -163,8 +153,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				}
 
 
-				//敵同士の当たり判定
-				for (int i = 0; i < Enemy::kEnemyMax; i++) {
+			//敵同士の当たり判定
+			for (int i = 0; i < Enemy::kEnemyMax; i++) {
 					for (int j = 0; j < Enemy::kEnemyMax; j++) {
 						if (i != j) {
 							//ヘビ同士の当たり判定
@@ -196,14 +186,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				}
 
 
-				//１フレームに倒した敵を計算する（毎フレーム初期化）
-				fever.mSnakeDefeat = 0;
-				fever.mTsuchinokoDefeat = 0;
+			//１フレームに倒した敵を計算する（毎フレーム初期化）
+			fever.mSnakeDefeat = 0;
+			fever.mTsuchinokoDefeat = 0;
 
 
-				//プレイヤーとの当たり判定
-				//ノックバックしていないとき（ノックバック中は無敵）
-				if (!player.mKnockbackActive && (ui.mIsStart || !ui.mIsReady)) {
+			//プレイヤーとの当たり判定
+			//ノックバックしていないとき（ノックバック中は無敵）
+			if (!player.mKnockbackActive && (ui.mIsStart || !ui.mIsReady) && 0 < ui.mTimeLeft) {
 
 					for (int i = 0; i < Enemy::kEnemyMax; i++) {
 						if (enemy.snake[i].mShakeTimer == -1) {
@@ -462,8 +452,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					}
 				}
 
-				//死んだ敵の数をカウントする→一定数超えたらウェーブを進める
-				if (ui.mIsStart) {
+			//死んだ敵の数をカウントする→一定数超えたらウェーブを進める
+			if (ui.mIsStart) {
 					for (int i = 0; i < Enemy::kEnemyMax; i++) {
 						if (enemy.snake[i].mIsDeath && !enemy.snake[i].mIsOldDeath) {
 							enemy.mSnakeDeathCount++;
@@ -476,33 +466,33 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					}
 				}
 
-				//複数キルのスコア
-				ui.mTsuchinokoDefeatStrike = fever.mTsuchinokoDefeatStrike;
-				ui.mSnakeDefeatStrike = fever.mSnakeDefeatStrike;
-				if (player.mIsStrikeActive && ui.StrikeEndFlag == 0) {
-					ui.StrikeEndFlag = 1;
-				} else if (ui.StrikeEndFlag == 1 && !player.mIsStrikeActive) {
-					int DefeatStrike = ui.mTsuchinokoDefeatStrike + ui.mSnakeDefeatStrike;
-					if (ui.mIsReady) {
-						if (DefeatStrike >= 4) {
-							//スーパーキル
-							result.mSuperKillCount++;
-						} else if (DefeatStrike == 3) {
-							//トリプルキル
-							result.mTripleKillCount++;
-						} else if (DefeatStrike == 2) {
-							//ダブルキル
-							result.mDoubleKillCount++;
-						}
+			//複数キルのスコア
+			ui.mTsuchinokoDefeatStrike = fever.mTsuchinokoDefeatStrike;
+			ui.mSnakeDefeatStrike = fever.mSnakeDefeatStrike;
+			if (player.mIsStrikeActive && ui.StrikeEndFlag == 0) {
+				ui.StrikeEndFlag = 1;
+			} else if (ui.StrikeEndFlag == 1 && !player.mIsStrikeActive) {
+				int DefeatStrike = ui.mTsuchinokoDefeatStrike + ui.mSnakeDefeatStrike;
+				if (ui.mIsReady) {
+					if (DefeatStrike >= 4) {
+						//スーパーキル
+						result.mSuperKillCount++;
+					} else if (DefeatStrike == 3) {
+						//トリプルキル
+						result.mTripleKillCount++;
+					} else if (DefeatStrike == 2) {
+						//ダブルキル
+						result.mDoubleKillCount++;
 					}
-					ui.StrikeEndScore(player.mIsStrikeActive, ui.mTsuchinokoDefeatStrike, ui.mSnakeDefeatStrike);
-					ui.StrikeEndFlag = 0;
 				}
-				ui.StrikeEasing();
-				
-				
+				ui.StrikeEndScore(player.mIsStrikeActive, ui.mTsuchinokoDefeatStrike, ui.mSnakeDefeatStrike);
+				ui.StrikeEndFlag = 0;
+			}
+			ui.StrikeEasing();
+			
+			
 
-				if (fever.mIsFever) {
+			if (fever.mIsFever) {
 					fever.mFeverGaugeStrikeEndFlag = 0;
 				} else {
 					if (player.mIsStrikeActive && fever.mFeverGaugeStrikeEndFlag == 0) {
@@ -514,69 +504,68 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 
-				if (0 >= ui.mTimeLeft) {
-					fever.mFeverStop = true;
-				} else {
-					fever.mFeverStop = false;
+			if (0 >= ui.mTimeLeft) {
+				fever.mFeverStop = true;
+			} else {
+				fever.mFeverStop = false;
+			}
+
+
+			//プレイヤーのノックバック
+			screen.ShakeUpdate(player.mKnockbackSet);
+			player.Knockback();
+
+
+
+			//追尾している敵の数に応じてスピードを変える（毎フレーム初期化）
+			player.LockonCount = 0;
+
+			//追尾している数の計算
+			for (int i = 0; i < Enemy::kEnemyMax; i++) {
+				if (enemy.snake[i].IsPlayerLockon) {
+					player.LockonCount++;
 				}
-
-
-				//プレイヤーのノックバック
-				screen.ShakeUpdate(player.mKnockbackSet);
-				player.Knockback();
-
-
-
-				//追尾している敵の数に応じてスピードを変える（毎フレーム初期化）
-				player.LockonCount = 0;
-
-				//追尾している数の計算
-				for (int i = 0; i < Enemy::kEnemyMax; i++) {
-					if (enemy.snake[i].IsPlayerLockon) {
-						player.LockonCount++;
-					}
-					if (enemy.tsuchinoko[i].IsPlayerLockon) {
-						player.LockonCount++;
-					}
+				if (enemy.tsuchinoko[i].IsPlayerLockon) {
+					player.LockonCount++;
 				}
+			}
 
-				
+			
 
-				//フィーバー
-				fever.Update(screen, player.mPosition, player.mIsStrikeActive);
+			//フィーバー
+			fever.Update(screen, player.mPosition, player.mIsStrikeActive);
 
-				//マップアップデート（フィーバーカラーにする）
-				map.Update(fever.mIsFever, fever.mIsOldFever, fever.feverGauge.color);
+			//マップアップデート（フィーバーカラーにする）
+			map.Update(fever.mIsFever, fever.mIsOldFever, fever.feverGauge.color);
 
-				//残像アップデート
-				player.Shadow(screen.GetHitStop(), ui.mIsStart, ui.mIsReady);
-
-
-				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			//残像アップデート
+			player.Shadow(screen.GetHitStop(), ui.mIsStart, ui.mIsReady);
 
 
-				//ズームアップデート
-				screen.ZoomUpdate(fever.mIsFever, fever.mIsOldFever, player.mIsStrikeActive, player.mIsOldStrikeActive, player.mMarkPosition, player.mPosition);
-
-				//スクロールアップデート
-				screen.ScrollUpdate(player);
-
-				//シェイクアップデート
-				screen.ShakeUpdate(player.mIsStrikeBoxShakeActive);
-
-				//ヒットストップアップデート
-				screen.HitStopUpdate();
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-				//タイムアップの文字が出てしばらくしたら黒めの矩形を出す
-				if (ui.mIsTimeUpFinish) {
-					change.mIsChangeActive = true;
+			//ズームアップデート
+			screen.ZoomUpdate(fever.mIsFever, fever.mIsOldFever, player.mIsStrikeActive, player.mIsOldStrikeActive, player.mMarkPosition, player.mPosition);
 
-					//矩形がある程度でたらリザルトに移行
-					if ((Screen::kWindowWidth - 50.0f) <= change.mMakePosition) {
-						result.Init();
-						scene = OUTGAME;
-					}
+			//スクロールアップデート
+			screen.ScrollUpdate(player);
+
+			//シェイクアップデート
+			screen.ShakeUpdate(player.mIsStrikeBoxShakeActive);
+
+			//ヒットストップアップデート
+			screen.HitStopUpdate();
+
+
+			//タイムアップの文字が出てしばらくしたら黒めの矩形を出す
+			if (ui.mIsTimeUpFinish) {
+				change.mIsChangeActive = true;
+
+				//矩形がある程度でたらリザルトに移行
+				if ((Screen::kWindowWidth - 50.0f) <= change.mMakePosition) {
+					result.Init();
+					scene = OUTGAME;
 				}
 			}
 
@@ -674,7 +663,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			title.FrontDraw(screen);
 
 			//隠し描画
-			change.DrawTitle(screen, ui.mIsStart);
+			change.DrawTitle(screen);
 
 			break;
 		case INGAME:
@@ -726,7 +715,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			fever.Draw(screen);
 
 			//隠し描画
-			change.DrawTitle(screen, ui.mIsStart);
+			if (ui.mIsTimeUpFinish) {
+				change.DrawIngame(screen);
+			}
 
 			break;
 		case OUTGAME:

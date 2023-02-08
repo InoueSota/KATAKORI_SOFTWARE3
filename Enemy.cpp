@@ -220,7 +220,7 @@ void Enemy::Update(int timeLeft, Vec2 playerPos, int lockOnCount, bool isReady, 
 			wave = FEVER;
 		}
 
-		if (Key::IsTrigger(DIK_1)) {
+		/*if (Key::IsTrigger(DIK_1)) {
 			mIsMakeSnake[WAVE1] = false;
 			mIsMakeTsuchinoko[WAVE1] = false;
 			wave = WAVE1;
@@ -269,7 +269,7 @@ void Enemy::Update(int timeLeft, Vec2 playerPos, int lockOnCount, bool isReady, 
 			mIsMakeSnake[WAVE10] = false;
 			mIsMakeTsuchinoko[WAVE10] = false;
 			wave = WAVE10;
-		}
+		}*/
 	}
 
 	for (int i = 0; i < kEnemyMax; i++) {

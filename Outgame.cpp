@@ -248,12 +248,11 @@ void Change::Update() {
 		mIsChangeActive = false;
 	}
 }
-void Change::DrawTitle(Screen& screen, bool isStart) {
-	if (!isStart) {
-		screen.DrawRectAngle({ mMakePosition / 2.0f, Screen::kWindowHeight / 2.0 }, mMakePosition, Screen::kWindowHeight, 0xDADADAFF, kFillModeSolid, false);
-	} else {
-		screen.DrawRectAngle({ mMakePosition / 2.0f, Screen::kWindowHeight / 2.0 }, mMakePosition, Screen::kWindowHeight, 0x383838FF, kFillModeSolid, false);
-	}
+void Change::DrawTitle(Screen& screen) {
+	screen.DrawRectAngle({ mMakePosition / 2.0f, Screen::kWindowHeight / 2.0 }, mMakePosition, Screen::kWindowHeight, 0xDADADAFF, kFillModeSolid, false);
+}
+void Change::DrawIngame(Screen& screen) {
+	screen.DrawRectAngle({ mMakePosition / 2.0f, Screen::kWindowHeight / 2.0 }, mMakePosition, Screen::kWindowHeight, 0x383838FF, kFillModeSolid, false);
 }
 void Change::Draw(Screen& screen, bool isStart) {
 
@@ -415,15 +414,15 @@ void Result::Draw(Screen& screen) {
 		screen.DrawUI(mScorePosition[i], mScoreSize, 32 * Result[i], 32, 32, mNumber, mScoreColor[i]);
 	}
 
-	if (mScore >= 9000000) {
+	if (mScore >= 20000000) {
 		Novice::DrawSpriteRect(33, 40, 0, 736, 264, 184, Rank, 1, 0.2, 0, WHITE);
-	} else if (mScore >= 5000000) {
+	} else if (mScore >= 10000000) {
 		Novice::DrawSpriteRect(33, 40, 0, 0, 264, 184, Rank, 1, 0.2, 0, WHITE);
-	} else if (mScore >= 1000000) {
+	} else if (mScore >= 5000000) {
 		Novice::DrawSpriteRect(33, 40, 0, 184, 264, 184, Rank, 1, 0.2, 0, WHITE);
-	} else if (mScore >= 500000) {
+	} else if (mScore >= 1000000) {
 		Novice::DrawSpriteRect(33, 40, 0, 368, 264, 184, Rank, 1, 0.2, 0, WHITE);
-	} else if (mScore >= 300000) {
+	} else if (mScore >= 500000) {
 		Novice::DrawSpriteRect(33, 40, 0, 552, 264, 184, Rank, 1, 0.2, 0, WHITE);
 	}
 

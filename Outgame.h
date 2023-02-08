@@ -86,7 +86,8 @@ public:
 
 	void Init();
 	void Update();
-	void DrawTitle(Screen& screen, bool isStart);
+	void DrawTitle(Screen& screen);
+	void DrawIngame(Screen& screen);
 	void Draw(Screen& screen, bool isStart);
 
 	//‰æ–Ê‘JˆÚ
