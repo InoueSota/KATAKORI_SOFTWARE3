@@ -415,6 +415,18 @@ void Result::Draw(Screen& screen) {
 		screen.DrawUI(mScorePosition[i], mScoreSize, 32 * Result[i], 32, 32, mNumber, mScoreColor[i]);
 	}
 
+	if (mScore >= 9000000) {
+		Novice::DrawSpriteRect(33, 40, 0, 736, 264, 184, Rank, 1, 0.2, 0, WHITE);
+	} else if (mScore >= 5000000) {
+		Novice::DrawSpriteRect(33, 40, 0, 0, 264, 184, Rank, 1, 0.2, 0, WHITE);
+	} else if (mScore >= 1000000) {
+		Novice::DrawSpriteRect(33, 40, 0, 184, 264, 184, Rank, 1, 0.2, 0, WHITE);
+	} else if (mScore >= 500000) {
+		Novice::DrawSpriteRect(33, 40, 0, 368, 264, 184, Rank, 1, 0.2, 0, WHITE);
+	} else if (mScore >= 300000) {
+		Novice::DrawSpriteRect(33, 40, 0, 552, 264, 184, Rank, 1, 0.2, 0, WHITE);
+	}
+
 	screen.DrawRectAngle(mCenterPosition, Screen::kWindowWidth, Screen::kWindowHeight, mBlackColor, kFillModeSolid, false);
 }
 void Result::LoadTexture() {
@@ -423,4 +435,5 @@ void Result::LoadTexture() {
 	mResultUI = Novice::LoadTexture("./Resources/Outgame/End/result.png");
 	mNumber = Novice::LoadTexture("./Resources/UI/Time/number.png");
 	mX = Novice::LoadTexture("./Resources/UI/Explanation/x.png");
+	Rank = Novice::LoadTexture("./Resources/UI/Explanation/Rank.png");
 }

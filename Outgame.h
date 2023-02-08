@@ -146,6 +146,7 @@ public:
 	int mNumber;
 	int mX;
 	int mResultUI;
+	int Rank;
 	void LoadTexture();
 
 
