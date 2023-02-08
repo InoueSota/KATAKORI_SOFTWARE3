@@ -260,6 +260,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 										//ダッシュで倒したらパワーを１増やす
 										if (!player.mIsStrikeActive) {
+											if (player.mStrikePower != player.kStrikePowerMax) {
+												int handle = -1;
+												if (Novice::IsPlayingAudio(handle) == false || handle == -1) {
+													handle = Novice::PlayAudio(bgm.startfever, 0, 0.2f);
+												}
+											}
 											player.mStrikePower++;
 										}
 										//ダッシュ使用時
@@ -388,6 +394,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 										//ダッシュで倒したらパワーを１増やす
 										if (!player.mIsStrikeActive) {
+											if (player.mStrikePower != player.kStrikePowerMax) {
+												int handle = -1;
+												if (Novice::IsPlayingAudio(handle) == false || handle == -1) {
+													handle = Novice::PlayAudio(bgm.startfever, 0, 0.2f);
+												}
+											}
 											player.mStrikePower++;
 										}
 										//ダッシュ使用時
@@ -557,7 +569,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		case TITLE:
 
 			if (Novice::IsPlayingAudio(bgm.titlehandle) == false || bgm.titlehandle == -1) {
-				bgm.titlehandle = Novice::PlayAudio(bgm.title, 0, 0.2f);
+				bgm.titlehandle = Novice::PlayAudio(bgm.title, 1, 0.2f);
 			}
 
 			break;

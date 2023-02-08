@@ -780,7 +780,7 @@ void Player::Draw(Screen& screen, bool isReady, bool isFever, unsigned int fever
 	}
 
 	//プレイヤー本体描画
-	screen.DrawPicture(mPosition, mSize, 0, 100, 100, toge, mColor);
+	screen.DrawPicture(mPosition, mSize, BetweenTheta(mDushVelocity), 100, 100, toge, mColor);
 
 	//ストライクしろ(圧)描画
 	if (mIsMarkActive && !mIsStrikeActive) {
@@ -987,7 +987,11 @@ void Player::TitleDraw(Screen& screen) {
 	}
 
 	//プレイヤー本体描画
-	screen.DrawPicture(mPosition, mSize / 2.0, 0, 100, 100, toge, mColor, { 1.0f, 1.0f }, false);
+	if (mIsControll) {
+		screen.DrawPicture(mPosition, mSize / 2.0, BetweenTheta(mDushVelocity), 100, 100, toge, mColor, { 1.0f, 1.0f }, false);
+	} else {
+		screen.DrawPicture(mPosition, mSize / 2.0, BetweenTheta(mVelocity), 100, 100, toge, mColor, { 1.0f, 1.0f }, false);
+	}
 
 	//宣伝描画
 	//screen.DrawPicture(mPosition, 400, 300, 0.0f, 1000, 800, senden, WHITE, { 1.0f,1.0f }, false);

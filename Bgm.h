@@ -17,6 +17,8 @@ public:
 	int tutorial;
 	int ingamehandle;
 	int ingame;
+	int startfeverhandle;
+	int startfever;
 	int feverhandle;
 	int fever;
 	int resulthandle;
