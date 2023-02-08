@@ -57,8 +57,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				ui.Init();
 				fever.Init();
 				map.Init();
+				change.Init();
+				change.mIsChangeActive = true;
+			}
+
+			if ((Screen::kWindowWidth - 100.0f) <= change.mMakePosition) {
 				scene = INGAME;
 			}
+
 			break;
 		case INGAME:
 
@@ -563,6 +569,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			break;
 		}
 
+		//画面遷移
+		change.Update();
+
 		//BGM
 		switch (scene)
 		{
@@ -578,6 +587,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			if (fever.mIsFever) {
 				Novice::StopAudio(bgm.titlehandle);
 				Novice::StopAudio(bgm.tutorialhandle);
+				Novice::StopAudio(bgm.ingamehandle);
 				if (Novice::IsPlayingAudio(bgm.feverhandle) == false || bgm.feverhandle == -1) {
 					bgm.feverhandle = Novice::PlayAudio(bgm.fever, 0, 0.2f);
 				}
@@ -630,6 +640,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			//タイトル文字描画
 			title.FrontDraw(screen);
+
+			//隠し描画
+			change.DrawTitle(screen);
 
 			break;
 		case INGAME:
@@ -688,6 +701,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			break;
 		}
+
+		//画面遷移描画
+		change.Draw(screen);
 
 		///
 		/// ↑描画処理ここまで

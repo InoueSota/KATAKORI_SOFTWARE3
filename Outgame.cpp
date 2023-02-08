@@ -211,6 +211,58 @@ void Title::LoadTexture() {
 }
 
 
+void Change::Init() {
+
+	mIsChangeActive = false;
+	mMakePosition = 0.0f;
+	for (int i = 0; i < kChangeBoxMax; i++) {
+		mIsChangeBoxActive[i] = false;
+	}
+}
+void Change::Update() {
+
+	if (mIsChangeActive) {
+		mMakePosition += 10.0f;
+	}
+
+	for (int i = 0; i < kChangeBoxMax; i++) {
+
+		if (!mIsChangeBoxActive[i] && mIsChangeActive) {
+			mChangeBoxPosition[i].x = mMakePosition;
+			mChangeBoxPosition[i].y = RAND(0, Screen::kWindowHeight);
+			mChangeBoxEasingt[i] = 0.0f;
+			mIsChangeBoxActive[i] = true;
+			break;
+		}
+
+		if (mIsChangeBoxActive[i]) {
+			mChangeBoxEasingt[i] = EasingClamp(0.01f, mChangeBoxEasingt[i]);
+			mChangeBoxSize[i] = EasingMove(200.0f, 0.0f, easeOutSine(mChangeBoxEasingt[i]));
+			if (mChangeBoxEasingt[i] == 1.0f) {
+				mIsChangeBoxActive[i] = false;
+			}
+		}
+	}
+
+	if (Screen::kWindowWidth <= mMakePosition) {
+		mIsChangeActive = false;
+	}
+}
+void Change::DrawTitle(Screen& screen) {
+	screen.DrawRectAngle({ mMakePosition / 2.0f, Screen::kWindowHeight / 2.0 }, mMakePosition, Screen::kWindowHeight, 0xDADADAFF, kFillModeSolid, false);
+}
+void Change::Draw(Screen& screen) {
+
+	for (int i = 0; i < kChangeBoxMax; i++) {
+
+		if (mIsChangeBoxActive[i]) {
+			screen.DrawSquare(mChangeBoxPosition[i], mChangeBoxSize[i], 0xDADADAFF, kFillModeSolid, false);
+			screen.DrawSquare(mChangeBoxPosition[i], mChangeBoxSize[i], BLACK, kFillModeWireFrame, false);
+		}
+	}
+}
+
+
 void Result::Init() {
 
 	mIsScoreInit = false;

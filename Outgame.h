@@ -77,6 +77,28 @@ public:
 
 };
 
+class Change
+{
+public:
+	Change() {
+		Init();
+	}
+
+	void Init();
+	void Update();
+	void DrawTitle(Screen& screen);
+	void Draw(Screen& screen);
+
+	//‰æ–Ê‘JˆÚ
+	static constexpr int kChangeBoxMax = 200;
+	bool mIsChangeActive;
+	float mMakePosition;
+	bool mIsChangeBoxActive[kChangeBoxMax];
+	Vec2 mChangeBoxPosition[kChangeBoxMax];
+	float mChangeBoxEasingt[kChangeBoxMax];
+	int mChangeBoxSize[kChangeBoxMax];
+};
+
 class Result
 {
 public:

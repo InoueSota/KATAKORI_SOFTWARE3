@@ -19,6 +19,7 @@
 //インスタンス化
 Screen screen;
 Title title;
+Change change;
 Result result;
 UI ui;
 Map map;
