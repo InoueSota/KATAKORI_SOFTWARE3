@@ -84,6 +84,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				//初期化
 				if (Key::IsTrigger(DIK_R) || Controller::IsTriggerButton(0,Controller::bSTART)) {
 					title.Init();
+					screen.Init();
 					scene = TITLE;
 				}
 
@@ -531,6 +532,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//Aボタン押下時にタイトル（初期化を行う）
 			if (Controller::IsTriggerButton(0, Controller::bX)) {
 				title.Init();
+				screen.Init();
 				scene = TITLE;
 			}
 			break;
