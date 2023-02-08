@@ -387,8 +387,9 @@ void UI::StrikeEndScore(bool isStrikeActive, int mTsuchinokoDefeatStrike, int mS
 			if (!strikeEasingEffect[i].StrikeEasingFlag) {
 				strikeEasingEffect[i].StrikeEasingFlag = 3;
 				strikeEasingEffect[i].StrikeEasingStart = { -200, 550 };
-				strikeEasingEffect[i].StrikeEasingEnd = { 300,550 };
+				strikeEasingEffect[i].StrikeEasingEnd = { 600,550 };
 				strikeEasingEffect[i].StrikeEasingPos = { -200,550 };
+				strikeEasingEffect[i].StrikeEasingFrame = 0;
 				strikeEasingEffect[i].StrikeEasingT = 0;
 			}
 		}
@@ -399,8 +400,9 @@ void UI::StrikeEndScore(bool isStrikeActive, int mTsuchinokoDefeatStrike, int mS
 			if (!strikeEasingEffect[i].StrikeEasingFlag) {
 				strikeEasingEffect[i].StrikeEasingFlag = 2;
 				strikeEasingEffect[i].StrikeEasingStart = { -200, 550 };
-				strikeEasingEffect[i].StrikeEasingEnd = { 300,550 };
+				strikeEasingEffect[i].StrikeEasingEnd = { 600,550 };
 				strikeEasingEffect[i].StrikeEasingPos = { -200,550 };
+				strikeEasingEffect[i].StrikeEasingFrame = 0;
 				strikeEasingEffect[i].StrikeEasingT = 0;
 			}
 		}
@@ -411,8 +413,9 @@ void UI::StrikeEndScore(bool isStrikeActive, int mTsuchinokoDefeatStrike, int mS
 			if (!strikeEasingEffect[i].StrikeEasingFlag) {
 				strikeEasingEffect[i].StrikeEasingFlag = 1;
 				strikeEasingEffect[i].StrikeEasingStart = { -200, 550 };
-				strikeEasingEffect[i].StrikeEasingEnd = { 300,550 };
+				strikeEasingEffect[i].StrikeEasingEnd = { 600,550 };
 				strikeEasingEffect[i].StrikeEasingPos = { -200,550 };
+				strikeEasingEffect[i].StrikeEasingFrame = 0;
 				strikeEasingEffect[i].StrikeEasingT = 0;
 			}
 		}
@@ -423,6 +426,7 @@ void UI::StrikeEndScore(bool isStrikeActive, int mTsuchinokoDefeatStrike, int mS
 
 }
 void UI::StrikeEasing() {
+
 	for (int i = 0; i < 10; i++) {
 		if (strikeEasingEffect[i].StrikeEasingFlag) {
 			if (strikeEasingEffect[i].StrikeEasingT < 1) {
@@ -435,8 +439,15 @@ void UI::StrikeEasing() {
 				strikeEasingEffect[i].StrikeEasingPos.x = ((1 - easedT) * strikeEasingEffect[i].StrikeEasingStart.x) + (easedT * strikeEasingEffect[i].StrikeEasingEnd.x);
 
 			} else {
-				strikeEasingEffect[i].StrikeEasingFlag = 0;
-				strikeEasingEffect[i].StrikeEasingT = 0;
+				
+				strikeEasingEffect[i].StrikeEasingFrame++;
+				strikeEasingEffect[i].StrikeEasingPos.x++;
+				if (80 <= strikeEasingEffect[i].StrikeEasingFrame) {
+					strikeEasingEffect[i].StrikeEasingFrame = 0;
+					strikeEasingEffect[i].StrikeEasingFlag = 0;
+					strikeEasingEffect[i].StrikeEasingT = 0;
+				}
+
 			}
 		}
 	}

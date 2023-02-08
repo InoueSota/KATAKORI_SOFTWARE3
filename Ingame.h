@@ -96,6 +96,7 @@ public:
 		Vec2 StrikeEasingEnd = {};
 		float StrikeEasingT = 0;
 		int StrikeEasingFlag = 0;
+		int StrikeEasingFrame = 0;
 	};
 	StrikeEasingEffect strikeEasingEffect[10];
 	
