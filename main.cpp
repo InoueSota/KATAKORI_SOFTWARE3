@@ -86,6 +86,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				if (Key::IsTrigger(DIK_R) || Controller::IsTriggerButton(0,Controller::bSTART)) {
 					title.Init();
 					screen.Init();
+					bgm.Init();
 					scene = TITLE;
 				}
 
@@ -537,6 +538,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			if (Controller::IsTriggerButton(0, Controller::bX)) {
 				title.Init();
 				screen.Init();
+				bgm.Init();
 				scene = TITLE;
 			}
 			break;
@@ -547,12 +549,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		{
 		case TITLE:
 
-
+			if (Novice::IsPlayingAudio(bgm.titlehandle) == false || bgm.titlehandle == -1) {
+				bgm.titlehandle = Novice::PlayAudio(bgm.title, 0, 0.2f);
+			}
 
 			break;
 		case INGAME:
 			
 			if (!ui.mIsReady) {
+				Novice::StopAudio(bgm.titlehandle);
 				if (Novice::IsPlayingAudio(bgm.tutorialhandle) == false || bgm.tutorialhandle == -1) {
 					bgm.tutorialhandle = Novice::PlayAudio(bgm.tutorial, 0, 0.2f);
 				}

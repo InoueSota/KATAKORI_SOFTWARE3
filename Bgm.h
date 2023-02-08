@@ -11,6 +11,8 @@ public:
 
 	void Init();
 
+	int titlehandle;
+	int title;
 	int tutorialhandle;
 	int tutorial;
 	int ingamehandle;
