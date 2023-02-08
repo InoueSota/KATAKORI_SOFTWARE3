@@ -133,9 +133,6 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever, unsigned int 
 		//ダッシュ
 		Dush(1.0f);
 
-		//パワーがある時にオーラ
-		PowerParticle();
-
 		//マーキング
 		Mark();
 
@@ -152,6 +149,10 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever, unsigned int 
 		//ダッシュ演出
 		DushBox(BackBoxColor);
 	}
+
+	//パワーがある時にオーラ
+	PowerParticle(screen, BackBoxColor, isFever);
+
 	//if (Controller::IsTriggerButton(0, Controller::bA)) {
 	//	//ダッシュ判定のタイマーセット
 	//	mDushTimer = kMaxDushTimer;
@@ -249,7 +250,7 @@ void Player::DushBox(unsigned int BackBoxColor) {
 		}
 	}
 }
-void Player::PowerParticle() {
+void Player::PowerParticle(Screen& screen, unsigned int BackBoxColor, bool isFever) {
 
 	for (int i = 0; i < kPowerParticleMax; i++) {
 
@@ -257,12 +258,17 @@ void Player::PowerParticle() {
 
 			if (!mIsPowerParticleActive[i]) {
 				float tmpRandTheta = Degree(RAND(0, 360));
-				mPowerParticlePosition[i].x = cosf(tmpRandTheta) * 200 + mPosition.x;
-				mPowerParticlePosition[i].y = sinf(tmpRandTheta) * 200 + mPosition.y;
-				if (mStrikePower != kStrikePowerMax) {
-					mPowerParticleStartColor[i] = 0xFFFFFF00;
+				mPowerParticlePosition[i].x = cosf(tmpRandTheta) * (100 / screen.GetZoom()) + mPosition.x;
+				mPowerParticlePosition[i].y = sinf(tmpRandTheta) * (100 / screen.GetZoom()) + mPosition.y;
+				if (!isFever) {
+					if (mStrikePower != kStrikePowerMax) {
+						mPowerParticleStartColor[i] = 0xFFFFFF00;
+					}
+					else {
+						mPowerParticleStartColor[i] = 0xFF000000;
+					}
 				} else {
-					mPowerParticleStartColor[i] = 0xFF000000;
+					mPowerParticleStartColor[i] = BackBoxColor & 0xFFFFFF00;
 				}
 				mPowerParticleColor[i] = mPowerParticleStartColor[i];
 				mPowerParticleEasingt[i] = 0.0f;
@@ -275,7 +281,7 @@ void Player::PowerParticle() {
 			mPowerParticleEasingt[i] = EasingClamp(0.02f, mPowerParticleEasingt[i]);
 			mPowerParticlePosition[i] += (mPosition - mPowerParticlePosition[i]) * 0.1f;
 			mPowerParticleColor[i] = mPowerParticleStartColor[i] | ColorEasingMove(0x00, 0xA0, easeOutCirc(mPowerParticleEasingt[i]));
-			mPowerParticleSize[i] = EasingMove(0.0f, kPowerParticleSize1, easeOutCirc(mPowerParticleEasingt[i]));
+			mPowerParticleSize[i] = EasingMove(0.0f, kPowerParticleSize1 / screen.GetZoom(), easeOutCirc(mPowerParticleEasingt[i]));
 			if (mPowerParticleEasingt[i] >= 0.4f) {
 				mIsPowerParticleActive[i] = false;
 			}

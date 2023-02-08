@@ -168,14 +168,14 @@ public:
 
 	//パワーが溜まっている時にオーラ風のパーティクル（パワーの数で色や大きさを変える）
 	static constexpr int kPowerParticleMax = 30;
-	static constexpr int kPowerParticleSize1 = 60;
+	static constexpr int kPowerParticleSize1 = 30;
 	bool mIsPowerParticleActive[kPowerParticleMax];
 	Vec2 mPowerParticlePosition[kPowerParticleMax];
 	float mPowerParticleEasingt[kPowerParticleMax];
 	int mPowerParticleSize[kPowerParticleMax];
 	unsigned int mPowerParticleColor[kPowerParticleMax];
 	unsigned int mPowerParticleStartColor[kPowerParticleMax];
-	void PowerParticle();
+	void PowerParticle(Screen& screen, unsigned int BackBoxColor, bool isFever);
 
 
 	//タイトル画面専用
