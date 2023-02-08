@@ -273,6 +273,11 @@ void Result::Init() {
 		mScorePosition[i].y = 200.0f;
 	}
 	mXEasingt = 0.0f;
+	mSnakeKillCount = 0;
+	mTsuchinokoKillCount = 0;
+	mDoubleKillCount = 0;
+	mTripleKillCount = 0;
+	mSuperKillCount = 0;
 }
 void Result::Update(float score) {
 
@@ -299,6 +304,7 @@ void Result::Update(float score) {
 void Result::Draw(Screen& screen) {
 
 	screen.DrawUI(mCenterPosition, Screen::kWindowWidth, Screen::kWindowHeight, 0, 1280, 720, mResult, WHITE);
+	screen.DrawUI(mCenterPosition, Screen::kWindowWidth, Screen::kWindowHeight, 0, 1280, 720, mResultUI, WHITE);
 	screen.DrawEllipse({ mCenterPosition.x, Screen::kWindowHeight - 75 }, 100, 100, 0.0f, mXScaleColor, kFillModeSolid, mXScale, false);
 	screen.DrawUI({ mCenterPosition.x, Screen::kWindowHeight - 75 }, 75, 75, 0, 160, 160, mX, WHITE);
 
@@ -306,6 +312,72 @@ void Result::Draw(Screen& screen) {
 	mIsDarkScore = false;
 	for (int i = 0; i < 8; i++) {
 		mScoreColor[i] = 0xFFFFFF50;
+	}
+
+	int DoubleKillCountViewNum = mDoubleKillCount;
+	int DoubleKillCountView[2] = {};
+
+	DoubleKillCountView[0] = DoubleKillCountViewNum / 10;
+	DoubleKillCountViewNum = DoubleKillCountViewNum % 10;
+
+	DoubleKillCountView[1] = DoubleKillCountViewNum;
+
+	for (int i = 0; i < 2; i++) {
+		Novice::DrawSpriteRect(400 + (i * 64), 288, DoubleKillCountView[i] * 32, 0, 32, 32, mNumber, 0.2, 2, 0.0f, WHITE);
+	}
+
+	int TripleKillCountViewNum = mTripleKillCount;
+	int TripleKillCountView[2] = {};
+
+	TripleKillCountView[0] = TripleKillCountViewNum / 10;
+	TripleKillCountViewNum = TripleKillCountViewNum % 10;
+
+	TripleKillCountView[1] = TripleKillCountViewNum;
+
+	for (int i = 0; i < 2; i++) {
+		Novice::DrawSpriteRect(400 + (i * 64), 385, TripleKillCountView[i] * 32, 0, 32, 32, mNumber, 0.2, 2, 0.0f, WHITE);
+	}
+
+	int SuperKillCountViewNum = mSuperKillCount;
+	int SuperKillCountView[2] = {};
+
+	SuperKillCountView[0] = SuperKillCountViewNum / 10;
+	SuperKillCountViewNum = SuperKillCountViewNum % 10;
+
+	SuperKillCountView[1] = SuperKillCountViewNum;
+
+	for (int i = 0; i < 2; i++) {
+		Novice::DrawSpriteRect(400 + (i * 64), 482, SuperKillCountView[i] * 32, 0, 32, 32, mNumber, 0.2, 2, 0.0f, WHITE);
+	}
+
+	int SnakeKillCountViewNum = mSnakeKillCount;
+	int SnakeKillCountView[3] = {};
+
+	SnakeKillCountView[0] = SnakeKillCountViewNum / 100;
+	SnakeKillCountViewNum = SnakeKillCountViewNum % 100;
+
+	SnakeKillCountView[1] = SnakeKillCountViewNum / 10;
+	SnakeKillCountViewNum = SnakeKillCountViewNum % 10;
+
+	SnakeKillCountView[2] = SnakeKillCountViewNum;
+
+	for (int i = 0; i < 3; i++) {
+		Novice::DrawSpriteRect(1008 + (i * 64), 330, SnakeKillCountView[i] * 64, 0, 32, 32, mNumber, 0.2, 2, 0.0f, WHITE);
+	}
+
+	int TsuchinokoKillCountViewNum = mTsuchinokoKillCount;
+	int TsuchinokoKillCountView[3] = {};
+
+	TsuchinokoKillCountView[0] = TsuchinokoKillCountViewNum / 100;
+	TsuchinokoKillCountViewNum = TsuchinokoKillCountViewNum % 100;
+
+	TsuchinokoKillCountView[1] = TsuchinokoKillCountViewNum / 10;
+	TsuchinokoKillCountViewNum = TsuchinokoKillCountViewNum % 10;
+
+	TsuchinokoKillCountView[2] = TsuchinokoKillCountViewNum;
+
+	for (int i = 0; i < 3; i++) {
+		Novice::DrawSpriteRect(1008 + (i * 64), 458, TsuchinokoKillCountView[i] * 64, 0, 32, 32, mNumber, 0.2, 2, 0.0f, WHITE);
 	}
 
 	int Result[8];
@@ -327,6 +399,7 @@ void Result::Draw(Screen& screen) {
 void Result::LoadTexture() {
 
 	mResult = Novice::LoadTexture("./Resources/Outgame/End/end.png");
+	mResultUI = Novice::LoadTexture("./Resources/Outgame/End/result.png");
 	mNumber = Novice::LoadTexture("./Resources/UI/Time/number.png");
 	mX = Novice::LoadTexture("./Resources/UI/Explanation/x.png");
 }

@@ -310,9 +310,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						}
 						if (enemy.snake[i].mShakeTimer > 0) {
 							enemy.snake[i].mShakeTimer--;
-						} else if (enemy.snake[i].mShakeTimer == 0) {
+						} else if (enemy.snake[i].mShakeTimer == 0 && !enemy.snake[i].mIsDeath) {
+							if (ui.mIsReady) {
+								result.mSnakeKillCount++;
+							}
 							enemy.snake[i].mIsDeath = true;
 						}
+						Novice::ScreenPrintf(0, 60, "%d", result.mSnakeKillCount);
 
 						if (enemy.tsuchinoko[i].mShakeTimer == -1) {
 							for (int j = 0; j < Tsuchinoko::kBodyMax; j++) {
@@ -444,12 +448,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						}
 						if (enemy.tsuchinoko[i].mShakeTimer > 0) {
 							enemy.tsuchinoko[i].mShakeTimer--;
-						} else if (enemy.tsuchinoko[i].mShakeTimer == 0) {
+						} else if (enemy.tsuchinoko[i].mShakeTimer == 0 && !enemy.tsuchinoko[i].mIsDeath) {
+							if (ui.mIsReady) {
+								result.mTsuchinokoKillCount++;
+							}
 							enemy.tsuchinoko[i].mIsDeath = true;
 						}
 					}
 				}
-
 
 				//死んだ敵の数をカウントする→一定数超えたらウェーブを進める
 				if (ui.mIsStart) {
@@ -471,6 +477,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				if (player.mIsStrikeActive && ui.StrikeEndFlag == 0) {
 					ui.StrikeEndFlag = 1;
 				} else if (ui.StrikeEndFlag == 1 && !player.mIsStrikeActive) {
+					int DefeatStrike = ui.mTsuchinokoDefeatStrike + ui.mSnakeDefeatStrike;
+					if (ui.mIsReady) {
+						if (DefeatStrike >= 4) {
+							//スーパーキル
+							result.mSuperKillCount++;
+						} else if (DefeatStrike == 3) {
+							//トリプルキル
+							result.mTripleKillCount++;
+						} else if (DefeatStrike == 2) {
+							//ダブルキル
+							result.mDoubleKillCount++;
+						}
+					}
 					ui.StrikeEndScore(player.mIsStrikeActive, ui.mTsuchinokoDefeatStrike, ui.mSnakeDefeatStrike);
 					ui.StrikeEndFlag = 0;
 				}
