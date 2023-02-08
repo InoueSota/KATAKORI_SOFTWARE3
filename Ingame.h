@@ -34,7 +34,7 @@ public:
 
 	//êßå¿éûä‘
 	bool mIsExtendTime;
-	const int kTimeLimit = 90;
+	const int kTimeLimit = 12;
 	Vec2 mTimePosition[2];
 	Vec2 mTimeScale;
 	Vec2 mTimeLastScale;
@@ -156,6 +156,7 @@ public:
 
 	//âπ
 	int countdown;
+	int finish;
 
 	void LoadTexture();
 

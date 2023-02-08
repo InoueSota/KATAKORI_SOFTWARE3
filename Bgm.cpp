@@ -21,4 +21,5 @@ void Bgm::LoadBgm() {
 	startfever = Novice::LoadAudio("./Sounds/startfever.mp3");
 	fever = Novice::LoadAudio("./Sounds/fever.mp3");
 	result = Novice::LoadAudio("./Sounds/result.mp3");
+	toingame = Novice::LoadAudio("./Sounds/toingame.mp3");
 }

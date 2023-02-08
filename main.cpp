@@ -59,9 +59,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				map.Init();
 				change.Init();
 				change.mIsChangeActive = true;
+				int handle = -1;
+				if (Novice::IsPlayingAudio(handle) == false || handle == -1) {
+					handle = Novice::PlayAudio(bgm.toingame, 0, 1);
+				}
 			}
 
-			if ((Screen::kWindowWidth - 100.0f) <= change.mMakePosition) {
+			if ((Screen::kWindowWidth - 50.0f) <= change.mMakePosition) {
 				scene = INGAME;
 			}
 
@@ -581,9 +585,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				title.Init();
 				screen.Init();
 				player.Init();
-				Novice::StopAudio(bgm.ingamehandle);
-				Novice::StopAudio(bgm.feverhandle);
+				Novice::StopAudio(bgm.resulthandle);
 				bgm.Init();
+				change.Init();
 				scene = TITLE;
 			}
 			break;
@@ -597,8 +601,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		{
 		case TITLE:
 
+			Novice::StopAudio(bgm.resulthandle);
 			if (Novice::IsPlayingAudio(bgm.titlehandle) == false || bgm.titlehandle == -1) {
-				bgm.titlehandle = Novice::PlayAudio(bgm.title, 1, 0.2f);
+				bgm.titlehandle = Novice::PlayAudio(bgm.title, 0, 0.2f);
 			}
 
 			break;

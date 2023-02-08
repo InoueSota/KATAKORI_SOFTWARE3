@@ -23,6 +23,7 @@ public:
 	int fever;
 	int resulthandle;
 	int result;
+	int toingame;
 	void LoadBgm();
 
 };

@@ -258,6 +258,12 @@ void UI::TimeLimit() {
 						handle = Novice::PlayAudio(countdown, 0, 1);
 					}
 				}
+				if (mTimeLeft == 0) {
+					int handle = -1;
+					if (Novice::IsPlayingAudio(handle) == false || handle == -1) {
+						handle = Novice::PlayAudio(finish, 0, 1);
+					}
+				}
 			}
 			mTimeEasingt = EasingClamp(1.0f / 60.0f, mTimeEasingt);
 			mTimeLastColor = ColorEasingMove(0xFFFFFF70, 0xFFFFFF00, easeOutSine(mTimeEasingt));
@@ -677,6 +683,7 @@ void UI::LoadTexture() {
 	triplekill = Novice::LoadTexture("./Resources/UI/Explanation/triplekill.png");
 	superkill = Novice::LoadTexture("./Resources/UI/Explanation/superkill.png");
 	countdown = Novice::LoadAudio("./Sounds/countdown.mp3");
+	finish = Novice::LoadAudio("./Sounds/finish.mp3");
 }
 
 
