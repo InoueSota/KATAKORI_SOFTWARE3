@@ -53,7 +53,7 @@ void UI::Init() {
 
 	//スコア
 	mScore = 0;
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < 8; i++) {
 		mScorePosition[i].x = Screen::kWindowWidth - mTimeUISize * (i + 1);
 		mScorePosition[i].y = 100.0f;
 	}
@@ -486,9 +486,9 @@ void UI::Draw(Screen& screen, bool mIsReady) {
 	//敵スコア
 	for (int j = 0; j < kEnemyScoreMax; j++) {
 		if (mIsEnemyScoreActive[j]) {
-			float Result[7];
+			float Result[8];
 			float tmpScore = mEnemyScore[j];
-			for (int i = 6; i > -1; i--) {
+			for (int i = 7; i > -1; i--) {
 				Result[i] = tmpScore / powf(10, i);
 				tmpScore = (int)tmpScore % (int)powf(10, i);
 				if (powf(10, i) <= mEnemyScore[j]) {
@@ -503,14 +503,14 @@ void UI::Draw(Screen& screen, bool mIsReady) {
 
 		//スコアの桁より大きい数字は色を薄くする
 		mIsDarkScore = false;
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < 8; i++) {
 			mScoreColor[i] = 0xFFFFFF50;
 		}
 
-		mScore = Clamp(mScore, 0, 10000000);
-		float Result[7];
+		mScore = Clamp(mScore, 0, 100000000);
+		float Result[8];
 		float tmpScore = mScore;
-		for (int i = 6; i > -1; i--) {
+		for (int i = 7; i > -1; i--) {
 			Result[i] = tmpScore / powf(10, i);
 			tmpScore = (int)tmpScore % (int)powf(10, i);
 			if ((int)Result[i] != 0) {

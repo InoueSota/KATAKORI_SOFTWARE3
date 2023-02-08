@@ -216,7 +216,7 @@ void Result::Init() {
 	mIsScoreInit = false;
 	mScoreEasingt = 0.0f;
 	mScoreSize = 96;
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < 8; i++) {
 		mScorePosition[i].x = (Screen::kWindowWidth - 15.0f - mScoreSize / 2.0) - mScoreSize * i;
 		mScorePosition[i].y = 200.0f;
 	}
@@ -252,13 +252,13 @@ void Result::Draw(Screen& screen) {
 
 	//ƒXƒRƒA•`‰æ
 	mIsDarkScore = false;
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < 8; i++) {
 		mScoreColor[i] = 0xFFFFFF50;
 	}
 
-	int Result[7];
+	int Result[8];
 	int tmpScore = mScore;
-	for (int i = 6; i > -1; i--) {
+	for (int i = 7; i > -1; i--) {
 		Result[i] = tmpScore / powf(10, i);
 		tmpScore = tmpScore % (int)powf(10, i);
 		if ((int)Result[i] != 0) {

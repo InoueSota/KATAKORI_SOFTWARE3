@@ -71,9 +71,9 @@ public:
 	const int kSnakeScore = 1000;
 	const int kTsuchinokoScore = 1000;
 	bool mIsDarkScore;
-	Vec2 mScorePosition[7];
+	Vec2 mScorePosition[8];
 	float mScore;
-	unsigned int mScoreColor[7];
+	unsigned int mScoreColor[8];
 	static constexpr int kEnemyScoreMax = 20;
 	bool mIsEnemyScoreActive[kEnemyScoreMax];
 	Vec2 mEnemyScorePosition[kEnemyScoreMax];

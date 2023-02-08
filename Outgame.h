@@ -92,8 +92,8 @@ public:
 	//ÉXÉRÉA
 	bool mIsScoreInit;
 	bool mIsDarkScore;
-	Vec2 mScorePosition[7];
-	unsigned int mScoreColor[7];
+	Vec2 mScorePosition[8];
+	unsigned int mScoreColor[8];
 	int mScoreSize;
 	float mStartScore;
 	float mEndScore;

@@ -257,22 +257,26 @@ void Player::PowerParticle() {
 
 			if (!mIsPowerParticleActive[i]) {
 				float tmpRandTheta = Degree(RAND(0, 360));
-				mPowerParticlePosition[i].x = cosf(tmpRandTheta) * 300 + mPosition.x;
-				mPowerParticlePosition[i].y = sinf(tmpRandTheta) * 300 + mPosition.y;
+				mPowerParticlePosition[i].x = cosf(tmpRandTheta) * 200 + mPosition.x;
+				mPowerParticlePosition[i].y = sinf(tmpRandTheta) * 200 + mPosition.y;
 				if (mStrikePower != kStrikePowerMax) {
-					mPowerParticleColor[i] = 0xFFFFFF90;
+					mPowerParticleStartColor[i] = 0xFFFFFF00;
 				} else {
-					mPowerParticleColor[i] = 0xFF000090;
+					mPowerParticleStartColor[i] = 0xFF000000;
 				}
-				mPowerParticleSize[i] = kPowerParticleSize1;
+				mPowerParticleColor[i] = mPowerParticleStartColor[i];
+				mPowerParticleEasingt[i] = 0.0f;
 				mIsPowerParticleActive[i] = true;
 				break;
 			}
 		}
 
 		if (mIsPowerParticleActive[i]) {
+			mPowerParticleEasingt[i] = EasingClamp(0.02f, mPowerParticleEasingt[i]);
 			mPowerParticlePosition[i] += (mPosition - mPowerParticlePosition[i]) * 0.1f;
-			if (Collision(mPosition, 10.0f, mPowerParticlePosition[i], 0.0f)) {
+			mPowerParticleColor[i] = mPowerParticleStartColor[i] | ColorEasingMove(0x00, 0xA0, easeOutCirc(mPowerParticleEasingt[i]));
+			mPowerParticleSize[i] = EasingMove(0.0f, kPowerParticleSize1, easeOutCirc(mPowerParticleEasingt[i]));
+			if (mPowerParticleEasingt[i] >= 0.4f) {
 				mIsPowerParticleActive[i] = false;
 			}
 		}
@@ -697,6 +701,10 @@ void Player::Knockback() {
 		mColor = 0xFFFFFF50;
 		mKnockBackT = EasingClamp(0.033f, mKnockBackT);
 		mPosition = EasingMove(mKnockbackStart, mKnockbackEnd, easeOutSine(mKnockBackT));
+		if (!Collision(mPosition, 0, mMarkPosition, kMarkMaxLength)) {
+			Vec2 tmpDirection = (mPosition - mMarkPosition).Normalized();
+			mPosition = mMarkPosition + tmpDirection * kMarkMaxLength;
+		}
 		if (mKnockBackT >= 0.7f) {
 			mKnockBackT = 0.0f;
 			mColor = WHITE;
@@ -797,6 +805,9 @@ void Player::DrawStrikeUI(Screen& screen, bool isFever, unsigned int feverGaugeC
 			screen.DrawUI({ 25.0f + (i + 1) * 50, 75.0f }, 50, 25, 0, 200, 100, flame, WHITE);
 		}
 	}
+
+	Novice::ScreenPrintf(0,  0, "mPowerParticleEasingt[0] : %f", mPowerParticleEasingt[0]);
+	Novice::ScreenPrintf(0, 20, "mPowerParticleSize[0] : %d", mPowerParticleSize[0]);
 
 }
 void Player::LoadTexture() {
