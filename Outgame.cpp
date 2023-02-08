@@ -362,7 +362,7 @@ void Result::Draw(Screen& screen) {
 	SnakeKillCountView[2] = SnakeKillCountViewNum;
 
 	for (int i = 0; i < 3; i++) {
-		Novice::DrawSpriteRect(1008 + (i * 64), 330, SnakeKillCountView[i] * 64, 0, 32, 32, mNumber, 0.2, 2, 0.0f, WHITE);
+		Novice::DrawSpriteRect(1008 + (i * 64), 330, SnakeKillCountView[i] * 32, 0, 32, 32, mNumber, 0.2, 2, 0.0f, WHITE);
 	}
 
 	int TsuchinokoKillCountViewNum = mTsuchinokoKillCount;
@@ -377,7 +377,7 @@ void Result::Draw(Screen& screen) {
 	TsuchinokoKillCountView[2] = TsuchinokoKillCountViewNum;
 
 	for (int i = 0; i < 3; i++) {
-		Novice::DrawSpriteRect(1008 + (i * 64), 458, TsuchinokoKillCountView[i] * 64, 0, 32, 32, mNumber, 0.2, 2, 0.0f, WHITE);
+		Novice::DrawSpriteRect(1008 + (i * 64), 458, TsuchinokoKillCountView[i] * 32, 0, 32, 32, mNumber, 0.2, 2, 0.0f, WHITE);
 	}
 
 	int Result[8];
