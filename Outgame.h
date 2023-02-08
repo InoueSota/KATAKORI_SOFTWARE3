@@ -122,6 +122,15 @@ public:
 	float mScore;
 	float mScoreEasingt;
 
+	//キルカウント
+	int mSnakeKillCount;
+	int mTsuchinokoKillCount;
+
+	//コンボカウント
+	int mDoubleKillCount;
+	int mTripleKillCount;
+	int mSuperKillCount;
+
 	Vec2 mCenterPosition{ Screen::kWindowWidth / 2, Screen::kWindowHeight / 2 };
 	unsigned int mXScaleColor;
 	Vec2 mXScale;
@@ -131,6 +140,7 @@ public:
 	int mResult;
 	int mNumber;
 	int mX;
+	int mResultUI;
 	void LoadTexture();
 
 
