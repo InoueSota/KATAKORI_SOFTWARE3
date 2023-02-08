@@ -229,6 +229,7 @@ void UI::TimeLimit() {
 				mTimeEasingt = 0.0f;
 				mTimeLastColor = 0xFFFFFF70;
 				mTimeLastScale = { 1.0f, 1.0f };
+
 			}
 		}
 
@@ -250,6 +251,14 @@ void UI::TimeLimit() {
 
 		//カウントダウンの透明度と大きさをイージング処理する
 		if (mTimeLeft < 10 || !mIsStart) {
+			if (mTimeEasingt == 0.0f) {
+				if ((!mIsStart && 0 < mCountDownTime) || (mIsStart && 0 < mTimeLeft)) {
+					int handle = -1;
+					if (Novice::IsPlayingAudio(handle) == false || handle == -1) {
+						handle = Novice::PlayAudio(countdown, 0, 1);
+					}
+				}
+			}
 			mTimeEasingt = EasingClamp(1.0f / 60.0f, mTimeEasingt);
 			mTimeLastColor = ColorEasingMove(0xFFFFFF70, 0xFFFFFF00, easeOutSine(mTimeEasingt));
 			mTimeLastScale = EasingMove({ 1.0f, 1.0f }, { 2.0f,2.0f }, easeOutSine(mTimeEasingt));
@@ -667,6 +676,7 @@ void UI::LoadTexture() {
 	doublekill = Novice::LoadTexture("./Resources/UI/Explanation/doublekill.png");
 	triplekill = Novice::LoadTexture("./Resources/UI/Explanation/triplekill.png");
 	superkill = Novice::LoadTexture("./Resources/UI/Explanation/superkill.png");
+	countdown = Novice::LoadAudio("./Sounds/countdown.mp3");
 }
 
 

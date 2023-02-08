@@ -97,6 +97,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					Novice::StopAudio(bgm.ingamehandle);
 					Novice::StopAudio(bgm.feverhandle);
 					bgm.Init();
+					change.Init();
 					scene = TITLE;
 				}
 

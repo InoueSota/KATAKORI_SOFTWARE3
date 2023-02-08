@@ -153,6 +153,10 @@ public:
 	int doublekill;
 	int triplekill;
 	int superkill;
+
+	//‰¹
+	int countdown;
+
 	void LoadTexture();
 
 };
