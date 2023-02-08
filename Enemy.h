@@ -53,7 +53,23 @@ public:
 
 	//‰¹
 	bool mIsPlayHitSound;
+	bool mIsPlayStrikeHitSound;
 	int enemyhit;
+	enum MusicalScale
+	{
+		C,
+		D,
+		E,
+		F,
+		G,
+		A,
+		B,
+		hiC,
+		MusicalScaleMax
+	};
+	int strikeenemyhit[MusicalScaleMax];
+	int mDeadCount;
 	void HitSound();
+	void StrikeHitSound();
 	void LoadTexture();
 };

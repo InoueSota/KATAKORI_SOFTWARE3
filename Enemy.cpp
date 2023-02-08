@@ -32,6 +32,7 @@ void Enemy::Init() {
 	kSnakeDeathCountMax[WAVE10] = 16;
 	kTsuchinokoDeathCountMax[WAVE10] = 16;
 	mWave10Frame = 0;
+	mDeadCount = 0;
 
 	for (int i = 0; i < WAVEMAX; i++) {
 		mIsMakeSnake[i] = false;
@@ -408,6 +409,28 @@ void Enemy::HitSound() {
 	}
 
 }
+void Enemy::StrikeHitSound() {
+
+	if (!mIsPlayStrikeHitSound) {
+
+		int handle = -1;
+		if (Novice::IsPlayingAudio(handle) == false || handle == -1) {
+			handle = Novice::PlayAudio(strikeenemyhit[mDeadCount], 0, 1);
+		}
+		mDeadCount++;
+		mDeadCount = Clamp(mDeadCount, 0, hiC);
+
+		mIsPlayStrikeHitSound = true;
+	}
+}
 void Enemy::LoadTexture() {
 	enemyhit = Novice::LoadAudio("./Sounds/enemyhit.wav");
+	strikeenemyhit[C] = Novice::LoadAudio("./Sounds/strikeC.wav");
+	strikeenemyhit[D] = Novice::LoadAudio("./Sounds/strikeD.wav");
+	strikeenemyhit[E] = Novice::LoadAudio("./Sounds/strikeE.wav");
+	strikeenemyhit[F] = Novice::LoadAudio("./Sounds/strikeF.wav");
+	strikeenemyhit[G] = Novice::LoadAudio("./Sounds/strikeG.wav");
+	strikeenemyhit[A] = Novice::LoadAudio("./Sounds/strikeA.wav");
+	strikeenemyhit[B] = Novice::LoadAudio("./Sounds/strikeB.wav");
+	strikeenemyhit[hiC] = Novice::LoadAudio("./Sounds/strikehiC.wav");
 }

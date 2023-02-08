@@ -76,6 +76,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 				//敵の音フラグを初期化する
 				enemy.mIsPlayHitSound = false;
+				enemy.mIsPlayStrikeHitSound = false;
+				if (!player.mIsStrikeActive) {
+					enemy.mDeadCount = 0;
+				}
 
 				//初期化
 				if (Key::IsTrigger(DIK_R) || Controller::IsTriggerButton(0,Controller::bSTART)) {
@@ -110,6 +114,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 				//ゲーム開始時に初期化する
 				if (!ui.mIsOldReady && ui.mIsReady) {
+					fever.Init();
 					enemy.Init();
 					enemy.Update(ui.mTimeLeft, player.mPosition, player.LockonCount, ui.mIsReady, fever.mIsFever);
 					player.Init();
@@ -196,11 +201,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 										if (ui.mIsReady) {
 											ui.SnakeScore(player.mIsStrikeActive, enemy.snake[i].mHeadPosition);
 											ui.AddKillCount();
-											fever.mSnakeDefeat++;
-											fever.mSnakeDefeatStrike++;
 										}
+										fever.mSnakeDefeat++;
+										fever.mSnakeDefeatStrike++;
 										screen.SetHitStop();
-										enemy.HitSound();
+										if (!player.mIsStrikeActive) {
+											enemy.HitSound();
+										} else {
+											enemy.StrikeHitSound();
+										}
 										enemy.snake[i].mShakeTimer = enemy.snake[i].kMaxShakeTimer;
 										//ダッシュタイマーリセット
 										player.mDushTimer = 0;
@@ -221,11 +230,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 											if (ui.mIsReady) {
 												ui.SnakeScore(player.mIsStrikeActive, enemy.snake[i].mHeadPosition);
 												ui.AddKillCount();
-												fever.mSnakeDefeat++;
-												fever.mSnakeDefeatStrike++;
 											}
+											fever.mSnakeDefeat++;
+											fever.mSnakeDefeatStrike++;
 											screen.SetHitStop();
-											enemy.HitSound();
+											if (!player.mIsStrikeActive) {
+												enemy.HitSound();
+											} else {
+												enemy.StrikeHitSound();
+											}
 											enemy.snake[i].mShakeTimer = enemy.snake[i].kMaxShakeTimer;
 											//ダッシュタイマーリセット
 											player.mDushTimer = 0;
@@ -243,17 +256,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 										//ダッシュ使用時
 										else {
 
-											//準備フェーズはフィーバーゲージを増やさない処理
-											if (ui.mIsReady) {
-												fever.mSnakeDefeat++;
-												fever.mSnakeDefeatStrike++;
-												if (!fever.mIsFever) {
-													for (int k = 0; k < Fever::kMaxEnemy; k++) {
-														if (!fever.particlecreat[k].IsUse) {
-															fever.particlecreat[k].IsUse = 1;
-															fever.particlecreat[k].Pos = enemy.snake[i].mHeadPosition;
-															break;
-														}
+											//準備フェーズもフィーバーゲージは増やす！！！
+											fever.mSnakeDefeat++;
+											fever.mSnakeDefeatStrike++;
+											if (!fever.mIsFever) {
+												for (int k = 0; k < Fever::kMaxEnemy; k++) {
+													if (!fever.particlecreat[k].IsUse) {
+														fever.particlecreat[k].IsUse = 1;
+														fever.particlecreat[k].Pos = enemy.snake[i].mHeadPosition;
+														break;
 													}
 												}
 											}
@@ -265,7 +276,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 											ui.AddKillCount();
 										}
 										screen.SetHitStop();
-										enemy.HitSound();
+										if (!player.mIsStrikeActive) {
+											enemy.HitSound();
+										} else {
+											enemy.StrikeHitSound();
+										}
 										enemy.snake[i].mShakeTimer = enemy.snake[i].kMaxShakeTimer;
 										break;
 									}
@@ -304,11 +319,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 										if (ui.mIsReady) {
 											ui.TsuchinokoScore(player.mIsStrikeActive, enemy.tsuchinoko[i].mCenterPosition);
 											ui.AddKillCount();
-											fever.mTsuchinokoDefeat++;
-											fever.mTsuchinokoDefeatStrike++;
 										}
+										fever.mTsuchinokoDefeat++;
+										fever.mTsuchinokoDefeatStrike++;
 										screen.SetHitStop();
-										enemy.HitSound();
+										if (!player.mIsStrikeActive) {
+											enemy.HitSound();
+										} else {
+											enemy.StrikeHitSound();
+										}
 										enemy.tsuchinoko[i].mShakeTimer = enemy.tsuchinoko[i].kMaxShakeTimer;
 										//ダッシュタイマーリセット
 										player.mDushTimer = 0;
@@ -339,11 +358,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 											if (ui.mIsReady) {
 												ui.TsuchinokoScore(player.mIsStrikeActive, enemy.tsuchinoko[i].mCenterPosition);
 												ui.AddKillCount();
-												fever.mTsuchinokoDefeat++;
-												fever.mTsuchinokoDefeatStrike++;
 											}
+											fever.mTsuchinokoDefeat++;
+											fever.mTsuchinokoDefeatStrike++;
 											screen.SetHitStop();
-											enemy.HitSound();
+											if (!player.mIsStrikeActive) {
+												enemy.HitSound();
+											} else {
+												enemy.StrikeHitSound();
+											}
 											enemy.tsuchinoko[i].mShakeTimer = enemy.tsuchinoko[i].kMaxShakeTimer;
 											//ダッシュタイマーリセット
 											player.mDushTimer = 0;
@@ -361,17 +384,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 										//ダッシュ使用時
 										else {
 
-											//準備フェーズはフィーバーゲージを増やさない処理
-											if (ui.mIsReady) {
-												fever.mTsuchinokoDefeat++;
-												fever.mTsuchinokoDefeatStrike++;
-												if (!fever.mIsFever) {
-													for (int k = 0; k < Fever::kMaxEnemy; k++) {
-														if (!fever.particlecreat[k].IsUse) {
-															fever.particlecreat[k].IsUse = 1;
-															fever.particlecreat[k].Pos = enemy.tsuchinoko[i].mCenterPosition;
-															break;
-														}
+											//準備フェーズもフィーバーゲージを増やす！！！
+											fever.mTsuchinokoDefeat++;
+											fever.mTsuchinokoDefeatStrike++;
+											if (!fever.mIsFever) {
+												for (int k = 0; k < Fever::kMaxEnemy; k++) {
+													if (!fever.particlecreat[k].IsUse) {
+														fever.particlecreat[k].IsUse = 1;
+														fever.particlecreat[k].Pos = enemy.tsuchinoko[i].mCenterPosition;
+														break;
 													}
 												}
 											}
@@ -383,7 +404,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 											ui.AddKillCount();
 										}
 										screen.SetHitStop();
-										enemy.HitSound();
+										if (!player.mIsStrikeActive) {
+											enemy.HitSound();
+										} else {
+											enemy.StrikeHitSound();
+										}
 										enemy.tsuchinoko[i].mShakeTimer = enemy.tsuchinoko[i].kMaxShakeTimer;
 										break;
 									}
@@ -442,7 +467,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				} else {
 					fever.mFeverStop = false;
 				}
-				
 
 
 				//プレイヤーのノックバック

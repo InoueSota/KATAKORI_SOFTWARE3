@@ -58,7 +58,6 @@ public:
 	//マーキング = Mark
 	static constexpr int kMarkMaxLength = 1600;
 	static constexpr int kMarkDurableMax = 3;
-	bool mIsSetMark;
 	bool mIsMarkActive;
 	bool mIsMarkLimitAnimationActive;
 	Vec2 mMarkPosition;
@@ -169,13 +168,11 @@ public:
 
 	//パワーが溜まっている時にオーラ風のパーティクル（パワーの数で色や大きさを変える）
 	static constexpr int kPowerParticleMax = 50;
-	static constexpr int kPowerParticleSize1 = 50;
+	static constexpr int kPowerParticleSize1 = 40;
 	bool mIsPowerParticleActive[kPowerParticleMax];
 	Vec2 mPowerParticlePosition[kPowerParticleMax];
-	float mPowerParticleEasingt[kPowerParticleMax];
 	int mPowerParticleSize[kPowerParticleMax];
 	unsigned int mPowerParticleColor[kPowerParticleMax];
-	unsigned int mPowerParticleStartColor[kPowerParticleMax];
 	void PowerParticle();
 
 

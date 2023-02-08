@@ -38,7 +38,6 @@ void Player::Init() {
 	}
 
 	//マーキング
-	mIsSetMark = false;
 	mIsMarkActive = false;
 	mMarkFrame = 0;
 	mMarkLength = 0.0f;
@@ -212,9 +211,11 @@ void Player::Dush(float mag) {
 		//速度を代入する
 		mVelocity += mDushVelocity;
 
-		int handle = -1;
-		if (Novice::IsPlayingAudio(handle) == false || handle == -1) {
-			handle = Novice::PlayAudio(dush, 0, 1);
+		if (!mKnockbackActive) {
+			int handle = -1;
+			if (Novice::IsPlayingAudio(handle) == false || handle == -1) {
+				handle = Novice::PlayAudio(dush, 0, 1);
+			}
 		}
 		
 	}
@@ -255,24 +256,23 @@ void Player::PowerParticle() {
 		if (0 < mStrikePower) {
 
 			if (!mIsPowerParticleActive[i]) {
-				mPowerParticlePosition[i].x = RAND(mPosition.x - 80, mPosition.x + 80);
-				mPowerParticlePosition[i].y = RAND(mPosition.y - 80, mPosition.y + 80);
-				mPowerParticleEasingt[i] = 0.0f;
+				float tmpRandTheta = Degree(RAND(0, 360));
+				mPowerParticlePosition[i].x = cosf(tmpRandTheta) * 300 + mPosition.x;
+				mPowerParticlePosition[i].y = sinf(tmpRandTheta) * 300 + mPosition.y;
 				if (mStrikePower != kStrikePowerMax) {
-					mPowerParticleStartColor[i] = 0xFFFFFF00;
+					mPowerParticleColor[i] = 0xFFFFFF90;
 				} else {
-					mPowerParticleStartColor[i] = 0xFF000000;
+					mPowerParticleColor[i] = 0xFF000090;
 				}
+				mPowerParticleSize[i] = kPowerParticleSize1;
 				mIsPowerParticleActive[i] = true;
 				break;
 			}
 		}
 
 		if (mIsPowerParticleActive[i]) {
-			mPowerParticleEasingt[i] = EasingClamp(0.02, mPowerParticleEasingt[i]);
-			mPowerParticleSize[i] = EasingMove(kPowerParticleSize1, 200, easeOutSine(mPowerParticleEasingt[i]));
-			mPowerParticleColor[i] = mPowerParticleStartColor[i] | ColorEasingMove(0xA0, 0x00, easeOutSine(mPowerParticleEasingt[i]));
-			if (mPowerParticleEasingt[i] == 1.0f) {
+			mPowerParticlePosition[i] += (mPosition - mPowerParticlePosition[i]) * 0.1f;
+			if (Collision(mPosition, 10.0f, mPowerParticlePosition[i], 0.0f)) {
 				mIsPowerParticleActive[i] = false;
 			}
 		}
@@ -281,13 +281,12 @@ void Player::PowerParticle() {
 void Player::Mark() {
 
 	//Xボタン押下時にPositionを設定＆フラグをtrueにする
-	if (Controller::IsTriggerButton(0, Controller::bX) || !mIsSetMark) {
+	if (Controller::IsTriggerButton(0, Controller::bX)) {
 
 		mMarkPosition = mPosition;
 		mMarkDurableValue = kMarkDurableMax;
 		mMarkFrame = 0;
 		mMarkScaleEasingt = 0.0f;
-		mIsSetMark = true;
 		mIsMarkActive = true;
 
 	}
@@ -516,7 +515,6 @@ void Player::Strike(bool isFever, bool isOldFever, Screen& screen) {
 
 			//移動が終了したら
 			if ((mPosition.x == mMarkPosition.x && mPosition.y == mMarkPosition.y) || mIsStraightStrikeFinish) {
-				mIsSetMark = false;
 				mIsMarkActive = false;
 				mIsStrikeActive = false;
 				mSlowMag = 1.0f;

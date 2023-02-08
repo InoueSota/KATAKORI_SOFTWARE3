@@ -240,6 +240,8 @@ void Tsuchinoko::Draw(Screen& screen, int HitStop) {
 	{
 		//“ª‚Æ”ö‚Ì•`‰æ
 		if (mShakeTimer > 0 && !HitStop) {
+			screen.DrawRectAngle(mHeadPosition + ShakeRand, mSize + 25.0f, mSize + 25.0f, mCenterAngle, RED, kFillModeSolid);
+			screen.DrawRectAngle(mTailPosition + ShakeRand, mSize + 25.0f, mSize + 25.0f, mCenterAngle, RED, kFillModeSolid);
 			if (mIsSuper) {
 				screen.DrawPicture(mHeadPosition + ShakeRand, mSize, mCenterAngle, 100, 100, supertsuchinoko, WHITE);
 				screen.DrawPicture(mTailPosition + ShakeRand, mSize, mCenterAngle, 100, 100, supertsuchinoko, WHITE);
@@ -248,6 +250,8 @@ void Tsuchinoko::Draw(Screen& screen, int HitStop) {
 				screen.DrawPicture(mTailPosition + ShakeRand, mSize, mCenterAngle, 100, 100, tsuchinoko, WHITE);
 			}
 		} else {
+			screen.DrawRectAngle(mHeadPosition, mSize + 25.0f, mSize + 25.0f, mCenterAngle, RED, kFillModeSolid);
+			screen.DrawRectAngle(mTailPosition, mSize + 25.0f, mSize + 25.0f, mCenterAngle, RED, kFillModeSolid);
 			if (mIsSuper) {
 				screen.DrawPicture(mHeadPosition, mSize, mCenterAngle, 100, 100, supertsuchinoko, WHITE);
 				screen.DrawPicture(mTailPosition, mSize, mCenterAngle, 100, 100, supertsuchinoko, WHITE);

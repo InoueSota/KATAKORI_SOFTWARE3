@@ -289,12 +289,14 @@ void Snake::Draw(Screen& screen, int HitStop) {
 
 		//“ª•`‰æ
 		if (mShakeTimer > 0) {
+			screen.DrawRectAngle(mHeadPosition + ShakeRand, mHeadRadius + 25.0f, mHeadRadius + 25.0f, mHeadAngle, RED, kFillModeSolid);
 			if (mIsSuper) {
 				screen.DrawPicture(mHeadPosition + ShakeRand, mHeadRadius, mHeadAngle, 100, 100, superhead, WHITE);
 			} else {
 				screen.DrawPicture(mHeadPosition + ShakeRand, mHeadRadius, mHeadAngle, 100, 100, head, WHITE);
 			}
 		} else {
+			screen.DrawRectAngle(mHeadPosition, mHeadRadius + 25.0f, mHeadRadius + 25.0f, mHeadAngle, RED, kFillModeSolid);
 			if (mIsSuper) {
 				screen.DrawPicture(mHeadPosition, mHeadRadius, mHeadAngle, 100, 100, superhead, WHITE);
 			} else {
