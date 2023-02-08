@@ -90,11 +90,15 @@ public:
 	int mTsuchinokoDefeatStrike = 0;//ストライク中にツチノコを倒した数
 	int StrikeEndFlag = false;
 
-	Vec2 StrikeEasingPos;
-	Vec2 StrikeEasingStart;
-	Vec2 StrikeEasingEnd;
-	float StrikeEasingT;
-	int StrikeEasingFlag;
+	typedef struct StrikeEasingEffect {
+		Vec2 StrikeEasingPos = {};
+		Vec2 StrikeEasingStart = {};
+		Vec2 StrikeEasingEnd = {};
+		float StrikeEasingT = 0;
+		int StrikeEasingFlag = 0;
+	};
+	StrikeEasingEffect strikeEasingEffect[10];
+	
 	void StrikeEasing();
 
 
@@ -146,6 +150,8 @@ public:
 	int areyouready;
 	int TutorialSkip;
 	int doublekill;
+	int triplekill;
+	int superkill;
 	void LoadTexture();
 
 };
