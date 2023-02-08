@@ -90,6 +90,13 @@ public:
 	int mTsuchinokoDefeatStrike = 0;//ストライク中にツチノコを倒した数
 	int StrikeEndFlag = false;
 
+	Vec2 StrikeEasingPos;
+	Vec2 StrikeEasingStart;
+	Vec2 StrikeEasingEnd;
+	float StrikeEasingT;
+	int StrikeEasingFlag;
+	void StrikeEasing();
+
 
 	//頭か尾に当たってしまったとき
 	bool mIsWarning;
@@ -138,6 +145,7 @@ public:
 	int Tutorial5;
 	int areyouready;
 	int TutorialSkip;
+	int doublekill;
 	void LoadTexture();
 
 };

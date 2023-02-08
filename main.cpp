@@ -446,8 +446,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					ui.StrikeEndFlag = 1;
 				} else if (ui.StrikeEndFlag == 1 && !player.mIsStrikeActive) {
 					ui.StrikeEndScore(player.mIsStrikeActive, ui.mTsuchinokoDefeatStrike, ui.mSnakeDefeatStrike);
+					ui.StrikeEasingStart = { 200, 550 };
+					ui.StrikeEasingEnd = { 600,550 };
+					ui.StrikeEasingPos = { 200,550 };
+					ui.StrikeEasingT = 0;
 					ui.StrikeEndFlag = 0;
 				}
+				ui.StrikeEasing();
 				
 				
 
