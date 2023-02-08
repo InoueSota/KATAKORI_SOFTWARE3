@@ -35,6 +35,8 @@ void Fever::Update(Screen& screen, Vec2 PlayerPos, bool isStrikeActive) {
 			mIsFever = false;
 			mFeverGauge = 0;
 		}
+		mTsuchinokoDefeatStrike = 0;
+		mSnakeDefeatStrike = 0;
 	} else {
 		if (mSnakeDefeat || mTsuchinokoDefeat) {
 			mFeverGauge += mSnakeDefeat * 30;

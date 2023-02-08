@@ -64,6 +64,13 @@ void UI::Init() {
 	mStartScore = 0.0f;
 	mEndScore = 0.0f;
 
+	//コンボイージング
+	StrikeEasingStart = {};
+	StrikeEasingEnd = {};
+	StrikeEasingT = {};
+	StrikeEasingPos = {};
+	StrikeEasingFlag = 0;
+
 	//頭か尾に当たってしまったとき
 	mIsWarning = false;
 	mIsWarningRed = false;
@@ -383,16 +390,35 @@ void UI::StrikeEndScore(bool isStrikeActive, int mTsuchinokoDefeatStrike, int mS
 	if (DefeatStrike >= 4) {
 		//スーパーキル
 		mEndScore += 8000;
+		StrikeEasingFlag = 1;
 	} else if (DefeatStrike == 3) {
 		//トリプルキル
 		mEndScore += 4000;
+		StrikeEasingFlag = 1;
 	} else if (DefeatStrike == 2) {
 		//ダブルキル
 		mEndScore += 2000;
+		StrikeEasingFlag = 1;
 	}
+
 	mStartScore = mScore;
 	mScoreAnimationEasingt = 0.0f;
 
+}
+void UI::StrikeEasing() {
+	if (StrikeEasingT < 1) {
+		StrikeEasingT += 0.033;
+		if (StrikeEasingT > 1) {
+			StrikeEasingT = 1;
+		}
+		float easedT = easeOutSine(StrikeEasingT);
+
+		StrikeEasingPos.x = ((1 - easedT) * StrikeEasingStart.x) + (easedT * StrikeEasingEnd.x);
+
+	} else {
+		StrikeEasingFlag = 0;
+		StrikeEasingT = 0;
+	}
 }
 void UI::ScoreAnimation() {
 
@@ -537,6 +563,10 @@ void UI::Draw(Screen& screen, bool mIsReady) {
 	screen.DrawUI({ mStickPosition.x, mStickPosition.y - 55 }, 50, 0, 160, 160, mX, mXColor, mXScale);
 	screen.DrawUI({ mStickPosition.x, mStickPosition.y - 110 }, 50, 0, 160, 160, mA, mAColor, mAScale);
 
+	if (StrikeEasingFlag) {
+		Novice::DrawSprite(StrikeEasingPos.x, StrikeEasingPos.y, doublekill, 1, 1, 0, WHITE);
+	}
+
 	if (!mIsReady) {
 		switch (mTutorialScene) {
 			case 0:
@@ -592,6 +622,7 @@ void UI::LoadTexture() {
 	Tutorial5 = Novice::LoadTexture("./Resources/UI/Explanation/5.png");
 	TutorialSkip = Novice::LoadTexture("./Resources/UI/Explanation/tutorialskip.png");
 	areyouready = Novice::LoadTexture("./Resources/UI/Explanation/areyouready.png");
+	doublekill = Novice::LoadTexture("./Resources/UI/Explanation/doublekill.png");
 
 }
 
