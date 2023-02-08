@@ -86,6 +86,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				if (Key::IsTrigger(DIK_R) || Controller::IsTriggerButton(0,Controller::bSTART)) {
 					title.Init();
 					screen.Init();
+					player.Init();
+					Novice::StopAudio(bgm.tutorialhandle);
+					Novice::StopAudio(bgm.ingamehandle);
+					Novice::StopAudio(bgm.feverhandle);
 					bgm.Init();
 					scene = TITLE;
 				}
@@ -538,6 +542,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			if (Controller::IsTriggerButton(0, Controller::bX)) {
 				title.Init();
 				screen.Init();
+				player.Init();
+				Novice::StopAudio(bgm.ingamehandle);
+				Novice::StopAudio(bgm.feverhandle);
 				bgm.Init();
 				scene = TITLE;
 			}
@@ -556,21 +563,37 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			break;
 		case INGAME:
 			
-			if (!ui.mIsReady) {
+			if (fever.mIsFever) {
 				Novice::StopAudio(bgm.titlehandle);
-				if (Novice::IsPlayingAudio(bgm.tutorialhandle) == false || bgm.tutorialhandle == -1) {
-					bgm.tutorialhandle = Novice::PlayAudio(bgm.tutorial, 0, 0.2f);
+				Novice::StopAudio(bgm.tutorialhandle);
+				if (Novice::IsPlayingAudio(bgm.feverhandle) == false || bgm.feverhandle == -1) {
+					bgm.feverhandle = Novice::PlayAudio(bgm.fever, 0, 0.2f);
 				}
 			} else {
-				Novice::StopAudio(bgm.tutorialhandle);
-				if (Novice::IsPlayingAudio(bgm.ingamehandle) == false || bgm.ingamehandle == -1) {
-					bgm.ingamehandle = Novice::PlayAudio(bgm.ingame, 0, 0.2f);
+				Novice::StopAudio(bgm.feverhandle);
+				if (!ui.mIsReady) {
+					Novice::StopAudio(bgm.titlehandle);
+					if (Novice::IsPlayingAudio(bgm.tutorialhandle) == false || bgm.tutorialhandle == -1) {
+						bgm.tutorialhandle = Novice::PlayAudio(bgm.tutorial, 0, 0.2f);
+					}
+				}
+				else {
+					Novice::StopAudio(bgm.tutorialhandle);
+					if (Novice::IsPlayingAudio(bgm.ingamehandle) == false || bgm.ingamehandle == -1) {
+						bgm.ingamehandle = Novice::PlayAudio(bgm.ingame, 0, 0.2f);
+					}
 				}
 			}
 			
 			break;
 		case OUTGAME:
+
+			Novice::StopAudio(bgm.feverhandle);
 			Novice::StopAudio(bgm.ingamehandle);
+			if (Novice::IsPlayingAudio(bgm.resulthandle) == false || bgm.resulthandle == -1) {
+				bgm.resulthandle = Novice::PlayAudio(bgm.result, 0, 0.2f);
+			}
+
 			break;
 		}
 

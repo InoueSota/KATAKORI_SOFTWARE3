@@ -17,6 +17,10 @@ public:
 	int tutorial;
 	int ingamehandle;
 	int ingame;
+	int feverhandle;
+	int fever;
+	int resulthandle;
+	int result;
 	void LoadBgm();
 
 };
