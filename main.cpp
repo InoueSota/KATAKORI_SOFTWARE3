@@ -66,6 +66,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 			if ((Screen::kWindowWidth - 50.0f) <= change.mMakePosition) {
+				change.Init();
 				scene = INGAME;
 			}
 
@@ -567,11 +568,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				screen.HitStopUpdate();
 
 
-
-				//タイムアップの文字が出てしばらくしたらスコア画面に移行する
+				//タイムアップの文字が出てしばらくしたら黒めの矩形を出す
 				if (ui.mIsTimeUpFinish) {
-					result.Init();
-					scene = OUTGAME;
+					change.mIsChangeActive = true;
+
+					//矩形がある程度でたらリザルトに移行
+					if ((Screen::kWindowWidth - 50.0f) <= change.mMakePosition) {
+						result.Init();
+						scene = OUTGAME;
+					}
 				}
 			}
 
@@ -669,7 +674,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			title.FrontDraw(screen);
 
 			//隠し描画
-			change.DrawTitle(screen);
+			change.DrawTitle(screen, ui.mIsStart);
 
 			break;
 		case INGAME:
@@ -720,6 +725,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//フィーバー
 			fever.Draw(screen);
 
+			//隠し描画
+			change.DrawTitle(screen, ui.mIsStart);
+
 			break;
 		case OUTGAME:
 
@@ -730,7 +738,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 		//画面遷移描画
-		change.Draw(screen);
+		change.Draw(screen, ui.mIsStart);
 
 		///
 		/// ↑描画処理ここまで

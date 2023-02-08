@@ -86,8 +86,8 @@ public:
 
 	void Init();
 	void Update();
-	void DrawTitle(Screen& screen);
-	void Draw(Screen& screen);
+	void DrawTitle(Screen& screen, bool isStart);
+	void Draw(Screen& screen, bool isStart);
 
 	//‰æ–Ê‘JˆÚ
 	static constexpr int kChangeBoxMax = 200;

@@ -248,16 +248,25 @@ void Change::Update() {
 		mIsChangeActive = false;
 	}
 }
-void Change::DrawTitle(Screen& screen) {
-	screen.DrawRectAngle({ mMakePosition / 2.0f, Screen::kWindowHeight / 2.0 }, mMakePosition, Screen::kWindowHeight, 0xDADADAFF, kFillModeSolid, false);
+void Change::DrawTitle(Screen& screen, bool isStart) {
+	if (!isStart) {
+		screen.DrawRectAngle({ mMakePosition / 2.0f, Screen::kWindowHeight / 2.0 }, mMakePosition, Screen::kWindowHeight, 0xDADADAFF, kFillModeSolid, false);
+	} else {
+		screen.DrawRectAngle({ mMakePosition / 2.0f, Screen::kWindowHeight / 2.0 }, mMakePosition, Screen::kWindowHeight, 0x383838FF, kFillModeSolid, false);
+	}
 }
-void Change::Draw(Screen& screen) {
+void Change::Draw(Screen& screen, bool isStart) {
 
 	for (int i = 0; i < kChangeBoxMax; i++) {
 
 		if (mIsChangeBoxActive[i]) {
-			screen.DrawSquare(mChangeBoxPosition[i], mChangeBoxSize[i], 0xDADADAFF, kFillModeSolid, false);
-			screen.DrawSquare(mChangeBoxPosition[i], mChangeBoxSize[i], BLACK, kFillModeWireFrame, false);
+			if (!isStart) {
+				screen.DrawSquare(mChangeBoxPosition[i], mChangeBoxSize[i], 0xDADADAFF, kFillModeSolid, false);
+				screen.DrawSquare(mChangeBoxPosition[i], mChangeBoxSize[i], BLACK, kFillModeWireFrame, false);
+			} else {
+				screen.DrawSquare(mChangeBoxPosition[i], mChangeBoxSize[i], 0x383838FF, kFillModeSolid, false);
+				screen.DrawSquare(mChangeBoxPosition[i], mChangeBoxSize[i], BLACK, kFillModeWireFrame, false);
+			}
 		}
 	}
 }
