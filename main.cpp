@@ -116,6 +116,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				//ゲーム開始時に初期化する
 				if (!ui.mIsOldReady && ui.mIsReady) {
 					fever.Init();
+					screen.Init();
+					map.Init();
 					enemy.Init();
 					enemy.Update(ui.mTimeLeft, player.mPosition, player.LockonCount, ui.mIsReady, fever.mIsFever);
 					player.Init();
