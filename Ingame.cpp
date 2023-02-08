@@ -64,13 +64,6 @@ void UI::Init() {
 	mStartScore = 0.0f;
 	mEndScore = 0.0f;
 
-	//コンボイージング
-	StrikeEasingStart = {};
-	StrikeEasingEnd = {};
-	StrikeEasingT = {};
-	StrikeEasingPos = {};
-	StrikeEasingFlag = 0;
-
 	//頭か尾に当たってしまったとき
 	mIsWarning = false;
 	mIsWarningRed = false;
@@ -390,15 +383,39 @@ void UI::StrikeEndScore(bool isStrikeActive, int mTsuchinokoDefeatStrike, int mS
 	if (DefeatStrike >= 4) {
 		//スーパーキル
 		mEndScore += 8000;
-		StrikeEasingFlag = 1;
+		for (int i = 0; i < 10; i++) {
+			if (!strikeEasingEffect[i].StrikeEasingFlag) {
+				strikeEasingEffect[i].StrikeEasingFlag = 3;
+				strikeEasingEffect[i].StrikeEasingStart = { -200, 550 };
+				strikeEasingEffect[i].StrikeEasingEnd = { 300,550 };
+				strikeEasingEffect[i].StrikeEasingPos = { -200,550 };
+				strikeEasingEffect[i].StrikeEasingT = 0;
+			}
+		}
 	} else if (DefeatStrike == 3) {
 		//トリプルキル
 		mEndScore += 4000;
-		StrikeEasingFlag = 1;
+		for (int i = 0; i < 10; i++) {
+			if (!strikeEasingEffect[i].StrikeEasingFlag) {
+				strikeEasingEffect[i].StrikeEasingFlag = 2;
+				strikeEasingEffect[i].StrikeEasingStart = { -200, 550 };
+				strikeEasingEffect[i].StrikeEasingEnd = { 300,550 };
+				strikeEasingEffect[i].StrikeEasingPos = { -200,550 };
+				strikeEasingEffect[i].StrikeEasingT = 0;
+			}
+		}
 	} else if (DefeatStrike == 2) {
 		//ダブルキル
 		mEndScore += 2000;
-		StrikeEasingFlag = 1;
+		for (int i = 0; i < 10; i++) {
+			if (!strikeEasingEffect[i].StrikeEasingFlag) {
+				strikeEasingEffect[i].StrikeEasingFlag = 1;
+				strikeEasingEffect[i].StrikeEasingStart = { -200, 550 };
+				strikeEasingEffect[i].StrikeEasingEnd = { 300,550 };
+				strikeEasingEffect[i].StrikeEasingPos = { -200,550 };
+				strikeEasingEffect[i].StrikeEasingT = 0;
+			}
+		}
 	}
 
 	mStartScore = mScore;
@@ -406,18 +423,22 @@ void UI::StrikeEndScore(bool isStrikeActive, int mTsuchinokoDefeatStrike, int mS
 
 }
 void UI::StrikeEasing() {
-	if (StrikeEasingT < 1) {
-		StrikeEasingT += 0.033;
-		if (StrikeEasingT > 1) {
-			StrikeEasingT = 1;
+	for (int i = 0; i < 10; i++) {
+		if (strikeEasingEffect[i].StrikeEasingFlag) {
+			if (strikeEasingEffect[i].StrikeEasingT < 1) {
+				strikeEasingEffect[i].StrikeEasingT += 0.033;
+				if (strikeEasingEffect[i].StrikeEasingT > 1) {
+					strikeEasingEffect[i].StrikeEasingT = 1;
+				}
+				float easedT = easeOutCirc(strikeEasingEffect[i].StrikeEasingT);
+
+				strikeEasingEffect[i].StrikeEasingPos.x = ((1 - easedT) * strikeEasingEffect[i].StrikeEasingStart.x) + (easedT * strikeEasingEffect[i].StrikeEasingEnd.x);
+
+			} else {
+				strikeEasingEffect[i].StrikeEasingFlag = 0;
+				strikeEasingEffect[i].StrikeEasingT = 0;
+			}
 		}
-		float easedT = easeOutSine(StrikeEasingT);
-
-		StrikeEasingPos.x = ((1 - easedT) * StrikeEasingStart.x) + (easedT * StrikeEasingEnd.x);
-
-	} else {
-		StrikeEasingFlag = 0;
-		StrikeEasingT = 0;
 	}
 }
 void UI::ScoreAnimation() {
@@ -563,8 +584,18 @@ void UI::Draw(Screen& screen, bool mIsReady) {
 	screen.DrawUI({ mStickPosition.x, mStickPosition.y - 55 }, 50, 0, 160, 160, mX, mXColor, mXScale);
 	screen.DrawUI({ mStickPosition.x, mStickPosition.y - 110 }, 50, 0, 160, 160, mA, mAColor, mAScale);
 
-	if (StrikeEasingFlag) {
-		Novice::DrawSprite(StrikeEasingPos.x, StrikeEasingPos.y, doublekill, 1, 1, 0, WHITE);
+	for (int i = 0; i < 10; i++) {
+		switch(strikeEasingEffect[i].StrikeEasingFlag) {
+			case 1:
+				Novice::DrawSprite(strikeEasingEffect[i].StrikeEasingPos.x, strikeEasingEffect[i].StrikeEasingPos.y, doublekill, 1, 1, 0, WHITE);
+				break;
+			case 2:
+				Novice::DrawSprite(strikeEasingEffect[i].StrikeEasingPos.x, strikeEasingEffect[i].StrikeEasingPos.y, triplekill, 1, 1, 0, WHITE);
+				break;
+			case 3:
+				Novice::DrawSprite(strikeEasingEffect[i].StrikeEasingPos.x, strikeEasingEffect[i].StrikeEasingPos.y, superkill, 1, 1, 0, WHITE);
+				break;
+		}
 	}
 
 	if (!mIsReady) {
@@ -623,7 +654,8 @@ void UI::LoadTexture() {
 	TutorialSkip = Novice::LoadTexture("./Resources/UI/Explanation/tutorialskip.png");
 	areyouready = Novice::LoadTexture("./Resources/UI/Explanation/areyouready.png");
 	doublekill = Novice::LoadTexture("./Resources/UI/Explanation/doublekill.png");
-
+	triplekill = Novice::LoadTexture("./Resources/UI/Explanation/triplekill.png");
+	superkill = Novice::LoadTexture("./Resources/UI/Explanation/superkill.png");
 }
 
 
