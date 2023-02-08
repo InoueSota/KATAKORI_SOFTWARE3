@@ -13,6 +13,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	title.LoadTexture();
 	result.LoadTexture();
 	player.LoadTexture();
+	enemy.LoadTexture();
 
 	bool isStop = true;
 
@@ -72,6 +73,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 				//UIアップデート
 				ui.Update(player.mStrikeTutorial, player.mIsStrikeActive);
+
+				//敵の音フラグを初期化する
+				enemy.mIsPlayHitSound = false;
 
 				//初期化
 				if (Key::IsTrigger(DIK_R) || Controller::IsTriggerButton(0,Controller::bSTART)) {
@@ -196,6 +200,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 											fever.mSnakeDefeatStrike++;
 										}
 										screen.SetHitStop();
+										enemy.HitSound();
 										enemy.snake[i].mShakeTimer = enemy.snake[i].kMaxShakeTimer;
 										//ダッシュタイマーリセット
 										player.mDushTimer = 0;
@@ -220,6 +225,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 												fever.mSnakeDefeatStrike++;
 											}
 											screen.SetHitStop();
+											enemy.HitSound();
 											enemy.snake[i].mShakeTimer = enemy.snake[i].kMaxShakeTimer;
 											//ダッシュタイマーリセット
 											player.mDushTimer = 0;
@@ -259,6 +265,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 											ui.AddKillCount();
 										}
 										screen.SetHitStop();
+										enemy.HitSound();
 										enemy.snake[i].mShakeTimer = enemy.snake[i].kMaxShakeTimer;
 										break;
 									}
@@ -301,6 +308,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 											fever.mTsuchinokoDefeatStrike++;
 										}
 										screen.SetHitStop();
+										enemy.HitSound();
 										enemy.tsuchinoko[i].mShakeTimer = enemy.tsuchinoko[i].kMaxShakeTimer;
 										//ダッシュタイマーリセット
 										player.mDushTimer = 0;
@@ -335,6 +343,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 												fever.mTsuchinokoDefeatStrike++;
 											}
 											screen.SetHitStop();
+											enemy.HitSound();
 											enemy.tsuchinoko[i].mShakeTimer = enemy.tsuchinoko[i].kMaxShakeTimer;
 											//ダッシュタイマーリセット
 											player.mDushTimer = 0;
@@ -374,6 +383,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 											ui.AddKillCount();
 										}
 										screen.SetHitStop();
+										enemy.HitSound();
 										enemy.tsuchinoko[i].mShakeTimer = enemy.tsuchinoko[i].kMaxShakeTimer;
 										break;
 									}

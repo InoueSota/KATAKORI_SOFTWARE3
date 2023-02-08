@@ -57,6 +57,8 @@ public:
 
 	//マーキング = Mark
 	static constexpr int kMarkMaxLength = 1600;
+	static constexpr int kMarkDurableMax = 3;
+	bool mIsSetMark;
 	bool mIsMarkActive;
 	bool mIsMarkLimitAnimationActive;
 	Vec2 mMarkPosition;
@@ -64,6 +66,7 @@ public:
 	Vec2 mMarkShake;
 	Vec2 mMarkScale;
 	int mMarkFrame;
+	int mMarkDurableValue;
 	unsigned int mMarkColor;
 	unsigned int mMarkScaleColor;
 	float mMarkLength;
@@ -164,6 +167,18 @@ public:
 	void SetKnockbackPosition(Vec2 enemyPosition, float enemyRadius);
 
 
+	//パワーが溜まっている時にオーラ風のパーティクル（パワーの数で色や大きさを変える）
+	static constexpr int kPowerParticleMax = 50;
+	static constexpr int kPowerParticleSize1 = 50;
+	bool mIsPowerParticleActive[kPowerParticleMax];
+	Vec2 mPowerParticlePosition[kPowerParticleMax];
+	float mPowerParticleEasingt[kPowerParticleMax];
+	int mPowerParticleSize[kPowerParticleMax];
+	unsigned int mPowerParticleColor[kPowerParticleMax];
+	unsigned int mPowerParticleStartColor[kPowerParticleMax];
+	void PowerParticle();
+
+
 	//タイトル画面専用
 	bool mIsControll;
 	Vec2 mTargetPoint;
@@ -188,7 +203,12 @@ public:
 	int nopower;
 	int toge;
 	int mark;
+	int powerparticle;
 	int senden;
+
+	//音
+	int hit;
+	int dush;
 	void LoadTexture();
 
 };

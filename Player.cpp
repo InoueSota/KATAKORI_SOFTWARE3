@@ -32,7 +32,13 @@ void Player::Init() {
 		mIsDushBoxActive[i] = false;
 	}
 
+	//パワーオーラ
+	for (int i = 0; i < kPowerParticleMax; i++) {
+		mIsPowerParticleActive[i] = false;
+	}
+
 	//マーキング
+	mIsSetMark = false;
 	mIsMarkActive = false;
 	mMarkFrame = 0;
 	mMarkLength = 0.0f;
@@ -128,6 +134,9 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever, unsigned int 
 		//ダッシュ
 		Dush(1.0f);
 
+		//パワーがある時にオーラ
+		PowerParticle();
+
 		//マーキング
 		Mark();
 
@@ -138,11 +147,11 @@ void Player::Update(Screen& screen, bool isFever, bool isOldFever, unsigned int 
 		mPosition.x = Clamp(mPosition.x, Map::kMapLeft + (mSize / 2), Map::kMapRight - (mSize / 2));
 		mPosition.y = Clamp(mPosition.y, Map::kMapBottom + (mSize / 2), Map::kMapTop - (mSize / 2));
 
-		//ダッシュ演出
-		DushBox(BackBoxColor);
-
 		//マークとの距離に制限をかける
 		MarkLimitLength(isFever);
+
+		//ダッシュ演出
+		DushBox(BackBoxColor);
 	}
 	//if (Controller::IsTriggerButton(0, Controller::bA)) {
 	//	//ダッシュ判定のタイマーセット
@@ -202,6 +211,11 @@ void Player::Dush(float mag) {
 
 		//速度を代入する
 		mVelocity += mDushVelocity;
+
+		int handle = -1;
+		if (Novice::IsPlayingAudio(handle) == false || handle == -1) {
+			handle = Novice::PlayAudio(dush, 0, 1);
+		}
 		
 	}
 }
@@ -234,14 +248,46 @@ void Player::DushBox(unsigned int BackBoxColor) {
 		}
 	}
 }
+void Player::PowerParticle() {
+
+	for (int i = 0; i < kPowerParticleMax; i++) {
+
+		if (0 < mStrikePower) {
+
+			if (!mIsPowerParticleActive[i]) {
+				mPowerParticlePosition[i].x = RAND(mPosition.x - 80, mPosition.x + 80);
+				mPowerParticlePosition[i].y = RAND(mPosition.y - 80, mPosition.y + 80);
+				mPowerParticleEasingt[i] = 0.0f;
+				if (mStrikePower != kStrikePowerMax) {
+					mPowerParticleStartColor[i] = 0xFFFFFF00;
+				} else {
+					mPowerParticleStartColor[i] = 0xFF000000;
+				}
+				mIsPowerParticleActive[i] = true;
+				break;
+			}
+		}
+
+		if (mIsPowerParticleActive[i]) {
+			mPowerParticleEasingt[i] = EasingClamp(0.02, mPowerParticleEasingt[i]);
+			mPowerParticleSize[i] = EasingMove(kPowerParticleSize1, 200, easeOutSine(mPowerParticleEasingt[i]));
+			mPowerParticleColor[i] = mPowerParticleStartColor[i] | ColorEasingMove(0xA0, 0x00, easeOutSine(mPowerParticleEasingt[i]));
+			if (mPowerParticleEasingt[i] == 1.0f) {
+				mIsPowerParticleActive[i] = false;
+			}
+		}
+	}
+}
 void Player::Mark() {
 
 	//Xボタン押下時にPositionを設定＆フラグをtrueにする
-	if (Controller::IsTriggerButton(0, Controller::bX)) {
+	if (Controller::IsTriggerButton(0, Controller::bX) || !mIsSetMark) {
 
 		mMarkPosition = mPosition;
+		mMarkDurableValue = kMarkDurableMax;
 		mMarkFrame = 0;
 		mMarkScaleEasingt = 0.0f;
+		mIsSetMark = true;
 		mIsMarkActive = true;
 
 	}
@@ -470,6 +516,7 @@ void Player::Strike(bool isFever, bool isOldFever, Screen& screen) {
 
 			//移動が終了したら
 			if ((mPosition.x == mMarkPosition.x && mPosition.y == mMarkPosition.y) || mIsStraightStrikeFinish) {
+				mIsSetMark = false;
 				mIsMarkActive = false;
 				mIsStrikeActive = false;
 				mSlowMag = 1.0f;
@@ -637,8 +684,16 @@ void Player::Knockback() {
 		mKnockbackEnd.y = mPosition.y + newB * 600;
 		mKnockbackActive = true;
 		mKnockbackSet = false;
+		mMarkDurableValue--;
+		if (mMarkDurableValue == 0) {
+			mIsMarkActive = false;
+		}
 		mIsStrikeActive = false;
-		mIsMarkActive = false;
+
+		int handle = -1;
+		if (Novice::IsPlayingAudio(handle) == false || handle == -1) {
+			handle = Novice::PlayAudio(hit, 0, 1);
+		}
 	}
 	if (mKnockbackActive) {
 		mColor = 0xFFFFFF50;
@@ -682,6 +737,13 @@ void Player::Draw(Screen& screen, bool isReady, bool isFever, unsigned int fever
 			screen.DrawRectAngle(mDushBoxPosition[i], mDushBoxSize[i], mDushBoxSize[i], mDushBoxAngle[i], mDushBoxColor[i], kFillModeWireFrame, true);
 		}
 	}
+
+	//パワーオーラ
+	for (int i = 0; i < kPowerParticleMax; i++) {
+		if (mIsPowerParticleActive[i]) {
+			screen.DrawSquare(mPowerParticlePosition[i], mPowerParticleSize[i], mPowerParticleColor[i], kFillModeSolid, true);
+		}
+	}
 	
 	//マーク描画
 	if (mIsMarkActive){
@@ -693,6 +755,14 @@ void Player::Draw(Screen& screen, bool isReady, bool isFever, unsigned int fever
 		}
 		screen.DrawPicture(mMarkPosition, mSize, 0, 100, 100, mark, mMarkScaleColor, mMarkScale);
 		screen.DrawPicture(mMarkPosition, mSize, 0, 100, 100, mark, WHITE);
+		//マークの長さ
+		if (!isFever && mIsMarkActive) {
+			screen.DrawBox({ mPosition.x - 125.0f + mMarkShake.x, mPosition.y + 100 + mMarkShake.y }, mMarkLength * (250.0f / kMarkMaxLength), 25, 0.0f, mMarkColor, kFillModeSolid, true);
+		}
+		else if (isFever) {
+			screen.DrawBox({ mPosition.x - 125.0f + mMarkShake.x, mPosition.y + 100 + mMarkShake.y }, 250.0f, 25, 0.0f, feverGaugeColor, kFillModeSolid, true);
+		}
+		screen.DrawUI({ mPosition.x + mMarkShake.x, mPosition.y + 87.5f + mMarkShake.y }, 250, 25, 0, 1000, 100, lengthflame, WHITE, { 1.0f,1.0f }, true);
 	}
 
 	//プレイヤー本体描画
@@ -701,9 +771,9 @@ void Player::Draw(Screen& screen, bool isReady, bool isFever, unsigned int fever
 	//ストライクしろ(圧)描画
 	if (mIsMarkActive && !mIsStrikeActive) {
 		if (0 < mStrikePower) {
-			screen.DrawAnime({ mPosition.x, mPosition.y + (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0.0f, 0, 200, 100, 2, 20, mMarkFrame, rb, 0xFFFFFFE5);
+			screen.DrawAnime({ mPosition.x, mPosition.y - (40 / screen.GetZoom()) }, 60 / screen.GetZoom(), 30 / screen.GetZoom(), 0.0f, 0, 200, 100, 2, 20, mMarkFrame, rb, 0xFFFFFFE5);
 		} else {
-			screen.DrawPicture({ mPosition.x, mPosition.y + (40 / screen.GetZoom()) }, 360, 120, 0.0f, 300, 100, nopower, WHITE);
+			screen.DrawPicture({ mPosition.x, mPosition.y - (40 / screen.GetZoom()) }, 360, 120, 0.0f, 300, 100, nopower, WHITE);
 		}
 	}
 
@@ -713,7 +783,11 @@ void Player::DrawStrikeUI(Screen& screen, bool isFever, unsigned int feverGaugeC
 	//ストライクパワーを収める
 	mStrikePower = Clamp(mStrikePower, 0, kStrikePowerMax);
 	if (!isFever) {
-		screen.DrawBox({ 50.0f, 62.5f }, 50 * mStrikePower, 25, 0.0f, WHITE, kFillModeSolid, false);
+		if (mStrikePower != kStrikePowerMax) {
+			screen.DrawBox({ 50.0f, 62.5f }, 50 * mStrikePower, 25, 0.0f, WHITE, kFillModeSolid, false);
+		} else {
+			screen.DrawBox({ 50.0f, 62.5f }, 50 * mStrikePower, 25, 0.0f, RED, kFillModeSolid, false);
+		}
 	} else {
 		screen.DrawBox({ 50.0f, 62.5f }, 50 * mStrikePower, 25, 0.0f, feverGaugeColor, kFillModeSolid, false);
 	}
@@ -726,17 +800,10 @@ void Player::DrawStrikeUI(Screen& screen, bool isFever, unsigned int feverGaugeC
 		}
 	}
 
-	//マークの長さ
-	if (!isFever && mIsMarkActive) {
-		screen.DrawBox(mMarkUIPosition + mMarkShake, mMarkLength * (250.0f / kMarkMaxLength), 25, 0.0f, mMarkColor, kFillModeSolid, false);
-	} else if (isFever) {
-		screen.DrawBox(mMarkUIPosition + mMarkShake, 250.0f, 25, 0.0f, feverGaugeColor, kFillModeSolid, false);
-	}
-	screen.DrawUI({ 175.0f + mMarkShake.x, 112.5f + mMarkShake.y }, 250, 25, 0, 1000, 100, lengthflame, WHITE);
-
 }
 void Player::LoadTexture() {
 
+	//画像
 	flame = Novice::LoadTexture("./Resources/Player/flame.png");
 	lastflame = Novice::LoadTexture("./Resources/Player/lastflame.png");
 	lengthflame = Novice::LoadTexture("./Resources/Player/lengthflame.png");
@@ -748,7 +815,13 @@ void Player::LoadTexture() {
 	nopower = Novice::LoadTexture("./Resources/Player/nopower.png");
 	toge = Novice::LoadTexture("./Resources/Player/toge.png");
 	mark = Novice::LoadTexture("./Resources/Player/mark.png");
+	powerparticle = Novice::LoadTexture("./Resources/Player/playerfeverparticle.png");
 	senden = Novice::LoadTexture("./Resources/Outgame/Title/senden.png");
+
+	//音
+	hit = Novice::LoadAudio("./Sounds/hit.wav");
+	dush = Novice::LoadAudio("./Sounds/dush.wav");
+
 }
 
 

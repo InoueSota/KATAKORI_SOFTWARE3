@@ -258,6 +258,7 @@ void Snake::Draw(Screen& screen, int HitStop) {
 		enemyspawnparticleTexture = Novice::LoadTexture("./Resources/Enemy/enemyspawnparticle.png");
 		enemybikkuritexture = Novice::LoadTexture("./Resources/Enemy/bikkuri.png");
 		speedTexture = Novice::LoadTexture("./Resources/Enemy/speed.png");
+		dead = Novice::LoadAudio("./Sounds/dead.wav");
 		mIsLoadTexture = true;
 	}
 

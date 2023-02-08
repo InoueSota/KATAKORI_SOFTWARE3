@@ -395,3 +395,19 @@ void Enemy::Draw(Screen& screen, int hitStop) {
 		tsuchinoko[i].Draw(screen, hitStop);
 	}
 }
+void Enemy::HitSound() {
+
+	if (!mIsPlayHitSound) {
+
+		int handle = -1;
+		if (Novice::IsPlayingAudio(handle) == false || handle == -1) {
+			handle = Novice::PlayAudio(enemyhit, 0, 1);
+		}
+
+		mIsPlayHitSound = true;
+	}
+
+}
+void Enemy::LoadTexture() {
+	enemyhit = Novice::LoadAudio("./Sounds/enemyhit.wav");
+}

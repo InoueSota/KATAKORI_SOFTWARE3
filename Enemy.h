@@ -50,4 +50,10 @@ public:
 	bool MakeSnake(const char* csv);
 	bool MakeTsuchinoko(const char* csv);
 	void NextWave(WAVE nextWave);
+
+	//‰¹
+	bool mIsPlayHitSound;
+	int enemyhit;
+	void HitSound();
+	void LoadTexture();
 };

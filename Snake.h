@@ -114,4 +114,6 @@ public:
 	int enemyspawnparticleTexture;
 	int enemybikkuritexture;
 	int speedTexture;
+	int dead;
+
 };
