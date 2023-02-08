@@ -415,15 +415,20 @@ void Result::Draw(Screen& screen) {
 		screen.DrawUI(mScorePosition[i], mScoreSize, 32 * Result[i], 32, 32, mNumber, mScoreColor[i]);
 	}
 
-	if (mScore >= 9000000) {
+	if (mScore >= 3000000) {
+		//ランクS
 		Novice::DrawSpriteRect(33, 40, 0, 736, 264, 184, Rank, 1, 0.2, 0, WHITE);
-	} else if (mScore >= 5000000) {
+	} else if (mScore >= 2000000) {
+		//ランクA
 		Novice::DrawSpriteRect(33, 40, 0, 0, 264, 184, Rank, 1, 0.2, 0, WHITE);
 	} else if (mScore >= 1000000) {
+		//ランクB
 		Novice::DrawSpriteRect(33, 40, 0, 184, 264, 184, Rank, 1, 0.2, 0, WHITE);
 	} else if (mScore >= 500000) {
+		//ランクC
 		Novice::DrawSpriteRect(33, 40, 0, 368, 264, 184, Rank, 1, 0.2, 0, WHITE);
 	} else if (mScore >= 300000) {
+		//ランクD
 		Novice::DrawSpriteRect(33, 40, 0, 552, 264, 184, Rank, 1, 0.2, 0, WHITE);
 	}
 
