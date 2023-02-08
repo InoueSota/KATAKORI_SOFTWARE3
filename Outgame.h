@@ -21,9 +21,9 @@ public:
 	Vec2 mCenterPosition{ Screen::kWindowWidth / 2, Screen::kWindowHeight / 2 };
 
 	//"KATAKORI SOFTWARE"‚Ì•`‰æ
-	bool mIsKatakoriClear = true;
-	bool mIsKatakoriAlphaClear = true;
-	bool mIsKatakoriScaleStart = true;
+	bool mIsKatakoriClear = false;
+	bool mIsKatakoriAlphaClear = false;
+	bool mIsKatakoriScaleStart = false;
 	Vec2 mKatakoriScale{ 0.75f, 0.75f };
 	float mKatakoriAlphaT = 0.0f;
 	unsigned int mKatakoriColor = 0xFFFFFF00;

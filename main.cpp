@@ -84,17 +84,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 			//初期化
-			if (Key::IsTrigger(DIK_R) || Controller::IsTriggerButton(0,Controller::bSTART)) {
-				title.Init();
-				screen.Init();
-				player.Init();
-				Novice::StopAudio(bgm.tutorialhandle);
-				Novice::StopAudio(bgm.ingamehandle);
-				Novice::StopAudio(bgm.feverhandle);
-				bgm.Init();
-				change.Init();
-				scene = TITLE;
-			}
+			//if (Key::IsTrigger(DIK_R) || Controller::IsTriggerButton(0,Controller::bSTART)) {
+			//	title.Init();
+			//	screen.Init();
+			//	player.Init();
+			//	Novice::StopAudio(bgm.tutorialhandle);
+			//	Novice::StopAudio(bgm.ingamehandle);
+			//	Novice::StopAudio(bgm.feverhandle);
+			//	bgm.Init();
+			//	change.Init();
+			//	scene = TITLE;
+			//}
 
 			//ヒットストップしてないとき
 			if (!screen.GetHitStop()) {
@@ -604,8 +604,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		case TITLE:
 
 			Novice::StopAudio(bgm.resulthandle);
-			if (Novice::IsPlayingAudio(bgm.titlehandle) == false || bgm.titlehandle == -1) {
-				bgm.titlehandle = Novice::PlayAudio(bgm.title, 0, 0.2f);
+			if (title.mIsKatakoriClear) {
+				if (Novice::IsPlayingAudio(bgm.titlehandle) == false || bgm.titlehandle == -1) {
+					bgm.titlehandle = Novice::PlayAudio(bgm.title, 0, 0.2f);
+				}
 			}
 
 			break;
@@ -663,7 +665,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			title.Draw(screen);
 
 			//プレイヤー描画
-			player.TitleDraw(screen);
+			if (title.mIsKatakoriClear) {
+				player.TitleDraw(screen);
+			}
 
 			//タイトル文字描画
 			title.FrontDraw(screen);
