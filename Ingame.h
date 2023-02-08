@@ -81,10 +81,14 @@ public:
 	float mEnemyScore[kEnemyScoreMax];
 	void SnakeScore(bool isStrikeActive, Vec2 enemyPosition);
 	void TsuchinokoScore(bool isStrikeActive, Vec2 enemyPosition);
+	void StrikeEndScore(bool isStrikeActive, int mTsuchinokoDefeatStrike, int mSnakeDefeatStrike);
 	float mStartScore;
 	float mEndScore;
 	float mScoreAnimationEasingt;
 	void ScoreAnimation();
+	int mSnakeDefeatStrike = 0;		//ストライク中にヘビを倒した数
+	int mTsuchinokoDefeatStrike = 0;//ストライク中にツチノコを倒した数
+	int StrikeEndFlag = false;
 
 
 	//頭か尾に当たってしまったとき
