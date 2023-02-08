@@ -12,6 +12,7 @@
 #include "Tsuchinoko.h"
 #include "Collision.h"
 #include "Fever.h"
+#include "Bgm.h"
 
 
 
@@ -24,6 +25,7 @@ Map map;
 Player player;
 Enemy enemy;
 Fever fever;
+Bgm bgm;
 
 //スイッチ文で main.cpp を分けるやつ
 enum Scene

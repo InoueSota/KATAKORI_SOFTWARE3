@@ -14,6 +14,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	result.LoadTexture();
 	player.LoadTexture();
 	enemy.LoadTexture();
+	bgm.LoadBgm();
 
 	bool isStop = true;
 
@@ -545,10 +546,26 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		switch (scene)
 		{
 		case TITLE:
+
+
+
 			break;
 		case INGAME:
+			
+			if (!ui.mIsReady) {
+				if (Novice::IsPlayingAudio(bgm.tutorialhandle) == false || bgm.tutorialhandle == -1) {
+					bgm.tutorialhandle = Novice::PlayAudio(bgm.tutorial, 0, 0.2f);
+				}
+			} else {
+				Novice::StopAudio(bgm.tutorialhandle);
+				if (Novice::IsPlayingAudio(bgm.ingamehandle) == false || bgm.ingamehandle == -1) {
+					bgm.ingamehandle = Novice::PlayAudio(bgm.ingame, 0, 0.2f);
+				}
+			}
+			
 			break;
 		case OUTGAME:
+			Novice::StopAudio(bgm.ingamehandle);
 			break;
 		}
 

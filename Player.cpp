@@ -707,9 +707,11 @@ void Player::Knockback() {
 		mColor = 0xFFFFFF50;
 		mKnockBackT = EasingClamp(0.033f, mKnockBackT);
 		mPosition = EasingMove(mKnockbackStart, mKnockbackEnd, easeOutSine(mKnockBackT));
-		if (!Collision(mPosition, 0, mMarkPosition, kMarkMaxLength)) {
-			Vec2 tmpDirection = (mPosition - mMarkPosition).Normalized();
-			mPosition = mMarkPosition + tmpDirection * kMarkMaxLength;
+		if (mIsMarkActive) {
+			if (!Collision(mPosition, 0, mMarkPosition, kMarkMaxLength)) {
+				Vec2 tmpDirection = (mPosition - mMarkPosition).Normalized();
+				mPosition = mMarkPosition + tmpDirection * kMarkMaxLength;
+			}
 		}
 		if (mKnockBackT >= 0.7f) {
 			mKnockBackT = 0.0f;
